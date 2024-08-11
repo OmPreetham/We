@@ -9,11 +9,11 @@ import Kingfisher
 import SwiftUI
 
 struct CircularProfileImageView: View {
-    var organisation: Organization?
+    var community: Community?
     var size: Size
     
-    init(organisation: Organization? = nil, size: Size) {
-        self.organisation = organisation
+    init(community: Community? = nil, size: Size) {
+        self.community = community
         self.size = size
     }
     
@@ -26,19 +26,19 @@ struct CircularProfileImageView: View {
         var dimensions: CGFloat {
             switch self {
             case .small:
-                return 30
+                return 35
             case .medium:
                 return 40
             case .large:
-                return 50
+                return 45
             case .extraLarge:
-                return 60
+                return 50
             }
         }
     }
     
     var body: some View {
-        Image(systemName: organisation?.systemImageName ?? "xmark.circle")
+        Image(systemName: community?.systemImageName ?? "xmark.circle")
             .resizable()
             .scaledToFit()
             .frame(width: size.dimensions, height: size.dimensions, alignment: .center)

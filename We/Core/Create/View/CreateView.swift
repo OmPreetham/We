@@ -12,16 +12,16 @@ struct CreateView: View {
     
     @State private var caption = ""
     
-    var organisation: Organization? = .mockOrganizations[0]
+    var community: Community? = .mockCommunities[0]
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack(alignment: .top) {
-                    CircularProfileImageView(organisation: .mockOrganizations[0], size: .small)
+                    CircularProfileImageView(community: .mockCommunities[0], size: .small)
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(organisation?.name ?? "Organization")
+                        Text(community?.name ?? "Community")
                             .fontWeight(.semibold)
                         
                         TextField("Start writing", text: $caption, axis: .vertical)

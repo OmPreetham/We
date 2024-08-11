@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PostCell: View {
     var post: Post
-    var organisation: Organization {
-        Organization.mockOrganizations.first { $0.id == post.organisationID }!
+    var community: Community {
+        Community.mockCommunities.first { $0.id == post.communityID }!
     }
     var user: User {
         User.mockUsers.first { $0.id == post.userID }!
@@ -18,7 +18,6 @@ struct PostCell: View {
     var hasParentPost: Bool?
     
     var replies: [Post] {
-        // Filter posts to get replies to the current post
         Post.mockPosts.filter { $0.parentPostID == post.id }
     }
     
@@ -27,13 +26,18 @@ struct PostCell: View {
     var onReplyPressed: (() -> Void)?
     var onBookmarkPressed: (() -> Void)?
     var onEllipsisPressed: (() -> Void)?
+    var onNamePressed: (() -> Void)?
+    
+    let imageNames = ["eva","eva-2", "eva-3", "eva-4"]
+    @State var selectedImage = 0
+    @State private var showingMediaViewer: Bool = false
     
     var body: some View {
         NavigationLink(destination: PostView(post: post)) {
             VStack {
-                HStack(alignment: .top, spacing: 4) {
+                HStack(alignment: .top, spacing: 0) {
                     VStack {
-                        CircularProfileImageView(organisation: organisation, size: .small)
+                        CircularProfileImageView(community: community, size: .small)
                         
                         Rectangle()
                             .opacity(hasParentPost ?? false ? 1 : 0)
@@ -45,9 +49,12 @@ struct PostCell: View {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading) {
-                                    Text(organisation.name)
+                                    Text(community.name)
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
+                                        .onTapGesture {
+                                            onNamePressed?()
+                                        }
                                     
                                     HStack(spacing: 4) {
                                         Text(user.username)
@@ -74,7 +81,9 @@ struct PostCell: View {
                                 .lineLimit(4)
                                 .multilineTextAlignment(.leading)
                             
-                            HStack(spacing: 8) {
+                            ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
+                            
+                            HStack(spacing: 20) {
                                 Button {
                                     onUpvotePressed?()
                                 } label: {
@@ -94,7 +103,7 @@ struct PostCell: View {
                                 }
                                 
                                 Spacer()
-                                
+                                                                
                                 Button {
                                     onBookmarkPressed?()
                                 } label: {
@@ -121,7 +130,7 @@ struct PostCell: View {
                 }
                 .padding(.vertical, 4)
             }
-            .padding(.leading)
+            .padding(.leading, 8)
         }
         .buttonStyle(PlainButtonStyle())
     }

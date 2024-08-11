@@ -14,7 +14,7 @@ struct HomeView: View {
     let filterOptions = ["Trending", "Recent", "Popular"]
     
     var posts: [Post] = Post.mockPosts
-    var organisation: Organization? = Organization.mockOrganizations[0]
+    var community: Community? = Community.mockCommunities[0]
 
     var body: some View {
         NavigationStack {
@@ -62,13 +62,6 @@ struct HomeView: View {
                     ForEach(posts, id: \.id) { post in
                         NavigationLink(value: post) {
                             PostCell(post: post)
-                                .swipeActions(edge: .trailing) {
-                                    Button {
-                                        print("Hello")
-                                    } label: {
-                                        Label("Hello", systemImage: "plus")
-                                    }
-                                }
                         }
                         .foregroundStyle(.primary)
                     }
@@ -79,7 +72,6 @@ struct HomeView: View {
             }
             .navigationTitle("We")
             .toolbar(.hidden, for: .navigationBar)
-            .scrollIndicators(.hidden)
             .padding(.top, -24)
             .refreshable {
                 print("DEBUG: Refresh Posts")

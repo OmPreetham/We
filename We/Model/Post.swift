@@ -14,7 +14,7 @@ struct Post: Identifiable, Codable, Hashable {
     var upvotes: Int // Number of upvotes
     var downvotes: Int // Number of downvotes
     
-    var organisationID: String // Single topic tag like "administration"
+    var communityID: String // Single topic tag like "administration"
     var userID: String // ID of the user who created the post
     var parentPostID: String? // Optional ID of the parent post for threading
     
@@ -25,7 +25,7 @@ struct Post: Identifiable, Codable, Hashable {
             timestamp: Date(),
             upvotes: 10,
             downvotes: 2,
-            organisationID: "org1",
+            communityID: "org1",
             userID: "user1",
             parentPostID: nil
         ),
@@ -35,7 +35,7 @@ struct Post: Identifiable, Codable, Hashable {
             timestamp: Date().addingTimeInterval(-86400),
             upvotes: 20,
             downvotes: 1,
-            organisationID: "org2",
+            communityID: "org2",
             userID: "user2",
             parentPostID: "1"
         ),
@@ -45,7 +45,7 @@ struct Post: Identifiable, Codable, Hashable {
             timestamp: Date().addingTimeInterval(-172800),
             upvotes: 15,
             downvotes: 0,
-            organisationID: "org3",
+            communityID: "org3",
             userID: "user3",
             parentPostID: "1"
         ),
@@ -55,7 +55,7 @@ struct Post: Identifiable, Codable, Hashable {
             timestamp: Date().addingTimeInterval(-3600),
             upvotes: 5,
             downvotes: 0,
-            organisationID: "org2",
+            communityID: "org2",
             userID: "user1",
             parentPostID: "1" // Replace with actual UUID of parent post
         )

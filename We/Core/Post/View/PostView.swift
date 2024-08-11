@@ -18,11 +18,13 @@ enum SortOption {
 struct PostView: View {
     @State private var isExpanded: Bool = false
     @State private var sortOption: SortOption = .newToOld
+    @State private var showingCreate: Bool = false
     
     var post: Post
-    var organisation: Organization {
-        Organization.mockOrganizations.first { $0.id == post.organisationID }!
+    var community: Community {
+        Community.mockCommunities.first { $0.id == post.communityID }!
     }
+    
     var user: User {
         User.mockUsers.first { $0.id == post.userID }!
     }
@@ -34,7 +36,6 @@ struct PostView: View {
     var onEllipsisPressed: (() -> Void)?
     
     var replies: [Post] {
-        // Filter posts to get replies to the current post
         Post.mockPosts.filter { $0.parentPostID == post.id }
     }
     
@@ -58,6 +59,10 @@ struct PostView: View {
         }
     }
     
+    let imageNames = ["eva","eva-2", "eva-3", "eva-4"]
+    @State var selectedImage = 0
+    @State private var showingMediaViewer: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -68,10 +73,10 @@ struct PostView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
-                        CircularProfileImageView(organisation: organisation, size: .small)
+                        CircularProfileImageView(community: community, size: .small)
 
                         VStack(alignment: .leading) {
-                            Text(organisation.name)
+                            Text(community.name)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
 
@@ -101,7 +106,9 @@ struct PostView: View {
                         .multilineTextAlignment(.leading)
                         .animation(.easeInOut, value: isExpanded)
                     
-                    HStack(spacing: 8) {
+                    ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
+                    
+                    HStack(spacing: 20) {
                         Button {
                             onUpvotePressed?()
                         } label: {
@@ -146,45 +153,47 @@ struct PostView: View {
                 .foregroundStyle(.primary)
                 .padding(.horizontal, 12)
                 
-                VStack {
-                    Divider()
-                        .foregroundStyle(.tertiary)
-                    
-                    HStack {
-                        Text("Replies")
-                            .font(.headline)
-                            .fontWeight(.semibold)
+                if !replies.isEmpty {
+                    VStack {
+                        Divider()
+                            .foregroundStyle(.tertiary)
                         
-                        Spacer()
-                        
-                        Menu {
-                            Picker("Sort by", selection: $sortOption) {
-                                Text("New to Old").tag(SortOption.newToOld)
-                                Text("Old to New").tag(SortOption.oldToNew)
-                                Text("Most Liked").tag(SortOption.mostLiked)
-                                Text("Most Upvotes").tag(SortOption.mostUpvotes)
-                                Text("Most Downvotes").tag(SortOption.mostDownvotes)
+                        HStack {
+                            Text("Replies")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            Spacer()
+                            
+                            Menu {
+                                Picker("Sort by", selection: $sortOption) {
+                                    Text("New to Old").tag(SortOption.newToOld)
+                                    Text("Old to New").tag(SortOption.oldToNew)
+                                    Text("Most Liked").tag(SortOption.mostLiked)
+                                    Text("Most Upvotes").tag(SortOption.mostUpvotes)
+                                    Text("Most Downvotes").tag(SortOption.mostDownvotes)
+                                }
+                            } label: {
+                                Label("Sort By", systemImage: "line.3.horizontal.decrease.circle")
+                                    .font(.callout)
+                                    .foregroundStyle(.foreground)
                             }
-                        } label: {
-                            Label("Sort By", systemImage: "line.3.horizontal.decrease.circle")
-                                .font(.callout)
-                                .foregroundStyle(.foreground)
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal)
+                        
+                        Divider()
+                            .foregroundStyle(.tertiary)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal)
                     
-                    Divider()
-                        .foregroundStyle(.tertiary)
-                }
-                
-                LazyVStack {
-                    ForEach(sortedReplies) { reply in
-                        NavigationLink(value: reply.id) {
-                            PostCell(post: reply)
+                    LazyVStack {
+                        ForEach(sortedReplies) { reply in
+                            NavigationLink(value: reply.id) {
+                                PostCell(post: reply)
+                            }
+                            .foregroundStyle(.primary)
                         }
-                        .foregroundStyle(.primary)
                     }
                 }
             }
@@ -195,17 +204,29 @@ struct PostView: View {
             if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
                 PostView(post: selectedPost)
             } else {
-                Text("Post not found")
+                ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
             }
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingCreate.toggle()
+                } label: {
+                    Label("New Post", systemImage: "plus")
+                }
+            }            
+            
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     
                 } label: {
                     ShareLink("", item: "")
                 }
             }
+        }
+        .sheet(isPresented: $showingCreate) {
+            CreateView()
+                .presentationDetents([.medium, .large])
         }
     }
 }
