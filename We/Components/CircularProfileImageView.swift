@@ -42,7 +42,7 @@ struct CircularProfileImageView: View {
             .resizable()
             .scaledToFit()
             .frame(width: size.dimensions, height: size.dimensions, alignment: .center)
-            .padding(4)
+            .padding(2)
             .background(.quaternary)
             .clipShape(Circle())
             .foregroundStyle(.secondary)

@@ -57,7 +57,7 @@ struct Post: Identifiable, Codable, Hashable {
             downvotes: 0,
             communityID: "org2",
             userID: "user1",
-            parentPostID: "1" // Replace with actual UUID of parent post
+            parentPostID: "2" // Replace with actual UUID of parent post
         )
     ]
 }
