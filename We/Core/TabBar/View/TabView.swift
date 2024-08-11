@@ -43,7 +43,6 @@ struct TabBar: View {
                 .onAppear { selectedTab = 3 }
                 .tag(3)
         }
-        .tint(.teal)
     }
 }
 

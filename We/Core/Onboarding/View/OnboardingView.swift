@@ -49,7 +49,6 @@ struct OnboardingView: View {
                     .padding()
                     .foregroundStyle(.background)
                     .background(.orange)
-                    .tint(.primary)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             .padding(30)

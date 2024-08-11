@@ -43,9 +43,8 @@ struct CircularProfileImageView: View {
             .scaledToFit()
             .frame(width: size.dimensions, height: size.dimensions, alignment: .center)
             .padding(2)
-            .background(.quaternary)
+            .background(.quinary)
             .clipShape(Circle())
-            .foregroundStyle(.secondary)
             .shadow(radius: 4)
     }
 }

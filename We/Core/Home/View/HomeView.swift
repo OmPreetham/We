@@ -23,7 +23,7 @@ struct HomeView: View {
                     Text("We")
                         .font(.system(size: 44))
                         .fontWeight(.bold)
-                        .foregroundStyle(.teal)
+                        .foregroundStyle(.blue)
                         .fontDesign(.serif)
                         .shadow(radius: 4)
                     
@@ -42,17 +42,19 @@ struct HomeView: View {
                             Image(systemName: "arrow.down")
                         }
                         .fontWeight(.bold)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                     }
                 }
                 
                 Spacer()
             
-                Image(systemName: "plus")
-                    .font(.title)
-                    .onTapGesture {
-                        showingCreate.toggle()
-                    }
+                Button {
+                    showingCreate.toggle()
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .font(.title)
+
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .leading)

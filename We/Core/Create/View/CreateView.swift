@@ -45,7 +45,7 @@ struct CreateView: View {
                                 } label: {
                                     Image(systemName: "xmark")
                                         .resizable()
-                                        .tint(.secondary)
+                                        .tint(.red)
                                         .frame(width: 12, height: 12)
                                 }
                             }
@@ -65,11 +65,10 @@ struct CreateView: View {
             .interactiveDismissDisabled()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
+                    Button("Cancel", role: .cancel) {
                         dismiss()
                     }
                     .font(.subheadline)
-                    .foregroundStyle(.primary)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -79,7 +78,7 @@ struct CreateView: View {
                     .opacity(caption.isEmpty ? 0.5 : 1)
                     .disabled(caption.isEmpty)
                     .font(.subheadline)
-                    .foregroundStyle(.teal)
+                    .fontWeight(.semibold)
                 }
             }
         }

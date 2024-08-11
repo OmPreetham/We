@@ -119,7 +119,6 @@ struct PostCell: View {
                             .font(.callout)
                             .foregroundStyle(.secondary)
                         }
-                        .foregroundStyle(.primary)
                         .padding(.horizontal, 8)
                         
                         if !(hasParentPost ?? false) {

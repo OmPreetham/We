@@ -143,14 +143,13 @@ struct PostView: View {
                             } label: {
                                 Text(isExpanded ? "Show Less" : "Show More")
                                     .font(.subheadline)
-                                    .foregroundStyle(.teal)
+                                    .foregroundStyle(.blue)
                             }
                         }
                     }
                     .font(.callout)
                     .foregroundStyle(.secondary)
                 }
-                .foregroundStyle(.primary)
                 .padding(.horizontal, 12)
                 
                 if !replies.isEmpty {

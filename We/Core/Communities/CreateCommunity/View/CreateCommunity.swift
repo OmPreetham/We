@@ -38,6 +38,8 @@ struct CreateCommunity: View {
                         
                     } label: {
                         Text("Create")
+                            .disabled(communityName.isEmpty || communityContent.isEmpty)
+                            .font(.subheadline)
                             .fontWeight(.semibold)
                     }
                 }

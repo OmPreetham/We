@@ -43,5 +43,5 @@ struct CommunityView: View {
 }
 
 #Preview {
-    CommunityView(community: Community.mockCommunities[0])
+    CommunityView(community: Community.mockCommunities[1])
 }
