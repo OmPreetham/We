@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showingOnboarding: Bool = true
+    @AppStorage("onboarding") private var showingOnboarding: Bool = true
     @State private var showingLogin: Bool = false
 
     var body: some View {
@@ -18,7 +18,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showingOnboarding) {
-            OnboardingView(isOnboardingShowing: $showingOnboarding)
+            OnboardingView(isShowingOnboarding: $showingOnboarding)
         }
     }
 }

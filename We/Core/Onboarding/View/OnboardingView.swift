@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @Binding var isOnboardingShowing: Bool
+    @Binding var isShowingOnboarding: Bool
     
     var body: some View {
         VStack {
@@ -40,7 +40,7 @@ struct OnboardingView: View {
             }
             
             Button(role: .cancel) {
-                isOnboardingShowing.toggle()
+                isShowingOnboarding = false
             } label: {
                 Text("Continue")
                     .font(.headline)
@@ -63,6 +63,6 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(isOnboardingShowing: .constant(true))
+    OnboardingView(isShowingOnboarding: .constant(true))
 }
 

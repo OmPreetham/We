@@ -64,168 +64,183 @@ struct PostView: View {
     @State private var showingMediaViewer: Bool = false
     
     var body: some View {
-        ScrollView {
-            VStack {
-                if let parent = parentPost {
-                    PostCell(post: parent, hasParentPost: true)
-                        .padding(.bottom, 8)
-                }
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top) {
-                        CircularProfileImageView(community: community, size: .small)
-
-                        VStack(alignment: .leading) {
-                            Text(community.name)
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-
-                            HStack(spacing: 4) {
-                                Text(user.username)
-                                Text("·")
-                                Text(post.timestamp.formatted(date: .abbreviated, time: .standard))
-                            }
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                        }
-                        
-                        Spacer()
-                                                    
-                        Button {
-                            onEllipsisPressed?()
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .foregroundStyle(.foreground)
-                        }
+        ZStack {
+            ScrollView {
+                VStack {
+                    if let parent = parentPost {
+                        PostCell(post: parent, hasParentPost: true)
+                            .padding(.bottom, 8)
                     }
-                    .padding(.trailing, 4)
-
-                    Text(post.content)
-                        .font(.subheadline)
-                        .lineLimit(isExpanded ? nil : 4)
-                        .multilineTextAlignment(.leading)
-                        .animation(.easeInOut, value: isExpanded)
                     
-                    ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
-                    
-                    HStack(spacing: 20) {
-                        Button {
-                            onUpvotePressed?()
-                        } label: {
-                            Label("\(post.upvotes)", systemImage: "arrowshape.up")
-                        }
-                        
-                        Button {
-                            onDownvotePressed?()
-                        } label: {
-                            Label("\(post.downvotes)", systemImage: "arrowshape.down")
-                        }
-                        
-                        Button {
-                            onReplyPressed?()
-                        } label: {
-                            Label("\(replies.count)", systemImage: "bubble.right")
-                        }
-                                                
-                        Spacer()
-                        
-                        Button {
-                            onBookmarkPressed?()
-                        } label: {
-                            Image(systemName: "bookmark")
-                        }
-                        
-                        if post.content.count > 250 {
-                            Button {
-                                withAnimation {
-                                    isExpanded.toggle()
-                                }
-                            } label: {
-                                Text(isExpanded ? "Show Less" : "Show More")
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(alignment: .top) {
+                            CircularProfileImageView(community: community, size: .small)
+                            
+                            VStack(alignment: .leading) {
+                                Text(community.name)
                                     .font(.subheadline)
-                                    .foregroundStyle(.blue)
+                                    .fontWeight(.semibold)
+                                
+                                HStack(spacing: 4) {
+                                    Text(user.username)
+                                    Text("·")
+                                    Text(post.timestamp.formatted(date: .abbreviated, time: .standard))
+                                }
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
                             }
-                        }
-                    }
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 12)
-                
-                if !replies.isEmpty {
-                    VStack {
-                        Divider()
-                            .foregroundStyle(.tertiary)
-                        
-                        HStack {
-                            Text("Replies")
-                                .font(.headline)
-                                .fontWeight(.semibold)
                             
                             Spacer()
                             
-                            Menu {
-                                Picker("Sort by", selection: $sortOption) {
-                                    Text("New to Old").tag(SortOption.newToOld)
-                                    Text("Old to New").tag(SortOption.oldToNew)
-                                    Text("Most Liked").tag(SortOption.mostLiked)
-                                    Text("Most Upvotes").tag(SortOption.mostUpvotes)
-                                    Text("Most Downvotes").tag(SortOption.mostDownvotes)
-                                }
+                            Button {
+                                onEllipsisPressed?()
                             } label: {
-                                Label("Sort By", systemImage: "line.3.horizontal.decrease.circle")
-                                    .font(.callout)
+                                Image(systemName: "ellipsis")
                                     .foregroundStyle(.foreground)
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal)
+                        .padding(.trailing, 4)
                         
-                        Divider()
-                            .foregroundStyle(.tertiary)
-                    }
-                    
-                    LazyVStack {
-                        ForEach(sortedReplies) { reply in
-                            NavigationLink(value: reply.id) {
-                                PostCell(post: reply)
+                        Text(post.content)
+                            .font(.subheadline)
+                            .lineLimit(isExpanded ? nil : 4)
+                            .multilineTextAlignment(.leading)
+                            .animation(.easeInOut, value: isExpanded)
+                        
+                        ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
+                        
+                        HStack(spacing: 20) {
+                            Button {
+                                onUpvotePressed?()
+                            } label: {
+                                Label("\(post.upvotes)", systemImage: "arrowshape.up")
                             }
-                            .foregroundStyle(.primary)
+                            
+                            Button {
+                                onDownvotePressed?()
+                            } label: {
+                                Label("\(post.downvotes)", systemImage: "arrowshape.down")
+                            }
+                            
+                            Button {
+                                onReplyPressed?()
+                            } label: {
+                                Label("\(replies.count)", systemImage: "bubble.right")
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                onBookmarkPressed?()
+                            } label: {
+                                Image(systemName: "bookmark")
+                            }
+                            
+                            if post.content.count > 250 {
+                                Button {
+                                    withAnimation {
+                                        isExpanded.toggle()
+                                    }
+                                } label: {
+                                    Text(isExpanded ? "Show Less" : "Show More")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.blue)
+                                }
+                            }
+                        }
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 12)
+                    
+                    if !replies.isEmpty {
+                        VStack {
+                            Divider()
+                                .foregroundStyle(.tertiary)
+                            
+                            HStack {
+                                Text("Replies")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                
+                                Spacer()
+                                
+                                Menu {
+                                    Picker("Sort by", selection: $sortOption) {
+                                        Text("New to Old").tag(SortOption.newToOld)
+                                        Text("Old to New").tag(SortOption.oldToNew)
+                                        Text("Most Liked").tag(SortOption.mostLiked)
+                                        Text("Most Upvotes").tag(SortOption.mostUpvotes)
+                                        Text("Most Downvotes").tag(SortOption.mostDownvotes)
+                                    }
+                                } label: {
+                                    Label("Sort By", systemImage: "line.3.horizontal.decrease.circle")
+                                        .font(.callout)
+                                        .foregroundStyle(.foreground)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal)
+                            
+                            Divider()
+                                .foregroundStyle(.tertiary)
+                        }
+                        
+                        LazyVStack {
+                            ForEach(sortedReplies) { reply in
+                                NavigationLink(value: reply.id) {
+                                    PostCell(post: reply)
+                                }
+                                .foregroundStyle(.primary)
+                            }
                         }
                     }
                 }
             }
-        }
-        .navigationTitle("Post")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(for: String.self) { postID in
-            if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
-                PostView(post: selectedPost)
-            } else {
-                ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+            .navigationTitle("Post")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: String.self) { postID in
+                if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
+                    PostView(post: selectedPost)
+                } else {
+                    ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+                }
             }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            .toolbar {                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        
+                    } label: {
+                        ShareLink("", item: "")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingCreate) {
+                CreateView()
+                    .presentationDetents([.medium, .large])
+            }
+            
+            VStack {
+                Spacer()
                 Button {
                     showingCreate.toggle()
                 } label: {
-                    Label("New Post", systemImage: "plus")
+                    HStack {
+                        Image(systemName: "bubble.right")
+                        Text("Add a reply...")
+                            .fontWeight(.bold)
+                    }
+                    .font(.subheadline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(.ultraThinMaterial)
+                    .foregroundColor(.primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .shadow(radius: 10)
                 }
-            }            
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    
-                } label: {
-                    ShareLink("", item: "")
-                }
+                .padding()
             }
-        }
-        .sheet(isPresented: $showingCreate) {
-            CreateView()
-                .presentationDetents([.medium, .large])
         }
     }
 }
