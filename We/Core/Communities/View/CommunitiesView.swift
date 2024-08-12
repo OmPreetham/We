@@ -54,8 +54,9 @@ struct CommunitiesView: View {
                         Button {
                             showingCreateCommunities.toggle()
                         } label: {
-                            Label("New Community", systemImage: "plus.circle.fill")
+                            Label("New Community", systemImage: "plus")
                         }
+                        
                     }
                 }
                 .sheet(isPresented: $showingCreateCommunities) {

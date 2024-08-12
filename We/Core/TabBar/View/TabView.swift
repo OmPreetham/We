@@ -30,11 +30,12 @@ struct TabBar: View {
             
             ActivityView()
                 .tabItem {
-                    Label("Activity", systemImage: selectedTab == 2 ? "bell.badge.fill" : "bell.badge")
+                    Label("Activity", systemImage: selectedTab == 2 ? "bell.fill" : "bell")
                         .environment(\.symbolVariants, selectedTab == 2 ? .fill : .none)
                 }
                 .onAppear { selectedTab = 2 }
                 .tag(2)
+                .badge(10)
             
             ExploreView()
                 .tabItem {

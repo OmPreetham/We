@@ -42,7 +42,7 @@ struct HomeView: View {
                             Image(systemName: "arrow.down")
                         }
                         .fontWeight(.bold)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.foreground.opacity(0.4))
                     }
                 }
                 
@@ -53,6 +53,7 @@ struct HomeView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
+                .foregroundStyle(.primary)
                 .font(.title)
 
             }

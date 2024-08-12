@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CommunityView: View {
+    @State private var showingCreate: Bool = false
+    
     var community: Community
     
     var communityPosts: [Post] {
@@ -39,6 +41,18 @@ struct CommunityView: View {
             }
         }
         .navigationTitle(community.name)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingCreate.toggle()
+                } label: {
+                    Label("New Post", systemImage: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $showingCreate) {
+            CreateView()
+        }
     }
 }
 
