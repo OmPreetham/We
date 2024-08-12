@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExploreView: View {
-    @State private var showingProfile: Bool = false
+    @State private var showingAuthentication: Bool = false
 
     @State private var searchText: String = ""
     
@@ -24,13 +24,13 @@ struct ExploreView: View {
                     Image(systemName: "person.circle.fill")
                         .font(.title2)
                         .onTapGesture {
-                            showingProfile.toggle()
+                            showingAuthentication.toggle()
                         }
                 }
             }
         }
-        .sheet(isPresented: $showingProfile) {
-            ProfileView()
+        .sheet(isPresented: $showingAuthentication) {
+            AuthenticationView()
         }
     }
 }

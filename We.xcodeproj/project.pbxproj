@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		0E1646772C635A7B00811FAC /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1646762C635A7B00811FAC /* PostCell.swift */; };
-		0E16468C2C63650300811FAC /* ThankYouCardRotationEffectModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E16468B2C63650300811FAC /* ThankYouCardRotationEffectModifier.swift */; };
 		0E16468E2C63688600811FAC /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E16468D2C63688600811FAC /* PostView.swift */; };
 		0E18CC732C65804900D358D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E18CC722C65804900D358D0 /* Post.swift */; };
 		0E37C8582C683645003787BD /* CreateCommunity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8572C683645003787BD /* CreateCommunity.swift */; };
 		0E37C85A2C684328003787BD /* CommunitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8592C684328003787BD /* CommunitiesView.swift */; };
 		0E8315DB2C66A64B00066274 /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8315DA2C66A64B00066274 /* Community.swift */; };
+		0EBACDA72C69874B00055CC6 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */; };
 		0EC20D5E2C6344000063503B /* WeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20D5D2C6344000063503B /* WeApp.swift */; };
 		0EC20D602C6344000063503B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20D5F2C6344000063503B /* ContentView.swift */; };
 		0EC20D622C6344010063503B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EC20D612C6344010063503B /* Assets.xcassets */; };
@@ -41,12 +41,12 @@
 
 /* Begin PBXFileReference section */
 		0E1646762C635A7B00811FAC /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
-		0E16468B2C63650300811FAC /* ThankYouCardRotationEffectModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouCardRotationEffectModifier.swift; sourceTree = "<group>"; };
 		0E16468D2C63688600811FAC /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
 		0E18CC722C65804900D358D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		0E37C8572C683645003787BD /* CreateCommunity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCommunity.swift; sourceTree = "<group>"; };
 		0E37C8592C684328003787BD /* CommunitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitiesView.swift; sourceTree = "<group>"; };
 		0E8315DA2C66A64B00066274 /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
+		0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		0EC20D5A2C6344000063503B /* We.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = We.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EC20D5D2C6344000063503B /* WeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeApp.swift; sourceTree = "<group>"; };
 		0EC20D5F2C6344000063503B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,7 +142,6 @@
 		0E16468A2C6364F400811FAC /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
-				0E16468B2C63650300811FAC /* ThankYouCardRotationEffectModifier.swift */,
 			);
 			path = ViewModifiers;
 			sourceTree = "<group>";
@@ -166,8 +165,8 @@
 		0E8367182C65EC8700D6E4A1 /* Communities */ = {
 			isa = PBXGroup;
 			children = (
-				0E37C8552C683635003787BD /* CreateCommunity */,
 				0EC6FB6C2C6816BE00A6513B /* Community */,
+				0E37C8552C683635003787BD /* CreateCommunity */,
 				0E83671B2C65ECA500D6E4A1 /* View */,
 				0E8367192C65EC9700D6E4A1 /* ViewModel */,
 			);
@@ -185,6 +184,21 @@
 			isa = PBXGroup;
 			children = (
 				0E37C8592C684328003787BD /* CommunitiesView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EBACDA42C69873000055CC6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0EBACDA52C69873A00055CC6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -233,17 +247,17 @@
 		0EC20D6C2C6344C90063503B /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				0E8367182C65EC8700D6E4A1 /* Communities */,
 				0EC20D752C6345480063503B /* Activity */,
 				0EC20D762C63454D0063503B /* Authentication */,
+				0E8367182C65EC8700D6E4A1 /* Communities */,
 				0EC20DA42C6354490063503B /* Create */,
+				0EC20D742C6345010063503B /* Explore */,
 				0EC20D722C6344F40063503B /* Home */,
 				0EC20D702C6344E20063503B /* LaunchScreen */,
 				0EC20D712C6344E80063503B /* Onboarding */,
 				0E1646782C635A9100811FAC /* Post */,
 				0EC20D6E2C6344D60063503B /* Profile */,
 				0EC20D6F2C6344DD0063503B /* Root */,
-				0EC20D742C6345010063503B /* Explore */,
 				0EC20D962C63475D0063503B /* TabBar */,
 			);
 			path = Core;
@@ -312,6 +326,8 @@
 			children = (
 				0EC20D772C63455E0063503B /* Login */,
 				0EC20D782C6345610063503B /* Registration */,
+				0EBACDA52C69873A00055CC6 /* View */,
+				0EBACDA42C69873000055CC6 /* ViewModel */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -475,9 +491,9 @@
 		0EC20DB02C6355580063503B /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				0EC20DB12C6355730063503B /* User.swift */,
 				0E8315DA2C66A64B00066274 /* Community.swift */,
 				0E18CC722C65804900D358D0 /* Post.swift */,
+				0EC20DB12C6355730063503B /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -584,6 +600,7 @@
 				0EC6FB6F2C6816CE00A6513B /* CommunityView.swift in Sources */,
 				0E16468E2C63688600811FAC /* PostView.swift in Sources */,
 				0EC20DA02C634D260063503B /* OnboardingModel.swift in Sources */,
+				0EBACDA72C69874B00055CC6 /* AuthenticationView.swift in Sources */,
 				0EC20DA32C6353D20063503B /* ContainerView.swift in Sources */,
 				0EC20D932C63472D0063503B /* LaunchScreenView.swift in Sources */,
 				0EC20D9E2C634D170063503B /* OnboardingViewModel.swift in Sources */,
@@ -599,7 +616,6 @@
 				0E37C8582C683645003787BD /* CreateCommunity.swift in Sources */,
 				0EC20D8E2C6346DF0063503B /* RegistrationView.swift in Sources */,
 				0EC20D992C63476E0063503B /* TabView.swift in Sources */,
-				0E16468C2C63650300811FAC /* ThankYouCardRotationEffectModifier.swift in Sources */,
 				0EC20D952C6347390063503B /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

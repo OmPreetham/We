@@ -15,6 +15,8 @@ struct ContentView: View {
         ZStack {
             if true {
                 TabBar()
+            } else {
+                AuthenticationView()
             }
         }
         .sheet(isPresented: $showingOnboarding) {
