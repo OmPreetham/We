@@ -10,7 +10,6 @@ import SwiftUI
 enum SortOption {
     case newToOld
     case oldToNew
-    case mostLiked
     case mostUpvotes
     case mostDownvotes
 }
@@ -50,8 +49,6 @@ struct PostView: View {
             return replies.sorted { $0.timestamp > $1.timestamp }
         case .oldToNew:
             return replies.sorted { $0.timestamp < $1.timestamp }
-        case .mostLiked:
-            return replies.sorted { ($0.upvotes - $0.downvotes) > ($1.upvotes - $1.downvotes) }
         case .mostUpvotes:
             return replies.sorted { $0.upvotes > $1.upvotes }
         case .mostDownvotes:
@@ -167,11 +164,10 @@ struct PostView: View {
                                 
                                 Menu {
                                     Picker("Sort by", selection: $sortOption) {
-                                        Text("New to Old").tag(SortOption.newToOld)
-                                        Text("Old to New").tag(SortOption.oldToNew)
-                                        Text("Most Liked").tag(SortOption.mostLiked)
-                                        Text("Most Upvotes").tag(SortOption.mostUpvotes)
-                                        Text("Most Downvotes").tag(SortOption.mostDownvotes)
+                                        Label("Newest First", systemImage: "arrow.up").tag(SortOption.newToOld)
+                                        Label("Oldest First", systemImage: "arrow.down").tag(SortOption.oldToNew)
+                                        Label("Top Upvotes", systemImage: "hand.thumbsup.fill").tag(SortOption.mostUpvotes)
+                                        Label("Top Downvotes", systemImage: "hand.thumbsdown.fill").tag(SortOption.mostDownvotes)
                                     }
                                 } label: {
                                     Label("Sort By", systemImage: "line.3.horizontal.decrease.circle")
@@ -204,7 +200,11 @@ struct PostView: View {
                 if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
                     PostView(post: selectedPost)
                 } else {
-                    ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+                    if #available(iOS 17.0, *) {
+                        ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+                    } else {
+                        Text("Post Unavailable")
+                    }
                 }
             }
             .toolbar {                

@@ -10,7 +10,7 @@ import Combine
 
 class LaunchScreenViewModel: ObservableObject {
     @Published var screenOpacity: Double = 1.0
-    @Published var scale: CGSize = CGSize(width: 0, height: 0)
+    @Published var scale: CGSize = CGSize(width: 0.4, height: 0.4)
     @Published var rotation: Double = 0
     @Published var offset: Double = 0
     

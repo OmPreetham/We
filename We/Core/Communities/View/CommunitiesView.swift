@@ -64,7 +64,11 @@ struct CommunitiesView: View {
                         .presentationDetents([.medium, .large])
                 }
             } else {
-                ContentUnavailableView("No Communities", systemImage: "people.3.fill", description: Text("There are no communities available."))
+                if #available(iOS 17.0, *) {
+                    ContentUnavailableView("No Communities", systemImage: "people.3.fill", description: Text("There are no communities available."))
+                } else {
+                    Text("There are no communities available.")
+                }
             }
         }
     }

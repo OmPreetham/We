@@ -23,7 +23,7 @@ struct PostCell: View {
         Post.mockPosts.filter { $0.parentPostID == post.id }
     }
     
-    var hasActions: Bool?
+    var hasActions: Bool = true
     
     var onUpvotePressed: (() -> Void)?
     var onDownvotePressed: (() -> Void)?
@@ -86,7 +86,7 @@ struct PostCell: View {
                             
                             ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
                             
-                            if hasActions == true {
+                            if hasActions {
                                 HStack(spacing: 20) {
                                     Button {
                                         onUpvotePressed?()

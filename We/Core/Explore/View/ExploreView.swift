@@ -9,27 +9,40 @@ import SwiftUI
 
 struct ExploreView: View {
     @State private var showingAuthentication: Bool = false
+    @State private var showingAppIcon: Bool = false
     @State private var searchText: String = ""
     
     var body: some View {
         NavigationStack {
             ZStack {
-                ContentUnavailableView.search(text: searchText)
+                if #available(iOS 17.0, *) {
+                    ContentUnavailableView.search(text: searchText)
+                } else {
+                    Text("No Results for \(searchText)")
+                }
             }
             .navigationTitle("Explore")
             .searchable(text: $searchText)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Image(systemName: "person.circle.fill")
-                        .font(.title2)
                         .onTapGesture {
                             showingAuthentication.toggle()
                         }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    Image(systemName: "square.stack.3d.up.badge.a")
+                        .onTapGesture {
+                            showingAppIcon.toggle()
+                        }
+                }
             }
         }
-        .fullScreenCover(isPresented: $showingAuthentication) {
+        .sheet(isPresented: $showingAuthentication) {
             AuthenticationView()
+        }
+        .sheet(isPresented: $showingAppIcon) {
+            AppIconView()
         }
     }
 }

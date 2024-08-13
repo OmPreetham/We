@@ -41,6 +41,8 @@
 		0EC6FB6F2C6816CE00A6513B /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6FB6E2C6816CE00A6513B /* CommunityView.swift */; };
 		0EC9F57A2C67562100A6321C /* FullScreenMediaViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */; };
 		0EC9F57C2C675A2F00A6321C /* ScrollMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */; };
+		0EFF6E4C2C6BFA310054A4DA /* AppIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF6E4B2C6BFA310054A4DA /* AppIconView.swift */; };
+		0EFF6E502C6C06830054A4DA /* AppIconViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF6E4F2C6C06830054A4DA /* AppIconViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +81,8 @@
 		0EC6FB6E2C6816CE00A6513B /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenMediaViewer.swift; sourceTree = "<group>"; };
 		0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollMediaView.swift; sourceTree = "<group>"; };
+		0EFF6E4B2C6BFA310054A4DA /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
+		0EFF6E4F2C6C06830054A4DA /* AppIconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +277,7 @@
 		0EC20D6C2C6344C90063503B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0EFF6E482C6BFA020054A4DA /* AppIcon */,
 				0EC20D752C6345480063503B /* Activity */,
 				0EC20D762C63454D0063503B /* Authentication */,
 				0E8367182C65EC8700D6E4A1 /* Communities */,
@@ -307,8 +312,8 @@
 		0EC20D702C6344E20063503B /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
-				0E17FA4F2C6B5CF80078318E /* ViewModel */,
 				0EC20D802C63467A0063503B /* View */,
+				0E17FA4F2C6B5CF80078318E /* ViewModel */,
 			);
 			path = LaunchScreen;
 			sourceTree = "<group>";
@@ -497,13 +502,13 @@
 		0EC20DAA2C63549C0063503B /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0EC20DAB2C6354CA0063503B /* CircularProfileImageView.swift */,
-				0E1646762C635A7B00811FAC /* PostCell.swift */,
-				0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */,
-				0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */,
-				0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */,
 				0E17FA522C6B60280078318E /* AppLogoView.swift */,
 				0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */,
+				0EC20DAB2C6354CA0063503B /* CircularProfileImageView.swift */,
+				0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */,
+				0E1646762C635A7B00811FAC /* PostCell.swift */,
+				0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */,
+				0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -532,6 +537,31 @@
 				0EC6FB6E2C6816CE00A6513B /* CommunityView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		0EFF6E482C6BFA020054A4DA /* AppIcon */ = {
+			isa = PBXGroup;
+			children = (
+				0EFF6E4A2C6BFA120054A4DA /* View */,
+				0EFF6E4E2C6C06740054A4DA /* ViewModel */,
+			);
+			path = AppIcon;
+			sourceTree = "<group>";
+		};
+		0EFF6E4A2C6BFA120054A4DA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EFF6E4B2C6BFA310054A4DA /* AppIconView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EFF6E4E2C6C06740054A4DA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0EFF6E4F2C6C06830054A4DA /* AppIconViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -627,6 +657,7 @@
 				0EC20D9E2C634D170063503B /* OnboardingViewModel.swift in Sources */,
 				0E17FA552C6B61010078318E /* AuthenticationHeaderCell.swift in Sources */,
 				0E17FA512C6B5D080078318E /* LaunchScreenViewModel.swift in Sources */,
+				0EFF6E4C2C6BFA310054A4DA /* AppIconView.swift in Sources */,
 				0EC9F57A2C67562100A6321C /* FullScreenMediaViewer.swift in Sources */,
 				0EC20D912C6347090063503B /* ActivityView.swift in Sources */,
 				0EC20D872C63469D0063503B /* ExploreView.swift in Sources */,
@@ -638,6 +669,7 @@
 				0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */,
 				0E18CC732C65804900D358D0 /* Post.swift in Sources */,
 				0E37C8582C683645003787BD /* CreateCommunity.swift in Sources */,
+				0EFF6E502C6C06830054A4DA /* AppIconViewModel.swift in Sources */,
 				0EC20D8E2C6346DF0063503B /* RegistrationView.swift in Sources */,
 				0EC20D992C63476E0063503B /* TabView.swift in Sources */,
 				0EC20D952C6347390063503B /* OnboardingView.swift in Sources */,
@@ -764,8 +796,10 @@
 		0EC20D6A2C6344010063503B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Pillars of Trust Dark";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Pillars of Trust Light";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = We/We.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -774,6 +808,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = We;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Please authenticate yourself to unlock We";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -785,15 +821,17 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5s;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ompreetham.We;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -803,8 +841,10 @@
 		0EC20D6B2C6344010063503B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Pillars of Trust Dark";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Pillars of Trust Light";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = We/We.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -813,6 +853,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = We;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Please authenticate yourself to unlock We";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -824,15 +866,17 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5s;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ompreetham.We;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

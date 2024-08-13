@@ -11,7 +11,11 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                ContentUnavailableView("No Profile", systemImage: "person.slash.fill", description: Text("There is no profile information available."))
+                if #available(iOS 17.0, *) {
+                    ContentUnavailableView("No Profile", systemImage: "person.slash.fill", description: Text("There is no profile information available."))
+                } else {
+                    Text("There is no profile information available.")
+                }
             }
             .navigationTitle("Profile")
             .toolbar {

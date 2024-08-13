@@ -33,11 +33,19 @@ struct CommunityView: View {
                     if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
                         PostView(post: selectedPost)
                     } else {
-                        ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+                        if #available(iOS 17.0, *) {
+                            ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
+                        } else {
+                            // Fallback on earlier versions
+                        }
                     }
                 }
             } else {
-                ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(community.name) Community."))
+                if #available(iOS 17.0, *) {
+                    ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(community.name) Community."))
+                } else {
+                    Text("There are no posts available for \(community.name) Community.")
+                }
             }
         }
         .navigationTitle(community.name)
