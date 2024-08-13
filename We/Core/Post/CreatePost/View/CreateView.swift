@@ -7,18 +7,34 @@
 
 import SwiftUI
 
-struct CreateView: View {
+struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var caption = ""
-    @State private var selectedCommunity: Community = Community.mockCommunities[0]
+    @State private var selectedCommunity: Community
     
-    var communities: [Community]? = Community.mockCommunities
-    var user: User? = User.mockUsers[0]
+    var replyPost: Post?
+    var communityID: String?
+    
+    var communities: [Community] = Community.mockCommunities
+    var user: User = User.mockUsers[0]
+    
+    init(replyPost: Post? = nil, communityID: String? = nil) {
+        self.replyPost = replyPost
+        self.communityID = communityID
+        _selectedCommunity = State(initialValue: Community.mockCommunities.first { $0.id == communityID } ?? Community.mockCommunities[0])
+    }
     
     var body: some View {
         NavigationStack {
             ScrollView {
+                VStack {
+                    if let post = replyPost {
+                        PostCell(post: post, hasParentPost: true, hasActions: false)
+                            .disabled(true)
+                    }
+                }
+                
                 VStack {
                     HStack(alignment: .top, spacing: 0) {
                         CircularProfileImageView(community: selectedCommunity, size: .medium)
@@ -27,20 +43,20 @@ struct CreateView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack(spacing: 2) {
                                 Picker("Select Community", selection: $selectedCommunity) {
-                                    ForEach(communities ?? [], id: \.id) { community in
+                                    ForEach(communities, id: \.id) { community in
                                         Text(community.name.capitalized)
                                             .tag(community)
                                     }
                                 }
                                 .pickerStyle(.menu)
                                 
-                                Text(user?.username ?? "UserName")
+                                Text(user.username)
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                                 
                                 Spacer()
                                 
-                                if !caption .isEmpty {
+                                if !caption.isEmpty {
                                     Button {
                                         caption = ""
                                     } label: {
@@ -54,14 +70,13 @@ struct CreateView: View {
                             
                             TextField("Start writing", text: $caption, axis: .vertical)
                                 .padding(.leading, 12)
+                                .multilineTextAlignment(.leading)
                         }
                         .font(.subheadline)
                     }
-                    
-                    Spacer()
                 }
-                .padding()
-                .navigationTitle("New Post")
+                .padding(.horizontal)
+                .navigationTitle((replyPost != nil) ? "Reply Post" : "New Post")
                 .navigationBarTitleDisplayMode(.inline)
                 .interactiveDismissDisabled()
                 .toolbar {
@@ -73,7 +88,8 @@ struct CreateView: View {
                     }
                     
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Post") {
+                        Button((replyPost != nil) ? "Add Reply" : "Post") {
+                            // Add your post logic here
                             dismiss()
                         }
                         .opacity(caption.isEmpty ? 0.5 : 1)
@@ -88,6 +104,5 @@ struct CreateView: View {
 }
 
 #Preview {
-    CreateView()
+    CreatePostView()
 }
-

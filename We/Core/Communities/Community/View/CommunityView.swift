@@ -51,7 +51,7 @@ struct CommunityView: View {
             }
         }
         .sheet(isPresented: $showingCreate) {
-            CreateView()
+            CreatePostView(communityID: community.id)
         }
     }
 }

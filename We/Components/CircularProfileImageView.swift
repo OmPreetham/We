@@ -5,7 +5,6 @@
 //  Created by Om Preetham Bandi on 8/7/24.
 //
 
-import Kingfisher
 import SwiftUI
 
 struct CircularProfileImageView: View {

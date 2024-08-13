@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		0E1646772C635A7B00811FAC /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1646762C635A7B00811FAC /* PostCell.swift */; };
 		0E16468E2C63688600811FAC /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E16468D2C63688600811FAC /* PostView.swift */; };
+		0E17FA512C6B5D080078318E /* LaunchScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA502C6B5D080078318E /* LaunchScreenViewModel.swift */; };
+		0E17FA532C6B60280078318E /* AppLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA522C6B60280078318E /* AppLogoView.swift */; };
+		0E17FA552C6B61010078318E /* AuthenticationHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */; };
 		0E18CC732C65804900D358D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E18CC722C65804900D358D0 /* Post.swift */; };
 		0E37C8582C683645003787BD /* CreateCommunity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8572C683645003787BD /* CreateCommunity.swift */; };
 		0E37C85A2C684328003787BD /* CommunitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8592C684328003787BD /* CommunitiesView.swift */; };
+		0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */; };
 		0E8315DB2C66A64B00066274 /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8315DA2C66A64B00066274 /* Community.swift */; };
 		0EBACDA72C69874B00055CC6 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */; };
 		0EC20D5E2C6344000063503B /* WeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20D5D2C6344000063503B /* WeApp.swift */; };
@@ -42,9 +46,13 @@
 /* Begin PBXFileReference section */
 		0E1646762C635A7B00811FAC /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		0E16468D2C63688600811FAC /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
+		0E17FA502C6B5D080078318E /* LaunchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewModel.swift; sourceTree = "<group>"; };
+		0E17FA522C6B60280078318E /* AppLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogoView.swift; sourceTree = "<group>"; };
+		0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHeaderCell.swift; sourceTree = "<group>"; };
 		0E18CC722C65804900D358D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		0E37C8572C683645003787BD /* CreateCommunity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCommunity.swift; sourceTree = "<group>"; };
 		0E37C8592C684328003787BD /* CommunitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitiesView.swift; sourceTree = "<group>"; };
+		0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerButton.swift; sourceTree = "<group>"; };
 		0E8315DA2C66A64B00066274 /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
 		0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		0EC20D5A2C6344000063503B /* We.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = We.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +126,7 @@
 		0E1646782C635A9100811FAC /* Post */ = {
 			isa = PBXGroup;
 			children = (
+				0E4F7FAE2C6B52CB00ECE8E3 /* CreatePost */,
 				0E16467B2C635AAA00811FAC /* View */,
 				0E1646792C635A9F00811FAC /* ViewModel */,
 			);
@@ -146,6 +155,14 @@
 			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
+		0E17FA4F2C6B5CF80078318E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0E17FA502C6B5D080078318E /* LaunchScreenViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		0E37C8552C683635003787BD /* CreateCommunity */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +177,15 @@
 				0E37C8572C683645003787BD /* CreateCommunity.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		0E4F7FAE2C6B52CB00ECE8E3 /* CreatePost */ = {
+			isa = PBXGroup;
+			children = (
+				0EC20DA72C6354620063503B /* View */,
+				0EC20DA52C6354530063503B /* ViewModel */,
+			);
+			path = CreatePost;
 			sourceTree = "<group>";
 		};
 		0E8367182C65EC8700D6E4A1 /* Communities */ = {
@@ -250,7 +276,6 @@
 				0EC20D752C6345480063503B /* Activity */,
 				0EC20D762C63454D0063503B /* Authentication */,
 				0E8367182C65EC8700D6E4A1 /* Communities */,
-				0EC20DA42C6354490063503B /* Create */,
 				0EC20D742C6345010063503B /* Explore */,
 				0EC20D722C6344F40063503B /* Home */,
 				0EC20D702C6344E20063503B /* LaunchScreen */,
@@ -282,6 +307,7 @@
 		0EC20D702C6344E20063503B /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
+				0E17FA4F2C6B5CF80078318E /* ViewModel */,
 				0EC20D802C63467A0063503B /* View */,
 			);
 			path = LaunchScreen;
@@ -453,15 +479,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		0EC20DA42C6354490063503B /* Create */ = {
-			isa = PBXGroup;
-			children = (
-				0EC20DA72C6354620063503B /* View */,
-				0EC20DA52C6354530063503B /* ViewModel */,
-			);
-			path = Create;
-			sourceTree = "<group>";
-		};
 		0EC20DA52C6354530063503B /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -484,6 +501,9 @@
 				0E1646762C635A7B00811FAC /* PostCell.swift */,
 				0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */,
 				0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */,
+				0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */,
+				0E17FA522C6B60280078318E /* AppLogoView.swift */,
+				0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -601,9 +621,12 @@
 				0E16468E2C63688600811FAC /* PostView.swift in Sources */,
 				0EC20DA02C634D260063503B /* OnboardingModel.swift in Sources */,
 				0EBACDA72C69874B00055CC6 /* AuthenticationView.swift in Sources */,
+				0E17FA532C6B60280078318E /* AppLogoView.swift in Sources */,
 				0EC20DA32C6353D20063503B /* ContainerView.swift in Sources */,
 				0EC20D932C63472D0063503B /* LaunchScreenView.swift in Sources */,
 				0EC20D9E2C634D170063503B /* OnboardingViewModel.swift in Sources */,
+				0E17FA552C6B61010078318E /* AuthenticationHeaderCell.swift in Sources */,
+				0E17FA512C6B5D080078318E /* LaunchScreenViewModel.swift in Sources */,
 				0EC9F57A2C67562100A6321C /* FullScreenMediaViewer.swift in Sources */,
 				0EC20D912C6347090063503B /* ActivityView.swift in Sources */,
 				0EC20D872C63469D0063503B /* ExploreView.swift in Sources */,
@@ -612,6 +635,7 @@
 				0EC20D5E2C6344000063503B /* WeApp.swift in Sources */,
 				0EC20DAC2C6354CA0063503B /* CircularProfileImageView.swift in Sources */,
 				0EC20DB22C6355730063503B /* User.swift in Sources */,
+				0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */,
 				0E18CC732C65804900D358D0 /* Post.swift in Sources */,
 				0E37C8582C683645003787BD /* CreateCommunity.swift in Sources */,
 				0EC20D8E2C6346DF0063503B /* RegistrationView.swift in Sources */,

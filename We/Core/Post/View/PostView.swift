@@ -217,30 +217,15 @@ struct PostView: View {
                 }
             }
             .sheet(isPresented: $showingCreate) {
-                CreateView()
+                CreatePostView(replyPost: post, communityID: community.id)
                     .presentationDetents([.medium, .large])
             }
             
             VStack {
-                Spacer()
-                Button {
-                    showingCreate.toggle()
-                } label: {
-                    HStack {
-                        Image(systemName: "bubble.right")
-                        Text("Add a reply...")
-                            .fontWeight(.bold)
-                    }
-                    .font(.subheadline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(.ultraThinMaterial)
-                    .foregroundColor(.primary)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .shadow(radius: 10)
-                }
-                .padding()
+                TriggerButton(title: "Add a reply...", systemName: "quote.bubble.fill", trigger: $showingCreate)
+                    .padding(8)
             }
+            .frame(maxHeight: .infinity, alignment: .bottom)
         }
     }
 }

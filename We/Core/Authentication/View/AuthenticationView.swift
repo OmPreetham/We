@@ -15,60 +15,14 @@ struct AuthenticationView: View {
         ZStack {
             ScrollView {
                 VStack(spacing: 90) {
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading) {
-                            Group {
-                                Text("Private,")
-                                Text("Safe,")
-                                Text("Anonymous")
-                            }
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            
-                            Text("Your Campus Discussion Platform")
-                                .foregroundStyle(.secondary)
-                                .fontWeight(.medium)
-                                .multilineTextAlignment(.leading)
-                        }
-                        
-                        Spacer()
-                        
-                        HStack {
-                            ForEach(0..<3) { _ in
-                                Rectangle()
-                                    .frame(width: 8, height: 45)
-                                    .padding(.horizontal, 2)
-                                    .foregroundStyle(.ultraThickMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                                    .overlay {
-                                        RadialGradient(gradient: .init(colors: [.blue.opacity(0.8), .teal.opacity(0.4), .mint.opacity(0.2)]), center: .center, startRadius: 0, endRadius: 1000).ignoresSafeArea()
-                                    }
-                                    .shadow(radius: 2)
-                            }
-                        }
-                        
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    headerSection
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
                     VStack(spacing: 20)  {
                         Group {
-                            Button {
-                                showingLogin.toggle()
-                            } label: {
-                                Label("Login", systemImage: "chevron.compact.right")
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                            }
+                            authenticationButton(title: "Login", image: "chevron.compact.right", action: $showingLogin)
                             
-                            Button {
-                                showingRegistration.toggle()
-                            } label: {
-                                Label("Verify & Sign Up", systemImage: "chevron.compact.up")
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                            }
+                            authenticationButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: $showingRegistration)
                         }
                         .font(.body)
                         .fontWeight(.semibold)
@@ -88,6 +42,40 @@ struct AuthenticationView: View {
         .sheet(isPresented: $showingRegistration) {
             RegistrationView()
         }
+    }
+}
+
+private var headerSection: some View {
+    HStack(alignment: .top) {
+        VStack(alignment: .leading) {
+            Group {
+                Text("Private,")
+                Text("Safe,")
+                Text("Anonymous")
+            }
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            
+            Text("Your Campus Discussion Platform")
+                .foregroundStyle(.secondary)
+                .fontWeight(.medium)
+                .multilineTextAlignment(.leading)
+        }
+        
+        Spacer()
+        
+        AppLogoView()
+    }
+}
+
+private func authenticationButton(title: String, image: String, action: Binding<Bool>) -> some View {
+    Button {
+        action.wrappedValue.toggle()
+    } label: {
+        Label(title, systemImage: image)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color.blue)
     }
 }
 

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ExploreView: View {
     @State private var showingAuthentication: Bool = false
-
     @State private var searchText: String = ""
     
     var body: some View {
@@ -29,7 +28,7 @@ struct ExploreView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingAuthentication) {
+        .fullScreenCover(isPresented: $showingAuthentication) {
             AuthenticationView()
         }
     }

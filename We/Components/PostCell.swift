@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PostCell: View {
+    @State private var showingCreate: Bool = false
+
     var post: Post
     var community: Community {
         Community.mockCommunities.first { $0.id == post.communityID }!
@@ -15,15 +17,16 @@ struct PostCell: View {
     var user: User {
         User.mockUsers.first { $0.id == post.userID }!
     }
-    var hasParentPost: Bool?
     
+    var hasParentPost: Bool?
     var replies: [Post] {
         Post.mockPosts.filter { $0.parentPostID == post.id }
     }
     
+    var hasActions: Bool?
+    
     var onUpvotePressed: (() -> Void)?
     var onDownvotePressed: (() -> Void)?
-    var onReplyPressed: (() -> Void)?
     var onBookmarkPressed: (() -> Void)?
     var onEllipsisPressed: (() -> Void)?
     var onNamePressed: (() -> Void)?
@@ -83,41 +86,43 @@ struct PostCell: View {
                             
                             ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
                             
-                            HStack(spacing: 20) {
-                                Button {
-                                    onUpvotePressed?()
-                                } label: {
-                                    Label("\(post.upvotes)", systemImage: "arrowshape.up")
-                                }
-                                
-                                Button {
-                                    onDownvotePressed?()
-                                } label: {
-                                    Label("\(post.downvotes)", systemImage: "arrowshape.down")
-                                }
-                                
-                                Button {
-                                    onReplyPressed?()
-                                } label: {
-                                    Label("\(replies.count)", systemImage: "bubble.right")
-                                }
-                                
-                                Spacer()
-                                                                
-                                Button {
-                                    onBookmarkPressed?()
-                                } label: {
-                                    Image(systemName: "bookmark")
-                                }
-                                
-                                Button {
+                            if hasActions == true {
+                                HStack(spacing: 20) {
+                                    Button {
+                                        onUpvotePressed?()
+                                    } label: {
+                                        Label("\(post.upvotes)", systemImage: "arrowshape.up")
+                                    }
                                     
-                                } label: {
-                                    ShareLink("", item: "")
+                                    Button {
+                                        onDownvotePressed?()
+                                    } label: {
+                                        Label("\(post.downvotes)", systemImage: "arrowshape.down")
+                                    }
+                                    
+                                    Button {
+                                        showingCreate.toggle()
+                                    } label: {
+                                        Label("\(replies.count)", systemImage: "bubble.right")
+                                    }
+                                    
+                                    Spacer()
+                                                                    
+                                    Button {
+                                        onBookmarkPressed?()
+                                    } label: {
+                                        Image(systemName: "bookmark")
+                                    }
+                                    
+                                    Button {
+                                        
+                                    } label: {
+                                        ShareLink("", item: "")
+                                    }
                                 }
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
                             }
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
                         }
                         .padding(.horizontal, 8)
                         
@@ -132,6 +137,9 @@ struct PostCell: View {
             .padding(.leading, 8)
         }
         .buttonStyle(PlainButtonStyle())
+        .sheet(isPresented: $showingCreate) {
+            CreatePostView(replyPost: post, communityID: community.id)
+        }
     }
 }
 

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var showingCreate: Bool = false
-    
     @State private var selectedMode: String = "Trending"
+    
     let filterOptions = ["Trending", "Recent", "Popular"]
     
     var posts: [Post] = Post.mockPosts
@@ -18,60 +18,11 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            HStack {
-                Group {
-                    Text("We")
-                        .font(.system(size: 44))
-                        .fontWeight(.bold)
-                        .foregroundStyle(.blue)
-                        .fontDesign(.serif)
-                        .shadow(radius: 4)
-                    
-                    Menu {
-                        ForEach(filterOptions, id: \.self) { option in
-                            Button {
-                                selectedMode = option
-                            } label: {
-                                Text(option)
-                            }
-                        }
-                    } label: {
-                        HStack {
-                            Text(selectedMode)
-                            
-                            Image(systemName: "arrow.down")
-                        }
-                        .fontWeight(.bold)
-                        .foregroundStyle(.foreground.opacity(0.4))
-                    }
-                }
-                
-                Spacer()
-            
-                Button {
-                    showingCreate.toggle()
-                } label: {
-                    Image(systemName: "plus")
-                }
-                .foregroundStyle(.primary)
-                .font(.title)
-
-            }
-            .padding(.horizontal)
+            headerSection(title: "We", options: filterOptions, selected: $selectedMode, action: $showingCreate)
             .frame(maxWidth: .infinity, alignment: .leading)
             
             ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(posts, id: \.id) { post in
-                        NavigationLink(value: post) {
-                            PostCell(post: post)
-                        }
-                        .foregroundStyle(.primary)
-                    }
-                }
-            }
-            .navigationDestination(for: Post.self) { post in
-                PostView(post: post)
+                postList(of: posts)
             }
             .navigationTitle("We")
             .toolbar(.hidden, for: .navigationBar)
@@ -79,10 +30,65 @@ struct HomeView: View {
             .refreshable {
                 print("DEBUG: Refresh Posts")
             }
+            .navigationDestination(for: Post.self) { post in
+                PostView(post: post)
+            }
             .sheet(isPresented: $showingCreate) {
-                CreateView()
+                CreatePostView()
                     .presentationDetents([.medium, .large])
             }
+        }
+    }
+}
+
+private func headerSection(title: String, options: [String], selected: Binding<String>, action: Binding<Bool>) -> some View {
+    HStack {
+        Text(title)
+            .font(.system(size: 44))
+            .fontWeight(.bold)
+            .foregroundStyle(.blue)
+            .fontDesign(.serif)
+            .shadow(radius: 4)
+        
+        Menu {
+            ForEach(options, id: \.self) { option in
+                Button {
+                    selected.wrappedValue = option
+                } label: {
+                    Text(option)
+                }
+            }
+        } label: {
+            HStack {
+                Text(selected.wrappedValue)
+                
+                Image(systemName: "arrow.down")
+            }
+            .fontWeight(.bold)
+            .foregroundStyle(.foreground.opacity(0.4))
+        }
+        
+        Spacer()
+    
+        Button {
+            action.wrappedValue.toggle()
+        } label: {
+            Image(systemName: "plus")
+        }
+        .foregroundStyle(.primary)
+        .font(.title2)
+
+    }
+    .padding(.horizontal)
+}
+
+private func postList(of posts: [Post]) -> some View {
+    LazyVStack {
+        ForEach(posts, id: \.id) { post in
+            NavigationLink(value: post) {
+                PostCell(post: post)
+            }
+            .foregroundStyle(.primary)
         }
     }
 }
