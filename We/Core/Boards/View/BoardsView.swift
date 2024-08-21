@@ -5,37 +5,30 @@
 //  Created by Om Preetham Bandi on 8/10/24.
 //
 
-//
-//  CommunitiesView.swift
-//  We
-//
-//  Created by Om Preetham Bandi on 8/10/24.
-//
-
 import SwiftUI
 
-struct CommunitiesView: View {
-    @State private var showingCreateCommunities: Bool = false
+struct BoardsView: View {
+    @State private var showingCreateBoard: Bool = false
     
-    var communities: [Community]? = Community.mockCommunities
+    var boards: [Board]? = Board.mockBoards
     
     var body: some View {
         NavigationStack {
-            if let communities = communities, !communities.isEmpty {
+            if let boards = boards, !boards.isEmpty {
                 List {
-                    ForEach(communities) { community in
-                        NavigationLink(value: community) {
+                    ForEach(boards) { board in
+                        NavigationLink(value: board) {
                             HStack(spacing: 16) {
-                                Image(systemName: community.systemImageName)
+                                Image(systemName: board.systemImageName)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 20, height: 20)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(community.name)
+                                    Text(board.name)
                                         .fontWeight(.semibold)
                                     
-                                    Text(community.content)
+                                    Text(board.content)
                                         .font(.callout)
                                         .foregroundStyle(.secondary)
                                         .multilineTextAlignment(.leading)
@@ -45,29 +38,29 @@ struct CommunitiesView: View {
                         }
                     }
                 }
-                .navigationDestination(for: Community.self, destination: { community in
-                    CommunityView(community: community)
+                .navigationDestination(for: Board.self, destination: { board in
+                    BoardView(board: board)
                 })
-                .navigationTitle("Communities")
+                .navigationTitle("Boards")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            showingCreateCommunities.toggle()
+                            showingCreateBoard.toggle()
                         } label: {
                             Label("New Community", systemImage: "plus")
                         }
                         
                     }
                 }
-                .sheet(isPresented: $showingCreateCommunities) {
-                    CreateCommunity()
+                .sheet(isPresented: $showingCreateBoard) {
+                    CreateBoard()
                         .presentationDetents([.medium, .large])
                 }
             } else {
                 if #available(iOS 17.0, *) {
-                    ContentUnavailableView("No Communities", systemImage: "people.3.fill", description: Text("There are no communities available."))
+                    ContentUnavailableView("No Boards", systemImage: "people.3.fill", description: Text("There are no boards available."))
                 } else {
-                    Text("There are no communities available.")
+                    Text("There are no boards available.")
                 }
             }
         }
@@ -75,5 +68,5 @@ struct CommunitiesView: View {
 }
 
 #Preview {
-    CommunitiesView()
+    BoardsView()
 }

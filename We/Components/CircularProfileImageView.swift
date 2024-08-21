@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CircularProfileImageView: View {
-    var community: Community?
+    var community: Board?
     var size: Size
     
-    init(community: Community? = nil, size: Size) {
+    init(community: Board? = nil, size: Size) {
         self.community = community
         self.size = size
     }

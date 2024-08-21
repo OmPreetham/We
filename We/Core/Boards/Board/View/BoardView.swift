@@ -1,5 +1,5 @@
 //
-//  CommunityView.swift
+//  BoardView.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 8/10/24.
@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-struct CommunityView: View {
+struct BoardView: View {
     @State private var showingCreate: Bool = false
     
-    var community: Community
+    var board: Board
     
-    var communityPosts: [Post] {
-        Post.mockPosts.filter { $0.communityID == community.id }
+    var boardPosts: [Post] {
+        Post.mockPosts.filter { $0.boardId == board.id }
     }
     
     var body: some View {
         ZStack {
-            if !communityPosts.isEmpty {
+            if !boardPosts.isEmpty {
                 ScrollView {
                     LazyVStack {
-                        ForEach(communityPosts) { post in
+                        ForEach(boardPosts) { post in
                             NavigationLink(value: post.id) {
                                 PostCell(post: post)
                             }
@@ -42,13 +42,13 @@ struct CommunityView: View {
                 }
             } else {
                 if #available(iOS 17.0, *) {
-                    ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(community.name) Community."))
+                    ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(board.name) Community."))
                 } else {
-                    Text("There are no posts available for \(community.name) Community.")
+                    Text("There are no posts available for \(board.name) Community.")
                 }
             }
         }
-        .navigationTitle(community.name)
+        .navigationTitle(board.name)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -59,11 +59,11 @@ struct CommunityView: View {
             }
         }
         .sheet(isPresented: $showingCreate) {
-            CreatePostView(communityID: community.id)
+            CreatePostView(communityID: board.id)
         }
     }
 }
 
 #Preview {
-    CommunityView(community: Community.mockCommunities[1])
+    BoardView(board: Board.mockBoards[1])
 }

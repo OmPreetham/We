@@ -11,8 +11,8 @@ struct PostCell: View {
     @State private var showingCreate: Bool = false
 
     var post: Post
-    var community: Community {
-        Community.mockCommunities.first { $0.id == post.communityID }!
+    var community: Board {
+        Board.mockBoards.first { $0.id == post.boardId }!
     }
     var user: User {
         User.mockUsers.first { $0.id == post.userID }!

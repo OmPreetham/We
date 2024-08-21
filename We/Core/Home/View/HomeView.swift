@@ -14,7 +14,7 @@ struct HomeView: View {
     let filterOptions = ["Trending", "Recent", "Popular"]
     
     var posts: [Post] = Post.mockPosts
-    var community: Community? = Community.mockCommunities[0]
+    var community: Board? = Board.mockBoards[0]
 
     var body: some View {
         NavigationStack {

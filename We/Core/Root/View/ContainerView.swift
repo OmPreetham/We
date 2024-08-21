@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContainerView: View {
+    @StateObject private var authenticationViewModel = AuthenticationViewModel()
+    
     @State private var showingLaunchScreen: Bool = true
     
     var body: some View {
@@ -16,7 +18,11 @@ struct ContainerView: View {
                 LaunchScreenView(isPresented: $showingLaunchScreen)
             } else {
                 ContentView()
+                    .environmentObject(authenticationViewModel)
             }
+        }
+        .onAppear {
+            authenticationViewModel.checkLoginStatus()
         }
     }
 }

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ExploreView: View {
+    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
+
     @State private var showingAuthentication: Bool = false
     @State private var showingAppIcon: Bool = false
     @State private var searchText: String = ""
@@ -39,7 +41,8 @@ struct ExploreView: View {
             }
         }
         .sheet(isPresented: $showingAuthentication) {
-            AuthenticationView()
+            ProfileView()
+                .environmentObject(authenticationViewModel)
         }
         .sheet(isPresented: $showingAppIcon) {
             AppIconView()

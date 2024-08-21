@@ -10,8 +10,9 @@ import SwiftUI
 struct LoginView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var login: String = ""
-    @State private var password: String = ""
+    @StateObject private var viewModel = LoginViewModel()
+    @State private var showAlert = false
+    let loginSuccess: () -> Void
     
     var body: some View {
         ZStack {
@@ -25,34 +26,49 @@ struct LoginView: View {
                         
                         VStack(spacing: 20)  {
                             Group {
-                                TextField("Enter university email..", text: $login)
-                                SecureField("Enter password..", text: $password)
+                                TextField("Enter university email..", text: $viewModel.email)
+                                    .keyboardType(.emailAddress)
+                                    .textInputAutocapitalization(.never)
+                                
+                                SecureField("Enter password..", text: $viewModel.password)
                             }
+                            .autocorrectionDisabled()
                             .padding()
                             .background(.ultraThickMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(radius: 2)
+                            .disabled(viewModel.isLoading)
                             
                             Button {
-                                // Action for the button goes here
+                                viewModel.login(onSuccess: loginSuccess, onFailure: {
+                                    showAlert.toggle()
+                                })
                             } label: {
-                                Label("Login", systemImage: "chevron.compact.right")
-                                    .font(.body)
-                                    .foregroundStyle(.background)
-                                    .padding()
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue)
-                                    .cornerRadius(8)
-                                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                                Group {
+                                    if viewModel.isLoading {
+                                        ProgressView()
+                                    } else {
+                                        Label("Login", systemImage: "chevron.compact.right")
+                                    }
+                                }
+                                .font(.body)
+                                .foregroundStyle(.background)
+                                .padding()
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .cornerRadius(8)
+                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                                .opacity(viewModel.isLoading || !viewModel.isFormValid ? 0.6 : 1)
                             }
+                            .disabled(viewModel.isLoading || !viewModel.isFormValid)
                         }
                     }
                     .navigationTitle("Login")
                     .navigationBarTitleDisplayMode(.inline)
                     .padding()
                     .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
+                        ToolbarItem(placement: .automatic) {
                             Button {
                                 dismiss()
                             } label: {
@@ -64,9 +80,12 @@ struct LoginView: View {
                 }
             }
         }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+        }
     }
 }
 
 #Preview {
-    LoginView()
+    LoginView(loginSuccess: {})
 }

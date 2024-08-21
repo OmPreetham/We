@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct AuthenticationView: View {
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+
     @State private var showingLogin: Bool = false
+    @State private var showingVerify: Bool = false
     @State private var showingRegistration: Bool = false
     
     var body: some View {
@@ -22,7 +25,7 @@ struct AuthenticationView: View {
                         Group {
                             authenticationButton(title: "Login", image: "chevron.compact.right", action: $showingLogin)
                             
-                            authenticationButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: $showingRegistration)
+                            authenticationButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: $showingVerify)
                         }
                         .font(.body)
                         .fontWeight(.semibold)
@@ -30,17 +33,15 @@ struct AuthenticationView: View {
                         .cornerRadius(8)
                         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                     }
-                    
-                    Spacer()
                 }
                 .padding()
             }
         }
         .sheet(isPresented: $showingLogin) {
-            LoginView()
+            LoginView(loginSuccess: { viewModel.isLoggedIn = true })
         }
-        .sheet(isPresented: $showingRegistration) {
-            RegistrationView()
+        .sheet(isPresented: $showingVerify) {
+            VerifyView()
         }
     }
 }

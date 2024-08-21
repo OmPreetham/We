@@ -18,14 +18,13 @@ struct AppIconView: View {
                     Image(uiImage: UIImage(named: iconName) ?? UIImage(systemName: "app")!)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 40, height: 40)
+                        .frame(width: 60, height: 60)
                         .cornerRadius(8)
                         .padding(.trailing, 8)
                         .accessibilityLabel(Text(iconName))
-                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
 
                     Text(iconName)
-                        .font(.headline)
                         .accessibilityHint(Text("Select to set as app icon"))
                     
                     Spacer()

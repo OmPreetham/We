@@ -11,18 +11,18 @@ struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var caption = ""
-    @State private var selectedCommunity: Community
+    @State private var selectedCommunity: Board
     
     var replyPost: Post?
     var communityID: String?
     
-    var communities: [Community] = Community.mockCommunities
+    var communities: [Board] = Board.mockBoards
     var user: User = User.mockUsers[0]
     
     init(replyPost: Post? = nil, communityID: String? = nil) {
         self.replyPost = replyPost
         self.communityID = communityID
-        _selectedCommunity = State(initialValue: Community.mockCommunities.first { $0.id == communityID } ?? Community.mockCommunities[0])
+        _selectedCommunity = State(initialValue: Board.mockBoards.first { $0.id == communityID } ?? Board.mockBoards[0])
     }
     
     var body: some View {

@@ -7,22 +7,22 @@
 
 import SwiftUI
 
-struct CreateCommunity: View {
+struct CreateBoard: View {
     @Environment(\.dismiss) var dismiss
 
-    @State private var communityName: String = ""
-    @State private var communityContent: String = ""
+    @State private var boardName: String = ""
+    @State private var boardContent: String = ""
     
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    TextField("Community Name...", text: $communityName)
-                    TextField("Community Description...", text: $communityContent, axis: .vertical)
+                    TextField("Board Name...", text: $boardName)
+                    TextField("Board Description...", text: $boardContent, axis: .vertical)
                 }
                 
             }
-            .navigationTitle("Create Community")
+            .navigationTitle("Create Board")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -38,7 +38,7 @@ struct CreateCommunity: View {
                         
                     } label: {
                         Text("Create")
-                            .disabled(communityName.isEmpty || communityContent.isEmpty)
+                            .disabled(boardName.isEmpty || boardContent.isEmpty)
                             .font(.subheadline)
                             .fontWeight(.semibold)
                     }
@@ -49,5 +49,5 @@ struct CreateCommunity: View {
 }
 
 #Preview {
-    CreateCommunity()
+    CreateBoard()
 }

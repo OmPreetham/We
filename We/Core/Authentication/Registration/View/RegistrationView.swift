@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     
-    @State private var login: String = ""
-    @State private var password: String = ""
-    
+    @StateObject private var viewModel = RegistrationViewModel()
+    @State private var showAlert = false
+    @State private var navigateToComplete = false
+        
     var body: some View {
         ZStack {
             NavigationStack {
@@ -25,13 +26,20 @@ struct RegistrationView: View {
                         
                         VStack(spacing: 20)  {
                             Group {
-                                TextField("Enter university email..", text: $login)
-                                SecureField("Create password..", text: $password)
+                                TextField("Enter username..", text: $viewModel.username)
+                                    .textInputAutocapitalization(.never)
+
+                                SecureField("Create password..", text: $viewModel.password)
+                                
+                                TextField("OTP", text: $viewModel.verificationCode)
+                                    .keyboardType(.numberPad)
                             }
+                            .autocorrectionDisabled()
                             .padding()
                             .background(.ultraThickMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .shadow(radius: 2)
+                            .disabled(viewModel.isLoading)
                             
                             VStack(alignment: .leading) {
                                 Text("There is no option to recover a forgotten password.")
@@ -43,27 +51,41 @@ struct RegistrationView: View {
                             }
                             
                             Button {
-                                // Action for the button goes here
+                                viewModel.completeRegistration(onSuccess: {
+                                    navigateToComplete.toggle()
+                                }, onFailure: { showAlert.toggle() })
                             } label: {
-                                Label("Verify", systemImage: "chevron.compact.up")
-                                    .font(.body)
-                                    .foregroundStyle(.background)
-                                    .padding()
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.orange)
-                                    .cornerRadius(8)
-                                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                                Group {
+                                    if viewModel.isLoading {
+                                        ProgressView()
+                                    } else {
+                                        Label("Register", systemImage: "chevron.compact.up")
+                                    }
+                                }
+                                .font(.body)
+                                .foregroundStyle(.background)
+                                .padding()
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orange)
+                                .opacity(viewModel.isLoading || !viewModel.isFormValid ? 0.6 : 1)
+                                .cornerRadius(8)
+                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                             }
+                            .disabled(viewModel.isLoading || !viewModel.isFormValid)
                         }
                     }
                     .navigationTitle("Register")
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(isPresented: $navigateToComplete, destination: {
+                        CompletedRegistrationView()
+                    })
                     .padding()
                     .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
+                        ToolbarItem(placement: .automatic) {
                             Button {
-                                dismiss()
+                                self.presentationMode.wrappedValue.dismiss()
+                                self.presentationMode.wrappedValue.dismiss()
                             } label: {
                                 Text("Cancel")
                             }
@@ -72,6 +94,9 @@ struct RegistrationView: View {
                     .interactiveDismissDisabled()
                 }
             }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
         }
     }
 }

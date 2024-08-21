@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TabBar: View {
+    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
+    
     @State private var selectedTab = 0
     
     var body: some View {
@@ -20,7 +22,7 @@ struct TabBar: View {
                 .onAppear { selectedTab = 0 }
                 .tag(0)
             
-            CommunitiesView()
+            BoardsView()
                 .tabItem {
                     Label("Communities", systemImage: selectedTab == 1 ? "square.grid.2x2.fill" : "square.grid.2x2")
                         .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
@@ -38,6 +40,7 @@ struct TabBar: View {
                 .badge(10)
             
             ExploreView()
+                .environmentObject(authenticationViewModel)
                 .tabItem {
                     Label("Explore", systemImage: "magnifyingglass")
                 }
