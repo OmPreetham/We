@@ -214,16 +214,8 @@
 				0EC6FB6C2C6816BE00A6513B /* Board */,
 				0E37C8552C683635003787BD /* CreateBoard */,
 				0E83671B2C65ECA500D6E4A1 /* View */,
-				0E8367192C65EC9700D6E4A1 /* ViewModel */,
 			);
 			path = Boards;
-			sourceTree = "<group>";
-		};
-		0E8367192C65EC9700D6E4A1 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		0E83671B2C65ECA500D6E4A1 /* View */ = {

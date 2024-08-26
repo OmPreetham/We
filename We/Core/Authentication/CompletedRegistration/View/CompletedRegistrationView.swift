@@ -33,10 +33,10 @@ struct CompletedRegistrationView: View {
                         Text("Login Now")
                             .font(.body)
                             .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.background)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.blue)
+                            .background(Color.primary)
                             .cornerRadius(8)
                     }
                     .padding()

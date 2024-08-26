@@ -24,7 +24,7 @@ struct TabBar: View {
             
             BoardsView()
                 .tabItem {
-                    Label("Communities", systemImage: selectedTab == 1 ? "square.grid.2x2.fill" : "square.grid.2x2")
+                    Label("Boards", systemImage: selectedTab == 1 ? "square.grid.2x2.fill" : "square.grid.2x2")
                         .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
                 }
                 .onAppear { selectedTab = 1 }

@@ -14,8 +14,16 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             List {
-                NavigationLink(destination: ChangePasswordView()) {
-                    Text("Change Password")
+                Section(header: Text("Account")) {
+                    NavigationLink(destination: ChangePasswordView()) {
+                        Text("Change Password")
+                    }
+                }
+                
+                Section(header: Text("Personalization")) {
+                    NavigationLink(destination: AppIconView()) {
+                        Text("Change App Icon")
+                    }
                 }
             }
             .navigationTitle("Profile")

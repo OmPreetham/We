@@ -56,7 +56,7 @@ struct LoginView: View {
                                 .padding()
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity)
-                                .background(Color.blue)
+                                .background(.primary)
                                 .cornerRadius(8)
                                 .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                                 .opacity(viewModel.isLoading || !viewModel.isFormValid ? 0.6 : 1)

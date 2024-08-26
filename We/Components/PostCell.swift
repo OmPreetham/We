@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PostCell: View {
     @State private var showingCreate: Bool = false
+    @State private var isExpanded: Bool = false
 
     var post: Post
     var community: Board {
@@ -79,26 +80,45 @@ struct PostCell: View {
                             }
                             .padding(.trailing, 4)
                             
-                            Text(post.content)
-                                .font(.subheadline)
-                                .lineLimit(4)
-                                .multilineTextAlignment(.leading)
-                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(post.content)
+                                    .font(.subheadline)
+                                    .lineLimit(isExpanded ? nil : 4)
+                                    .multilineTextAlignment(.leading)
+                                .animation(.easeInOut, value: isExpanded)
+                                
+                                if post.content.count > 250 {
+                                    Button {
+                                        withAnimation {
+                                            isExpanded.toggle()
+                                        }
+                                    } label: {
+                                        Text(isExpanded ? "Show Less" : "Show More")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.blue)
+                                    }
+                                }
+                            }
+
                             ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
                             
                             if hasActions {
-                                HStack(spacing: 20) {
+                                HStack {
                                     Button {
                                         onUpvotePressed?()
                                     } label: {
                                         Label("\(post.upvotes)", systemImage: "arrowshape.up")
                                     }
                                     
+                                    Spacer()
+                                    
                                     Button {
                                         onDownvotePressed?()
                                     } label: {
                                         Label("\(post.downvotes)", systemImage: "arrowshape.down")
                                     }
+                                    
+                                    Spacer()
                                     
                                     Button {
                                         showingCreate.toggle()
@@ -107,21 +127,16 @@ struct PostCell: View {
                                     }
                                     
                                     Spacer()
-                                                                    
+
                                     Button {
                                         onBookmarkPressed?()
                                     } label: {
                                         Image(systemName: "bookmark")
                                     }
-                                    
-                                    Button {
-                                        
-                                    } label: {
-                                        ShareLink("", item: "")
-                                    }
                                 }
                                 .font(.callout)
                                 .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         .padding(.horizontal, 8)

@@ -98,40 +98,12 @@ struct PostView: View {
                         }
                         .padding(.trailing, 4)
                         
-                        Text(post.content)
-                            .font(.subheadline)
-                            .lineLimit(isExpanded ? nil : 4)
-                            .multilineTextAlignment(.leading)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(post.content)
+                                .font(.subheadline)
+                                .lineLimit(isExpanded ? nil : 4)
+                                .multilineTextAlignment(.leading)
                             .animation(.easeInOut, value: isExpanded)
-                        
-                        ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
-                        
-                        HStack(spacing: 20) {
-                            Button {
-                                onUpvotePressed?()
-                            } label: {
-                                Label("\(post.upvotes)", systemImage: "arrowshape.up")
-                            }
-                            
-                            Button {
-                                onDownvotePressed?()
-                            } label: {
-                                Label("\(post.downvotes)", systemImage: "arrowshape.down")
-                            }
-                            
-                            Button {
-                                onReplyPressed?()
-                            } label: {
-                                Label("\(replies.count)", systemImage: "bubble.right")
-                            }
-                            
-                            Spacer()
-                            
-                            Button {
-                                onBookmarkPressed?()
-                            } label: {
-                                Image(systemName: "bookmark")
-                            }
                             
                             if post.content.count > 250 {
                                 Button {
@@ -145,8 +117,44 @@ struct PostView: View {
                                 }
                             }
                         }
+                        
+                        ScrollMediaView(imageNames: imageNames, selectedImage: $selectedImage, showingMediaViewer: $showingMediaViewer)
+                        
+                        HStack {
+                            Button {
+                                onUpvotePressed?()
+                            } label: {
+                                Label("\(post.upvotes)", systemImage: "arrowshape.up")
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                onDownvotePressed?()
+                            } label: {
+                                Label("\(post.downvotes)", systemImage: "arrowshape.down")
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                showingCreate.toggle()
+                            } label: {
+                                Label("\(replies.count)", systemImage: "bubble.right")
+                            }
+                            
+                            Spacer()
+                            
+                            Button {
+                                onBookmarkPressed?()
+                            } label: {
+                                Image(systemName: "bookmark")
+                            }
+                        }
                         .font(.callout)
                         .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                     }
                     .padding(.horizontal, 12)
                     
@@ -191,6 +199,7 @@ struct PostView: View {
                                 .foregroundStyle(.primary)
                             }
                         }
+                        .padding(.bottom, 60)
                     }
                 }
             }
@@ -207,7 +216,7 @@ struct PostView: View {
                     }
                 }
             }
-            .toolbar {                
+            .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         

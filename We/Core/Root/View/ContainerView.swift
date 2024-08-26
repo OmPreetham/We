@@ -24,6 +24,7 @@ struct ContainerView: View {
         .onAppear {
             authenticationViewModel.checkLoginStatus()
         }
+        .tint(.primary)
     }
 }
 

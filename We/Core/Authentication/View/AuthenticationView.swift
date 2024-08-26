@@ -30,6 +30,7 @@ struct AuthenticationView: View {
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(.background)
+                        .background(.foreground)
                         .cornerRadius(8)
                         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                     }
@@ -76,7 +77,6 @@ private func authenticationButton(title: String, image: String, action: Binding<
         Label(title, systemImage: image)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color.blue)
     }
 }
 

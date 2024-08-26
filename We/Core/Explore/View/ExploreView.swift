@@ -11,7 +11,6 @@ struct ExploreView: View {
     @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
 
     @State private var showingAuthentication: Bool = false
-    @State private var showingAppIcon: Bool = false
     @State private var searchText: String = ""
     
     var body: some View {
@@ -26,16 +25,10 @@ struct ExploreView: View {
             .navigationTitle("Explore")
             .searchable(text: $searchText)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Image(systemName: "person.circle.fill")
+                ToolbarItem(placement: .automatic) {
+                    Label("Account", systemImage: "person.circle")
                         .onTapGesture {
                             showingAuthentication.toggle()
-                        }
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    Image(systemName: "square.stack.3d.up.badge.a")
-                        .onTapGesture {
-                            showingAppIcon.toggle()
                         }
                 }
             }
@@ -43,9 +36,6 @@ struct ExploreView: View {
         .sheet(isPresented: $showingAuthentication) {
             ProfileView()
                 .environmentObject(authenticationViewModel)
-        }
-        .sheet(isPresented: $showingAppIcon) {
-            AppIconView()
         }
     }
 }

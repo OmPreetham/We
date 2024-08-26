@@ -17,7 +17,7 @@ struct AppLogoView: View {
                     .foregroundStyle(.ultraThickMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .overlay {
-                        RadialGradient(gradient: .init(colors: [.blue.opacity(0.8), .teal.opacity(0.4), .mint.opacity(0.2)]), center: .center, startRadius: 0, endRadius: 1000).ignoresSafeArea()
+                        Color.primary.ignoresSafeArea()
                     }
                     .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
             }

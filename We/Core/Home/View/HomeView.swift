@@ -15,71 +15,48 @@ struct HomeView: View {
     
     var posts: [Post] = Post.mockPosts
     var community: Board? = Board.mockBoards[0]
-
+    
     var body: some View {
         NavigationStack {
-            headerSection(title: "We", options: filterOptions, selected: $selectedMode, action: $showingCreate)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            
             ScrollView(.vertical) {
                 postList(of: posts)
             }
-            .navigationTitle("We")
-            .toolbar(.hidden, for: .navigationBar)
-            .padding(.top, -24)
-            .refreshable {
-                print("DEBUG: Refresh Posts")
-            }
+            .navigationTitle("Home")
             .navigationDestination(for: Post.self) { post in
                 PostView(post: post)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        ForEach(filterOptions, id: \.self) { option in
+                            Button {
+                                selectedMode = option
+                            } label: {
+                                Text(option)
+                            }
+                        }
+                    } label: {
+                        Label(selectedMode, systemImage: "line.3.horizontal.decrease.circle")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingCreate.toggle()
+                    } label: {
+                        Label("New Post", systemImage: "plus")
+                    }
+                }
             }
             .sheet(isPresented: $showingCreate) {
                 CreatePostView()
                     .presentationDetents([.medium, .large])
             }
+            .refreshable {
+                print("DEBUG: Refresh Posts")
+            }
         }
     }
-}
-
-private func headerSection(title: String, options: [String], selected: Binding<String>, action: Binding<Bool>) -> some View {
-    HStack {
-        Text(title)
-            .font(.system(size: 44))
-            .fontWeight(.bold)
-            .foregroundStyle(.blue)
-            .fontDesign(.serif)
-            .shadow(radius: 4)
-        
-        Menu {
-            ForEach(options, id: \.self) { option in
-                Button {
-                    selected.wrappedValue = option
-                } label: {
-                    Text(option)
-                }
-            }
-        } label: {
-            HStack {
-                Text(selected.wrappedValue)
-                
-                Image(systemName: "arrow.down")
-            }
-            .fontWeight(.bold)
-            .foregroundStyle(.foreground.opacity(0.4))
-        }
-        
-        Spacer()
-    
-        Button {
-            action.wrappedValue.toggle()
-        } label: {
-            Image(systemName: "plus")
-        }
-        .foregroundStyle(.primary)
-        .font(.title2)
-
-    }
-    .padding(.horizontal)
 }
 
 private func postList(of posts: [Post]) -> some View {
