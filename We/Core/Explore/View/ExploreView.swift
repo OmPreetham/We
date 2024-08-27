@@ -15,10 +15,7 @@ struct ExploreView: View {
     @State private var showingSchool: Bool = false
     @State private var searchText: String = ""
     
-    @State private var position: MapCameraPosition = .camera(MapCamera(centerCoordinate: .tamucc,
-                                                                       distance: 1600,
-                                                                       heading: 70,
-                                                                       pitch: 50))
+    @State private var position: MapCameraPosition = .camera(MapCamera(centerCoordinate: .tamucc, distance: 1600, heading: 0, pitch: 50))
     
     var body: some View {
         NavigationStack {
@@ -26,22 +23,20 @@ struct ExploreView: View {
                 Button {
                     showingSchool.toggle()
                 } label: {
-                    ZStack(alignment: .bottomTrailing) {
-                        Map(position: $position)
-                            .disabled(true)
-                            .mapStyle(.standard(elevation: .realistic))
-                            .overlay(alignment: .bottomTrailing) {
-                                Text("Browse Places Around School")
-                                    .font(.callout)
-                                    .fontWeight(.semibold)
-                                    .padding(8)
-                                    .background(RoundedRectangle(cornerRadius: 4).fill(.ultraThinMaterial))
-                                    .padding(8)
-                            }
-                    }
+                    Map(position: $position)
+                        .disabled(true)
+                        .mapStyle(.standard(elevation: .realistic))
+                        .overlay(alignment: .bottomTrailing) {
+                            Text("Locate School")
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                                .padding(8)
+                                .background(RoundedRectangle(cornerRadius: 8).fill(.ultraThinMaterial))
+                                .padding(8)
+                        }
                 }
-                .frame(minHeight: 200)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .frame(minHeight: 150)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .padding()
                 .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
             }
@@ -55,7 +50,7 @@ struct ExploreView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingSchool) {
+        .fullScreenCover(isPresented: $showingSchool) {
             SchoolMapView()
         }
         .sheet(isPresented: $showingProfile) {

@@ -23,7 +23,7 @@ struct HomeView: View {
                     Section {
                         postList(of: posts)
                     } header: {
-                        Picker("Select Mode", selection: $selectedMode) {
+                        Picker("Sort Posts", selection: $selectedMode) {
                             ForEach(filterOptions, id: \.self) { option in
                                 Text(option)
                                     .tag(option)
@@ -36,9 +36,6 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Today")
-            .navigationDestination(for: Post.self) { post in
-                PostView(post: post)
-            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -70,7 +67,7 @@ struct HomeView: View {
 private func postList(of posts: [Post]) -> some View {
     LazyVStack {
         ForEach(posts, id: \.id) { post in
-            NavigationLink(value: post) {
+            NavigationLink(destination: PostView(post: post)) {
                 PostCell(post: post)
             }
             .foregroundStyle(.primary)

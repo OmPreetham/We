@@ -61,6 +61,9 @@ struct BoardView: View {
         .sheet(isPresented: $showingCreate) {
             CreatePostView(communityID: board.id)
         }
+        .refreshable {
+            print("DEBUG: Refresh")
+        }
     }
 }
 

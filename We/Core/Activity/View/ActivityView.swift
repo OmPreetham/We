@@ -12,7 +12,7 @@ struct ActivityView: View {
     
     var body: some View {
         NavigationStack {
-            LazyVStack {
+            VStack {
                 ContentUnavailableView("No Activity", systemImage: "bell.badge.slash", description: Text("There is no recent activity to show."))
             }
             .navigationTitle("Activity")
@@ -28,6 +28,9 @@ struct ActivityView: View {
             .sheet(isPresented: $showingCreate) {
                 CreatePostView()
                     .presentationDetents([.medium, .large])
+            }
+            .refreshable {
+                print("DEBUG: Refresh")
             }
         }
     }

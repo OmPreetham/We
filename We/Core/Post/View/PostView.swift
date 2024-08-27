@@ -224,6 +224,9 @@ struct PostView: View {
             .sheet(isPresented: $showingCreate) {
                 CreatePostView(replyPost: post, communityID: community.id)
             }
+            .refreshable {
+                print("DEBUG: Refresh")
+            }
             
             VStack {
                 TriggerButton(title: "Add a reply...", systemName: "quote.bubble.fill", trigger: $showingCreate)

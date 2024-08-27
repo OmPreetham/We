@@ -18,7 +18,7 @@ struct BoardsView: View {
             if let boards = boards, !boards.isEmpty {
                 List {
                     ForEach(boards) { board in
-                        NavigationLink(value: board) {
+                        NavigationLink(destination: BoardView(board: board)) {
                             HStack(spacing: 16) {
                                 Image(systemName: board.systemImageName)
                                     .resizable()
@@ -39,9 +39,6 @@ struct BoardsView: View {
                         }
                     }
                 }
-                .navigationDestination(for: Board.self, destination: { board in
-                    BoardView(board: board)
-                })
                 .navigationTitle("Boards")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -57,11 +54,14 @@ struct BoardsView: View {
                     CreateBoard()
                         .presentationDetents([.medium, .large])
                 }
+                .searchable(text: $searchText)
+                .refreshable {
+                    print("DEBUG: Refresh")
+                }
             } else {
                 ContentUnavailableView("No Boards", systemImage: "people.3.fill", description: Text("There are no boards available."))
             }
         }
-        .searchable(text: $searchText)
     }
 }
 
