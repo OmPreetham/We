@@ -8,16 +8,27 @@
 import SwiftUI
 
 struct ActivityView: View {
+    @State private var showingCreate: Bool = false
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                if #available(iOS 17.0, *) {
-                    ContentUnavailableView("No Activity", systemImage: "bell.badge.slash", description: Text("There is no recent activity to show."))
-                } else {
-                    Text("There is no recent activity to show.")
-                }
+            LazyVStack {
+                ContentUnavailableView("No Activity", systemImage: "bell.badge.slash", description: Text("There is no recent activity to show."))
             }
             .navigationTitle("Activity")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingCreate.toggle()
+                    } label: {
+                        Label("New Post", systemImage: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingCreate) {
+                CreatePostView()
+                    .presentationDetents([.medium, .large])
+            }
         }
     }
 }

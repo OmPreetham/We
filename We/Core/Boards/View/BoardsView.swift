@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BoardsView: View {
     @State private var showingCreateBoard: Bool = false
+    @State private var searchText: String = ""
     
     var boards: [Board]? = Board.mockBoards
     
@@ -57,13 +58,10 @@ struct BoardsView: View {
                         .presentationDetents([.medium, .large])
                 }
             } else {
-                if #available(iOS 17.0, *) {
-                    ContentUnavailableView("No Boards", systemImage: "people.3.fill", description: Text("There are no boards available."))
-                } else {
-                    Text("There are no boards available.")
-                }
+                ContentUnavailableView("No Boards", systemImage: "people.3.fill", description: Text("There are no boards available."))
             }
         }
+        .searchable(text: $searchText)
     }
 }
 

@@ -75,10 +75,8 @@ struct CreatePostView: View {
                         .font(.subheadline)
                     }
                 }
-                .padding(.horizontal)
-                .navigationTitle((replyPost != nil) ? "Reply Post" : "New Post")
+                .navigationTitle((replyPost != nil) ? "Reply" : "New Post")
                 .navigationBarTitleDisplayMode(.inline)
-                .interactiveDismissDisabled()
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button("Cancel", role: .cancel) {
@@ -89,7 +87,7 @@ struct CreatePostView: View {
                     
                     ToolbarItem(placement: .topBarTrailing) {
                         Button((replyPost != nil) ? "Add Reply" : "Post") {
-                            // Add your post logic here
+                            // Add post logic here
                             dismiss()
                         }
                         .opacity(caption.isEmpty ? 0.5 : 1)
@@ -98,6 +96,8 @@ struct CreatePostView: View {
                         .fontWeight(.semibold)
                     }
                 }
+                .interactiveDismissDisabled()
+                .padding(.horizontal)
             }
         }
     }

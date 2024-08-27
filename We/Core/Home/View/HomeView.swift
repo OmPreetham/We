@@ -11,7 +11,7 @@ struct HomeView: View {
     @State private var showingCreate: Bool = false
     @State private var selectedMode: String = "Trending"
     
-    let filterOptions = ["Trending", "Recent", "Popular"]
+    let filterOptions = ["Trending", "Recent"]
     
     var posts: [Post] = Post.mockPosts
     var community: Board? = Board.mockBoards[0]
@@ -19,24 +19,32 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
-                postList(of: posts)
+                VStack {
+                    Section {
+                        postList(of: posts)
+                    } header: {
+                        Picker("Select Mode", selection: $selectedMode) {
+                            ForEach(filterOptions, id: \.self) { option in
+                                Text(option)
+                                    .tag(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                    }
+                }
             }
-            .navigationTitle("Home")
+            .navigationTitle("Today")
             .navigationDestination(for: Post.self) { post in
                 PostView(post: post)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Menu {
-                        ForEach(filterOptions, id: \.self) { option in
-                            Button {
-                                selectedMode = option
-                            } label: {
-                                Text(option)
-                            }
-                        }
+                    Button {
+                        
                     } label: {
-                        Label(selectedMode, systemImage: "line.3.horizontal.decrease.circle")
+                        Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
                     }
                 }
                 

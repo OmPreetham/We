@@ -16,7 +16,7 @@ struct TabBar: View {
         TabView(selection: $selectedTab) {
             HomeView()
                 .tabItem {
-                    Label("Home", systemImage: selectedTab == 0 ? "house.fill" : "house")
+                    Label("Today", systemImage: selectedTab == 0 ? "doc.text.image.fill" : "doc.text.image")
                         .environment(\.symbolVariants, selectedTab == 0 ? .fill : .none)
                 }
                 .onAppear { selectedTab = 0 }
@@ -52,4 +52,5 @@ struct TabBar: View {
 
 #Preview {
     TabBar()
+        .environmentObject(AuthenticationViewModel())
 }

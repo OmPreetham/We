@@ -103,7 +103,7 @@ struct PostView: View {
                                 .font(.subheadline)
                                 .lineLimit(isExpanded ? nil : 4)
                                 .multilineTextAlignment(.leading)
-                            .animation(.easeInOut, value: isExpanded)
+                                .animation(.easeInOut, value: isExpanded)
                             
                             if post.content.count > 250 {
                                 Button {
@@ -209,11 +209,7 @@ struct PostView: View {
                 if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
                     PostView(post: selectedPost)
                 } else {
-                    if #available(iOS 17.0, *) {
-                        ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
-                    } else {
-                        Text("Post Unavailable")
-                    }
+                    ContentUnavailableView("Post Unavailable", systemImage: "rectangle.slash.fill", description: Text("Post not found"))
                 }
             }
             .toolbar {
@@ -227,7 +223,6 @@ struct PostView: View {
             }
             .sheet(isPresented: $showingCreate) {
                 CreatePostView(replyPost: post, communityID: community.id)
-                    .presentationDetents([.medium, .large])
             }
             
             VStack {

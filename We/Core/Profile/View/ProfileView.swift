@@ -16,13 +16,13 @@ struct ProfileView: View {
             List {
                 Section(header: Text("Account")) {
                     NavigationLink(destination: ChangePasswordView()) {
-                        Text("Change Password")
+                        Label("Change Password", systemImage: "lock")
                     }
                 }
                 
                 Section(header: Text("Personalization")) {
                     NavigationLink(destination: AppIconView()) {
-                        Text("Change App Icon")
+                        Label("Change App Icon", systemImage: "app.badge.checkmark")
                     }
                 }
             }

@@ -28,7 +28,7 @@ struct TriggerButton: View {
             .padding()
             .frame(maxWidth: .infinity)
             .background(.ultraThinMaterial)
-            .foregroundColor(.primary)
+            .foregroundStyle(.primary)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(radius: 10)
         }

@@ -13,6 +13,8 @@
 		0E17FA532C6B60280078318E /* AppLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA522C6B60280078318E /* AppLogoView.swift */; };
 		0E17FA552C6B61010078318E /* AuthenticationHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */; };
 		0E18CC732C65804900D358D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E18CC722C65804900D358D0 /* Post.swift */; };
+		0E2F5A212C7D114700DA6E53 /* SchoolMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */; };
+		0E2F5A232C7D19DA00DA6E53 /* MapExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2F5A222C7D19DA00DA6E53 /* MapExtensions.swift */; };
 		0E37C8582C683645003787BD /* CreateBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8572C683645003787BD /* CreateBoard.swift */; };
 		0E37C85A2C684328003787BD /* BoardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8592C684328003787BD /* BoardsView.swift */; };
 		0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */; };
@@ -60,6 +62,8 @@
 		0E17FA522C6B60280078318E /* AppLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogoView.swift; sourceTree = "<group>"; };
 		0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHeaderCell.swift; sourceTree = "<group>"; };
 		0E18CC722C65804900D358D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SchoolMapView.swift; path = ../../../../../../../../../../../Documents/SchoolMapView.swift; sourceTree = "<group>"; };
+		0E2F5A222C7D19DA00DA6E53 /* MapExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExtensions.swift; sourceTree = "<group>"; };
 		0E37C8572C683645003787BD /* CreateBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBoard.swift; sourceTree = "<group>"; };
 		0E37C8592C684328003787BD /* BoardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardsView.swift; sourceTree = "<group>"; };
 		0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerButton.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 		0E1646742C6359F100811FAC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0E2F5A222C7D19DA00DA6E53 /* MapExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -181,6 +186,22 @@
 				0E17FA502C6B5D080078318E /* LaunchScreenViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0E2F5A1E2C7D113800DA6E53 /* SchoolMap */ = {
+			isa = PBXGroup;
+			children = (
+				0E2F5A1F2C7D113C00DA6E53 /* View */,
+			);
+			path = SchoolMap;
+			sourceTree = "<group>";
+		};
+		0E2F5A1F2C7D113C00DA6E53 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		0E37C8552C683635003787BD /* CreateBoard */ = {
@@ -286,6 +307,7 @@
 		0EC20D6C2C6344C90063503B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0EE7AF1D2C7C4A850046030F /* School */,
 				0EC20D752C6345480063503B /* Activity */,
 				0EFF6E482C6BFA020054A4DA /* AppIcon */,
 				0EC20D762C63454D0063503B /* Authentication */,
@@ -610,6 +632,22 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		0EE7AF1D2C7C4A850046030F /* School */ = {
+			isa = PBXGroup;
+			children = (
+				0E2F5A1E2C7D113800DA6E53 /* SchoolMap */,
+				0EE7AF1E2C7C4A940046030F /* View */,
+			);
+			path = School;
+			sourceTree = "<group>";
+		};
+		0EE7AF1E2C7C4A940046030F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		0EED79B72C75C7CB003E7536 /* ChangePassword */ = {
 			isa = PBXGroup;
 			children = (
@@ -771,6 +809,8 @@
 				0EC20DAC2C6354CA0063503B /* CircularProfileImageView.swift in Sources */,
 				0EC20DB22C6355730063503B /* User.swift in Sources */,
 				0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */,
+				0E2F5A232C7D19DA00DA6E53 /* MapExtensions.swift in Sources */,
+				0E2F5A212C7D114700DA6E53 /* SchoolMapView.swift in Sources */,
 				0E18CC732C65804900D358D0 /* Post.swift in Sources */,
 				0E37C8582C683645003787BD /* CreateBoard.swift in Sources */,
 				0EFF6E502C6C06830054A4DA /* AppIconViewModel.swift in Sources */,
@@ -925,7 +965,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5s;
@@ -970,7 +1010,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5s;
