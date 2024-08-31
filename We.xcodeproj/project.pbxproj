@@ -13,11 +13,11 @@
 		0E17FA532C6B60280078318E /* AppLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA522C6B60280078318E /* AppLogoView.swift */; };
 		0E17FA552C6B61010078318E /* AuthenticationHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */; };
 		0E18CC732C65804900D358D0 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E18CC722C65804900D358D0 /* Post.swift */; };
-		0E2F5A212C7D114700DA6E53 /* SchoolMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */; };
 		0E2F5A232C7D19DA00DA6E53 /* MapExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2F5A222C7D19DA00DA6E53 /* MapExtensions.swift */; };
 		0E37C8582C683645003787BD /* CreateBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8572C683645003787BD /* CreateBoard.swift */; };
 		0E37C85A2C684328003787BD /* BoardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E37C8592C684328003787BD /* BoardsView.swift */; };
 		0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */; };
+		0E69F2E82C8398C200DC8933 /* SchoolMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E69F2E72C8398C200DC8933 /* SchoolMapView.swift */; };
 		0E8315DB2C66A64B00066274 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8315DA2C66A64B00066274 /* Board.swift */; };
 		0EBACDA72C69874B00055CC6 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */; };
 		0EC20D5E2C6344000063503B /* WeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20D5D2C6344000063503B /* WeApp.swift */; };
@@ -37,7 +37,7 @@
 		0EC20DA02C634D260063503B /* OnboardingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20D9F2C634D260063503B /* OnboardingModel.swift */; };
 		0EC20DA32C6353D20063503B /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DA22C6353D20063503B /* ContainerView.swift */; };
 		0EC20DA92C63546F0063503B /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DA82C63546F0063503B /* CreateView.swift */; };
-		0EC20DAC2C6354CA0063503B /* CircularProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DAB2C6354CA0063503B /* CircularProfileImageView.swift */; };
+		0EC20DAC2C6354CA0063503B /* EclipseProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DAB2C6354CA0063503B /* EclipseProfileImageView.swift */; };
 		0EC20DAF2C6354E40063503B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC20DAE2C6354E40063503B /* Kingfisher */; };
 		0EC20DB22C6355730063503B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DB12C6355730063503B /* User.swift */; };
 		0EC6FB6F2C6816CE00A6513B /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6FB6E2C6816CE00A6513B /* BoardView.swift */; };
@@ -62,11 +62,11 @@
 		0E17FA522C6B60280078318E /* AppLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogoView.swift; sourceTree = "<group>"; };
 		0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationHeaderCell.swift; sourceTree = "<group>"; };
 		0E18CC722C65804900D358D0 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
-		0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SchoolMapView.swift; path = ../../../../../../../../../../../Documents/SchoolMapView.swift; sourceTree = "<group>"; };
 		0E2F5A222C7D19DA00DA6E53 /* MapExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExtensions.swift; sourceTree = "<group>"; };
 		0E37C8572C683645003787BD /* CreateBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBoard.swift; sourceTree = "<group>"; };
 		0E37C8592C684328003787BD /* BoardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardsView.swift; sourceTree = "<group>"; };
 		0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerButton.swift; sourceTree = "<group>"; };
+		0E69F2E72C8398C200DC8933 /* SchoolMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolMapView.swift; sourceTree = "<group>"; };
 		0E8315DA2C66A64B00066274 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		0EBACDA62C69874B00055CC6 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		0EC20D5A2C6344000063503B /* We.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = We.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,7 +88,7 @@
 		0EC20D9F2C634D260063503B /* OnboardingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingModel.swift; sourceTree = "<group>"; };
 		0EC20DA22C6353D20063503B /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		0EC20DA82C63546F0063503B /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
-		0EC20DAB2C6354CA0063503B /* CircularProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProfileImageView.swift; sourceTree = "<group>"; };
+		0EC20DAB2C6354CA0063503B /* EclipseProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EclipseProfileImageView.swift; sourceTree = "<group>"; };
 		0EC20DB12C6355730063503B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		0EC6FB6E2C6816CE00A6513B /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenMediaViewer.swift; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 		0E2F5A1F2C7D113C00DA6E53 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0E2F5A202C7D114700DA6E53 /* SchoolMapView.swift */,
+				0E69F2E72C8398C200DC8933 /* SchoolMapView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -540,7 +540,7 @@
 			children = (
 				0E17FA522C6B60280078318E /* AppLogoView.swift */,
 				0E17FA542C6B61000078318E /* AuthenticationHeaderCell.swift */,
-				0EC20DAB2C6354CA0063503B /* CircularProfileImageView.swift */,
+				0EC20DAB2C6354CA0063503B /* EclipseProfileImageView.swift */,
 				0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */,
 				0E1646762C635A7B00811FAC /* PostCell.swift */,
 				0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */,
@@ -806,11 +806,11 @@
 				0EDA3C9B2C748D92004EB089 /* RegistrationViewModel.swift in Sources */,
 				0EDA3C982C748B74004EB089 /* VerifyViewModel.swift in Sources */,
 				0EC20D5E2C6344000063503B /* WeApp.swift in Sources */,
-				0EC20DAC2C6354CA0063503B /* CircularProfileImageView.swift in Sources */,
+				0EC20DAC2C6354CA0063503B /* EclipseProfileImageView.swift in Sources */,
 				0EC20DB22C6355730063503B /* User.swift in Sources */,
 				0E4F7FAD2C6B4E9B00ECE8E3 /* TriggerButton.swift in Sources */,
 				0E2F5A232C7D19DA00DA6E53 /* MapExtensions.swift in Sources */,
-				0E2F5A212C7D114700DA6E53 /* SchoolMapView.swift in Sources */,
+				0E69F2E82C8398C200DC8933 /* SchoolMapView.swift in Sources */,
 				0E18CC732C65804900D358D0 /* Post.swift in Sources */,
 				0E37C8582C683645003787BD /* CreateBoard.swift in Sources */,
 				0EFF6E502C6C06830054A4DA /* AppIconViewModel.swift in Sources */,

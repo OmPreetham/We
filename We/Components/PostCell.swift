@@ -41,7 +41,7 @@ struct PostCell: View {
             VStack {
                 HStack(alignment: .top, spacing: 0) {
                     VStack {
-                        CircularProfileImageView(community: community, size: .small)
+                        EclipseProfileImageView(community: community, size: .small)
                         
                         Rectangle()
                             .opacity(hasParentPost ?? false ? 1 : 0)
@@ -143,7 +143,7 @@ struct PostCell: View {
                         
                         if !(hasParentPost ?? false) {
                             Divider()
-                                .background(.tertiary)
+                                .foregroundStyle(.quinary)
                         }
                     }
                 }

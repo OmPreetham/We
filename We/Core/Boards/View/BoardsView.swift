@@ -20,10 +20,7 @@ struct BoardsView: View {
                     ForEach(boards) { board in
                         NavigationLink(destination: BoardView(board: board)) {
                             HStack(spacing: 16) {
-                                Image(systemName: board.systemImageName)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                EclipseProfileImageView(community: board, size: .extraLarge)
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(board.name)
@@ -33,7 +30,7 @@ struct BoardsView: View {
                                         .font(.callout)
                                         .foregroundStyle(.secondary)
                                         .multilineTextAlignment(.leading)
-                                        .lineLimit(3)
+                                        .lineLimit(2)
                                 }
                             }
                         }

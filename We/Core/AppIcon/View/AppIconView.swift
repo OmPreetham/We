@@ -19,7 +19,7 @@ struct AppIconView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 60, height: 60)
-                        .cornerRadius(8)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .padding(.trailing, 8)
                         .accessibilityLabel(Text(iconName))
                         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)

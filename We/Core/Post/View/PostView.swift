@@ -20,7 +20,7 @@ struct PostView: View {
     @State private var showingCreate: Bool = false
     
     var post: Post
-    var community: Board {
+    var board: Board {
         Board.mockBoards.first { $0.id == post.boardId }!
     }
     
@@ -71,10 +71,10 @@ struct PostView: View {
                     
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(alignment: .top) {
-                            CircularProfileImageView(community: community, size: .small)
+                            EclipseProfileImageView(community: board, size: .small)
                             
                             VStack(alignment: .leading) {
-                                Text(community.name)
+                                Text(board.name)
                                     .font(.subheadline)
                                     .fontWeight(.semibold)
                                 
@@ -161,8 +161,8 @@ struct PostView: View {
                     if !replies.isEmpty {
                         VStack {
                             Divider()
-                                .foregroundStyle(.tertiary)
-                            
+                                .foregroundStyle(.quinary)
+
                             HStack {
                                 Text("Replies")
                                     .font(.headline)
@@ -188,7 +188,7 @@ struct PostView: View {
                             .padding(.horizontal)
                             
                             Divider()
-                                .foregroundStyle(.tertiary)
+                                .foregroundStyle(.quinary)
                         }
                         
                         LazyVStack {
@@ -199,11 +199,10 @@ struct PostView: View {
                                 .foregroundStyle(.primary)
                             }
                         }
-                        .padding(.bottom, 60)
                     }
                 }
             }
-            .navigationTitle("Post")
+            .navigationTitle(board.name)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: String.self) { postID in
                 if let selectedPost = Post.mockPosts.first(where: { $0.id == postID }) {
@@ -222,17 +221,15 @@ struct PostView: View {
                 }
             }
             .sheet(isPresented: $showingCreate) {
-                CreatePostView(replyPost: post, communityID: community.id)
+                CreatePostView(replyPost: post, communityID: board.id)
             }
             .refreshable {
                 print("DEBUG: Refresh")
             }
-            
-            VStack {
-                TriggerButton(title: "Add a reply...", systemName: "quote.bubble.fill", trigger: $showingCreate)
-                    .padding(8)
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
+        }
+        .safeAreaInset(edge: .bottom) {
+            TriggerButton(title: "Add a reply...", systemName: "quote.bubble.fill", trigger: $showingCreate)
+                .padding(8)
         }
     }
 }

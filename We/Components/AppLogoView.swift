@@ -19,7 +19,7 @@ struct AppLogoView: View {
                     .overlay {
                         Color.primary.ignoresSafeArea()
                     }
-                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
             }
         }
     }

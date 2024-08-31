@@ -35,8 +35,8 @@ struct LoginView: View {
                             .autocorrectionDisabled()
                             .padding()
                             .background(.ultraThickMaterial)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .shadow(radius: 2)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                             .disabled(viewModel.isLoading)
                             
                             Button {
@@ -58,7 +58,7 @@ struct LoginView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(.primary)
                                 .cornerRadius(8)
-                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
                                 .opacity(viewModel.isLoading || !viewModel.isFormValid ? 0.6 : 1)
                             }
                             .disabled(viewModel.isLoading || !viewModel.isFormValid)

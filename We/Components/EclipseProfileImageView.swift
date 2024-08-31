@@ -1,5 +1,5 @@
 //
-//  CircularProfileImageView.swift
+//  EclipseProfileImageView.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 8/7/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CircularProfileImageView: View {
+struct EclipseProfileImageView: View {
     var community: Board?
     var size: Size
     
@@ -43,11 +43,11 @@ struct CircularProfileImageView: View {
             .frame(width: size.dimensions, height: size.dimensions, alignment: .center)
             .padding(2)
             .background(.quinary)
-            .clipShape(Circle())
-            .shadow(radius: 4)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
     }
 }
 
 #Preview {
-    CircularProfileImageView(size: .small)
+    EclipseProfileImageView(size: .small)
 }

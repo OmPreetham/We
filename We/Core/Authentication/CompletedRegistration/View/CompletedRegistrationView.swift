@@ -37,7 +37,7 @@ struct CompletedRegistrationView: View {
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(Color.primary)
-                            .cornerRadius(8)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     .padding()
                 }

@@ -41,11 +41,7 @@ struct BoardView: View {
                     }
                 }
             } else {
-                if #available(iOS 17.0, *) {
-                    ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(board.name) Community."))
-                } else {
-                    Text("There are no posts available for \(board.name) Community.")
-                }
+                ContentUnavailableView("No Posts", systemImage: "square.3.layers.3d.down.right.slash", description: Text("There are no posts available for \(board.name) Community."))
             }
         }
         .navigationTitle(board.name)

@@ -32,9 +32,9 @@ struct VerifyView: View {
                             }
                             .padding()
                             .background(.ultraThickMaterial)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .shadow(radius: 2)
-                            
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+
                             VStack(alignment: .leading) {
                                 Text("A verification code will be sent to email.")
                                     .font(.footnote)
@@ -58,8 +58,8 @@ struct VerifyView: View {
                                         .frame(maxWidth: .infinity)
                                         .background(.primary)
                                         .opacity(viewModel.isLoading || !viewModel.isValidEmail ? 0.6 : 1)
-                                        .cornerRadius(8)
-                                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
                                 }
                             }
                             .disabled(viewModel.isLoading || !viewModel.isValidEmail)

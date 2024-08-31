@@ -30,7 +30,7 @@ struct TriggerButton: View {
             .background(.ultraThinMaterial)
             .foregroundStyle(.primary)
             .clipShape(RoundedRectangle(cornerRadius: 8))
-            .shadow(radius: 10)
+            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
         }
     }
 }

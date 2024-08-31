@@ -37,7 +37,7 @@ struct CreatePostView: View {
                 
                 VStack {
                     HStack(alignment: .top, spacing: 0) {
-                        CircularProfileImageView(community: selectedCommunity, size: .medium)
+                        EclipseProfileImageView(community: selectedCommunity, size: .medium)
                             .offset(y: 8)
                         
                         VStack(alignment: .leading, spacing: 4) {
