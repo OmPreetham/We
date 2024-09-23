@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @StateObject private var viewModel = AuthenticationViewModel()
     
     @State private var showingLogin: Bool = false
     @State private var showingRequestVerificationCode: Bool = false
-    @State private var showingRegistration: Bool = false
     
     var body: some View {
         ZStack {
@@ -47,63 +46,70 @@ struct AuthenticationView: View {
         .sheet(isPresented: $showingRequestVerificationCode) {
             RequestVerificationCodeView()
         }
+        .sheet(isPresented: $viewModel.showingWebView) {
+            WebViewViewer(viewModel: WebViewModel(url: viewModel.webViewURL))
+        }
     }
-}
-
-private var headerSection: some View {
-    HStack(alignment: .top) {
-        VStack(alignment: .leading) {
-            Group {
-                Text("Private")
-                Text("Safe")
-                Text("Anonymous")
+    
+    private var headerSection: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading) {
+                Group {
+                    Text("Private")
+                    Text("Safe")
+                    Text("Anonymous")
+                }
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .fontDesign(.serif)
+                
+                Text("Your Campus Discussion Platform")
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .fontDesign(.monospaced)
+                    .multilineTextAlignment(.leading)
             }
-            .font(.largeTitle)
-            .fontWeight(.bold)
-            .fontDesign(.serif)
             
-            Text("Your Campus Discussion Platform")
-                .foregroundStyle(.secondary)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .fontDesign(.monospaced)
-                .multilineTextAlignment(.leading)
+            Spacer()
+            
+            AppLogoView()
         }
-        
-        Spacer()
-        
-        AppLogoView()
     }
-}
-
-private var termsAndPrivacySection: some View {
-    VStack(spacing: 8) {
-        Text("By using this app, you agree to our")
-            .font(.caption)
-            .foregroundStyle(.secondary)
-        
-        HStack(spacing: 4) {
-            Link("Terms of Service", destination: URL(string: "https://we.ompreetham.com/terms")!)
-            Text("and")
+    
+    private var termsAndPrivacySection: some View {
+        VStack(spacing: 8) {
+            Text("By using this app, you agree to our")
+                .font(.caption)
                 .foregroundStyle(.secondary)
-            Link("Privacy Policy", destination: URL(string: "https://we.ompreetham.com/privacy")!)
-        }
-        .font(.caption)
-        
-        Text("We use cookies to improve your experience.")
+            
+            HStack(spacing: 4) {
+                Button("Terms of Service") {
+                    viewModel.showWebView(for: URL(string: "https://www.ompreetham.com")!)
+                }
+                Text("and")
+                    .foregroundStyle(.secondary)
+                Button("Privacy Policy") {
+                    viewModel.showWebView(for: URL(string: "https://www.ompreetham.com")!)
+                }
+            }
             .font(.caption)
-            .foregroundStyle(.secondary)
+            
+            Text("We use cookies to improve your experience.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .multilineTextAlignment(.center)
     }
-    .multilineTextAlignment(.center)
-}
-
-private func authenticationButton(title: String, image: String, action: Binding<Bool>) -> some View {
-    Button {
-        action.wrappedValue.toggle()
-    } label: {
-        Label(title, systemImage: image)
-            .padding()
-            .frame(maxWidth: .infinity)
+    
+    private func authenticationButton(title: String, image: String, action: Binding<Bool>) -> some View {
+        Button {
+            action.wrappedValue.toggle()
+        } label: {
+            Label(title, systemImage: image)
+                .padding()
+                .frame(maxWidth: .infinity)
+        }
     }
 }
 

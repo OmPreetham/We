@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -108,6 +108,10 @@
 		0EFF6E4B2C6BFA310054A4DA /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 		0EFF6E4F2C6C06830054A4DA /* AppIconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0ED40E3B2CA17A75000F61B7 /* Web View */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Web View"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0EC20D572C6344000063503B /* Frameworks */ = {
@@ -311,6 +315,7 @@
 		0EC20D6C2C6344C90063503B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0ED40E3B2CA17A75000F61B7 /* Web View */,
 				0EE7AF1D2C7C4A850046030F /* School */,
 				0EC20D752C6345480063503B /* Activity */,
 				0EFF6E482C6BFA020054A4DA /* AppIcon */,
@@ -718,6 +723,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0ED40E3B2CA17A75000F61B7 /* Web View */,
 			);
 			name = We;
 			packageProductDependencies = (
