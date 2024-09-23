@@ -9,14 +9,21 @@ import SwiftUI
 
 class AppIconViewModel: ObservableObject {
     @Published var currentIcon: String?
-    @Published var customAppIcons: [String] = ["Pillars of Trust Light", "Pillars of Trust Dark"]
+    @Published var customAppIcons: [String] = ["Light Pillars of Trust", "Dark Pillars of Trust", "Light Rubik", "Dark Rubik"]
     
     init() {
-        self.currentIcon = UIApplication.shared.alternateIconName
+        self.currentIcon = UIApplication.shared.alternateIconName ?? "Light Pillars of Trust"
     }
     
-    func changeIcon(to iconName: String?) {
-        UIApplication.shared.setAlternateIconName(iconName) { [weak self] error in
+    func changeIcon(to iconName: String) {
+        let iconNameForSystem: String?
+        if iconName == "Light Pillars of Trust" {
+            iconNameForSystem = nil
+        } else {
+            iconNameForSystem = iconName
+        }
+        
+        UIApplication.shared.setAlternateIconName(iconNameForSystem) { [weak self] error in
             if let error = error {
                 print("Error changing icon: \(error.localizedDescription)")
             } else {

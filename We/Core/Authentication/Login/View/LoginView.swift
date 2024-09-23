@@ -19,7 +19,7 @@ struct LoginView: View {
             NavigationStack {
                 ScrollView {
                     VStack(spacing: 10) {
-                    AuthenticationHeaderCell()
+                        AuthenticationHeaderCell()
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Spacer()
@@ -30,11 +30,14 @@ struct LoginView: View {
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                                 
+                                TextField("Enter username..", text: $viewModel.username)
+                                    .textInputAutocapitalization(.never)
+                                
                                 SecureField("Enter password..", text: $viewModel.password)
                             }
                             .autocorrectionDisabled()
                             .padding()
-                            .background(.ultraThickMaterial)
+                            .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
                             .disabled(viewModel.isLoading)

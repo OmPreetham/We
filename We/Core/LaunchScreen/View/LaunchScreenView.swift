@@ -23,7 +23,7 @@ struct LaunchScreenView: View {
         .opacity(viewModel.screenOpacity)
         .onAppear {
             viewModel.startAnimation()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.6) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) {
                 isPresented.toggle()
             }
         }

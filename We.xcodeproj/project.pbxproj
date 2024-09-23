@@ -40,12 +40,14 @@
 		0EC20DAC2C6354CA0063503B /* EclipseProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DAB2C6354CA0063503B /* EclipseProfileImageView.swift */; };
 		0EC20DAF2C6354E40063503B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC20DAE2C6354E40063503B /* Kingfisher */; };
 		0EC20DB22C6355730063503B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC20DB12C6355730063503B /* User.swift */; };
+		0EC4C7702C9FF89400977152 /* PasswordStrengthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC4C76F2C9FF89400977152 /* PasswordStrengthView.swift */; };
+		0EC4C7722CA0010800977152 /* VerificationCodeInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC4C7712CA0010800977152 /* VerificationCodeInputCell.swift */; };
 		0EC6FB6F2C6816CE00A6513B /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6FB6E2C6816CE00A6513B /* BoardView.swift */; };
 		0EC9F57A2C67562100A6321C /* FullScreenMediaViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */; };
 		0EC9F57C2C675A2F00A6321C /* ScrollMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */; };
 		0EDA3C902C748B23004EB089 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C8F2C748B23004EB089 /* AuthenticationViewModel.swift */; };
-		0EDA3C962C748B69004EB089 /* VerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C952C748B69004EB089 /* VerifyView.swift */; };
-		0EDA3C982C748B74004EB089 /* VerifyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C972C748B74004EB089 /* VerifyViewModel.swift */; };
+		0EDA3C962C748B69004EB089 /* RequestVerificationCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C952C748B69004EB089 /* RequestVerificationCodeView.swift */; };
+		0EDA3C982C748B74004EB089 /* RequestVerificationCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C972C748B74004EB089 /* RequestVerificationCodeViewModel.swift */; };
 		0EDA3C9B2C748D92004EB089 /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C9A2C748D92004EB089 /* RegistrationViewModel.swift */; };
 		0EDA3CA02C74A0F4004EB089 /* CompletedRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3C9F2C74A0F4004EB089 /* CompletedRegistrationView.swift */; };
 		0EDA3CA32C74A598004EB089 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA3CA22C74A598004EB089 /* LoginViewModel.swift */; };
@@ -90,12 +92,14 @@
 		0EC20DA82C63546F0063503B /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
 		0EC20DAB2C6354CA0063503B /* EclipseProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EclipseProfileImageView.swift; sourceTree = "<group>"; };
 		0EC20DB12C6355730063503B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		0EC4C76F2C9FF89400977152 /* PasswordStrengthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordStrengthView.swift; sourceTree = "<group>"; };
+		0EC4C7712CA0010800977152 /* VerificationCodeInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeInputCell.swift; sourceTree = "<group>"; };
 		0EC6FB6E2C6816CE00A6513B /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		0EC9F5792C67562100A6321C /* FullScreenMediaViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenMediaViewer.swift; sourceTree = "<group>"; };
 		0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollMediaView.swift; sourceTree = "<group>"; };
 		0EDA3C8F2C748B23004EB089 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
-		0EDA3C952C748B69004EB089 /* VerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyView.swift; sourceTree = "<group>"; };
-		0EDA3C972C748B74004EB089 /* VerifyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyViewModel.swift; sourceTree = "<group>"; };
+		0EDA3C952C748B69004EB089 /* RequestVerificationCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestVerificationCodeView.swift; sourceTree = "<group>"; };
+		0EDA3C972C748B74004EB089 /* RequestVerificationCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestVerificationCodeViewModel.swift; sourceTree = "<group>"; };
 		0EDA3C9A2C748D92004EB089 /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		0EDA3C9F2C74A0F4004EB089 /* CompletedRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedRegistrationView.swift; sourceTree = "<group>"; };
 		0EDA3CA22C74A598004EB089 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -390,7 +394,7 @@
 				0EDA3C9D2C74A0D9004EB089 /* CompletedRegistration */,
 				0EC20D772C63455E0063503B /* Login */,
 				0EC20D782C6345610063503B /* Registration */,
-				0EDA3C922C748B49004EB089 /* Verify */,
+				0EDA3C922C748B49004EB089 /* Request Verification Code */,
 				0EBACDA52C69873A00055CC6 /* View */,
 				0EBACDA42C69873000055CC6 /* ViewModel */,
 			);
@@ -545,6 +549,8 @@
 				0E1646762C635A7B00811FAC /* PostCell.swift */,
 				0EC9F57B2C675A2F00A6321C /* ScrollMediaView.swift */,
 				0E4F7FAC2C6B4E9B00ECE8E3 /* TriggerButton.swift */,
+				0EC4C76F2C9FF89400977152 /* PasswordStrengthView.swift */,
+				0EC4C7712CA0010800977152 /* VerificationCodeInputCell.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -583,19 +589,19 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		0EDA3C922C748B49004EB089 /* Verify */ = {
+		0EDA3C922C748B49004EB089 /* Request Verification Code */ = {
 			isa = PBXGroup;
 			children = (
 				0EDA3C942C748B5D004EB089 /* ViewModel */,
 				0EDA3C932C748B50004EB089 /* View */,
 			);
-			path = Verify;
+			path = "Request Verification Code";
 			sourceTree = "<group>";
 		};
 		0EDA3C932C748B50004EB089 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0EDA3C952C748B69004EB089 /* VerifyView.swift */,
+				0EDA3C952C748B69004EB089 /* RequestVerificationCodeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -603,7 +609,7 @@
 		0EDA3C942C748B5D004EB089 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				0EDA3C972C748B74004EB089 /* VerifyViewModel.swift */,
+				0EDA3C972C748B74004EB089 /* RequestVerificationCodeViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -729,7 +735,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					0EC20D592C6344000063503B = {
 						CreatedOnToolsVersion = 15.4;
@@ -780,6 +786,8 @@
 				0EC9F57C2C675A2F00A6321C /* ScrollMediaView.swift in Sources */,
 				0EC20D8B2C6346D10063503B /* LoginView.swift in Sources */,
 				0EC20D7E2C63465E0063503B /* HomeView.swift in Sources */,
+				0EC4C7702C9FF89400977152 /* PasswordStrengthView.swift in Sources */,
+				0EC4C7722CA0010800977152 /* VerificationCodeInputCell.swift in Sources */,
 				0EC20D832C6346850063503B /* ProfileView.swift in Sources */,
 				0EED79BB2C75C7EE003E7536 /* ChangePasswordView.swift in Sources */,
 				0EC20DA92C63546F0063503B /* CreateView.swift in Sources */,
@@ -798,13 +806,13 @@
 				0EC9F57A2C67562100A6321C /* FullScreenMediaViewer.swift in Sources */,
 				0EC20D912C6347090063503B /* ActivityView.swift in Sources */,
 				0EDA3CA02C74A0F4004EB089 /* CompletedRegistrationView.swift in Sources */,
-				0EDA3C962C748B69004EB089 /* VerifyView.swift in Sources */,
+				0EDA3C962C748B69004EB089 /* RequestVerificationCodeView.swift in Sources */,
 				0EC20D872C63469D0063503B /* ExploreView.swift in Sources */,
 				0EED79BE2C75C7FE003E7536 /* ChangePasswordViewModel.swift in Sources */,
 				0E1646772C635A7B00811FAC /* PostCell.swift in Sources */,
 				0E8315DB2C66A64B00066274 /* Board.swift in Sources */,
 				0EDA3C9B2C748D92004EB089 /* RegistrationViewModel.swift in Sources */,
-				0EDA3C982C748B74004EB089 /* VerifyViewModel.swift in Sources */,
+				0EDA3C982C748B74004EB089 /* RequestVerificationCodeViewModel.swift in Sources */,
 				0EC20D5E2C6344000063503B /* WeApp.swift in Sources */,
 				0EC20DAC2C6354CA0063503B /* EclipseProfileImageView.swift in Sources */,
 				0EC20DB22C6355730063503B /* User.swift in Sources */,
@@ -857,6 +865,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -918,6 +927,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -940,13 +950,14 @@
 		0EC20D6A2C6344010063503B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Pillars of Trust Dark";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "Pillars of Trust Light";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"Dark Rubik\" \"Light Rubik\" \"Dark Pillars of Trust\" \"Light Pillars of Trust\"";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Light Pillars of Trust";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = We/We.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"We/Preview Content\"";
 				DEVELOPMENT_TEAM = FJJB79XVG4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -965,17 +976,18 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5s;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ompreetham.We;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -985,13 +997,14 @@
 		0EC20D6B2C6344010063503B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "Pillars of Trust Dark";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "Pillars of Trust Light";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"Dark Rubik\" \"Light Rubik\" \"Dark Pillars of Trust\" \"Light Pillars of Trust\"";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Light Pillars of Trust";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = We/We.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"We/Preview Content\"";
 				DEVELOPMENT_TEAM = FJJB79XVG4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1010,17 +1023,18 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.5s;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ompreetham.We;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

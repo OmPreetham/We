@@ -10,7 +10,6 @@ import SwiftUI
 struct ChangePasswordView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = ChangePasswordViewModel()
-    @State private var showAlert = false
     
     var body: some View {
         NavigationStack {
@@ -25,17 +24,39 @@ struct ChangePasswordView: View {
                 }
                 
                 Section {
-                    Button("Change Password") {
+                    Button(action: {
                         viewModel.changePassword()
-                        showAlert = viewModel.showAlert
+                    }) {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                        } else {
+                            Text("Change Password")
+                        }
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .disabled(viewModel.isLoading || !viewModel.isFormValid)
                 }
             }
             .navigationTitle("Change Password")
             .navigationBarTitleDisplayMode(.inline)
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Password Change"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(
+                    title: Text("Password Change"),
+                    message: Text(viewModel.alertMessage),
+                    dismissButton: .default(Text("OK")) {
+                        if viewModel.alertMessage == "Password changed successfully" {
+                            dismiss()
+                        }
+                    }
+                )
+            }
+            .toolbar {
+                ToolbarItem {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
             }
         }
     }

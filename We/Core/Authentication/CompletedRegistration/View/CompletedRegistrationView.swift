@@ -9,41 +9,59 @@ import SwiftUI
 
 struct CompletedRegistrationView: View {
     @Environment(\.presentationMode) var presentationMode
-
+    @State private var isLoading = true
+    
     var body: some View {
         ZStack {
             NavigationStack {
-                VStack(spacing: 20) {
+                VStack {
                     AppLogoView()
                     
-                    Text("Registration Complete")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding()
-                    
-                    Text("Thank you for registering! Your account has been successfully created.")
-                        .font(.body)
+                    if isLoading {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .padding()
+                    } else {
+                        
+                        Group {
+                            Text("Account Created")
+                                .font(.largeTitle)
+                                .fontDesign(.serif)
+                                .fontWeight(.bold)
+                            
+                            Text("Thank you for registering! Your account has been successfully created.")
+                                .font(.subheadline)
+                                .fontDesign(.monospaced)
+                        }
                         .multilineTextAlignment(.center)
                         .padding()
-                    
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                        self.presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Text("Login Now")
-                            .font(.body)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.background)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        
+                        Button(action: {
+                            self.presentationMode.wrappedValue.dismiss()
+                            self.presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Text("Login Now")
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.background)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.primary)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        .padding()
                     }
-                    .padding()
                 }
                 .navigationBarBackButtonHidden()
-                .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            }
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
     }

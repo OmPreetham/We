@@ -19,7 +19,7 @@ struct AppIconView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 60, height: 60)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                         .padding(.trailing, 8)
                         .accessibilityLabel(Text(iconName))
                         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
@@ -38,20 +38,10 @@ struct AppIconView: View {
                 .padding(.vertical, 8)
                 .background(.primary.opacity(0.0001))
                 .onTapGesture {
-                    viewModel.changeIcon(to: iconName == "Pillars of Trust Light" ? nil : iconName)
+                    viewModel.changeIcon(to: iconName)
                 }
             }
-            .navigationTitle("App Icon")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
-                            .accessibilityLabel(Text("Cancel icon selection"))
-                    }
-                }
-            }
+            .navigationTitle("App Icons")
         }
     }
 }
