@@ -110,7 +110,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0ED40E3B2CA17A75000F61B7 /* Web View */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Web View"; sourceTree = "<group>"; };
+		0ED40E3B2CA17A75000F61B7 /* Safari UI */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Safari UI"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -315,7 +315,7 @@
 		0EC20D6C2C6344C90063503B /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				0ED40E3B2CA17A75000F61B7 /* Web View */,
+				0ED40E3B2CA17A75000F61B7 /* Safari UI */,
 				0EE7AF1D2C7C4A850046030F /* School */,
 				0EC20D752C6345480063503B /* Activity */,
 				0EFF6E482C6BFA020054A4DA /* AppIcon */,
@@ -725,7 +725,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				0ED40E3B2CA17A75000F61B7 /* Web View */,
+				0ED40E3B2CA17A75000F61B7 /* Safari UI */,
 			);
 			name = We;
 			packageProductDependencies = (

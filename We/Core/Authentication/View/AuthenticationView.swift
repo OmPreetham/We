@@ -9,29 +9,15 @@ import SwiftUI
 
 struct AuthenticationView: View {
     @StateObject private var viewModel = AuthenticationViewModel()
-    
-    @State private var showingLogin: Bool = false
-    @State private var showingRequestVerificationCode: Bool = false
-    
+    @StateObject private var safariViewModel = SafariViewModel()
+
     var body: some View {
         ZStack {
             VStack(spacing: 45) {
                 headerSection
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                VStack(spacing: 20)  {
-                    Group {
-                        authenticationButton(title: "Login", image: "chevron.compact.right", action: $showingLogin)
-                        
-                        authenticationButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: $showingRequestVerificationCode)
-                    }
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.background)
-                    .background(.foreground)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
-                }
+                authenticationButtons
                 
                 Spacer()
                 
@@ -40,14 +26,11 @@ struct AuthenticationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
         }
-        .sheet(isPresented: $showingLogin) {
-            LoginView(loginSuccess: { viewModel.isLoggedIn = true })
+        .sheet(isPresented: $viewModel.showingLogin) {
+            LoginView(loginSuccess: viewModel.setLoggedIn)
         }
-        .sheet(isPresented: $showingRequestVerificationCode) {
+        .sheet(isPresented: $viewModel.showingRequestVerificationCode) {
             RequestVerificationCodeView()
-        }
-        .sheet(isPresented: $viewModel.showingWebView) {
-            WebViewViewer(viewModel: WebViewModel(url: viewModel.webViewURL))
         }
     }
     
@@ -77,6 +60,13 @@ struct AuthenticationView: View {
         }
     }
     
+    private var authenticationButtons: some View {
+        VStack(spacing: 20) {
+            AuthButton(title: "Login", image: "chevron.compact.right", action: viewModel.toggleLogin)
+            AuthButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: viewModel.toggleRequestVerificationCode)
+        }
+    }
+    
     private var termsAndPrivacySection: some View {
         VStack(spacing: 8) {
             Text("By using this app, you agree to our")
@@ -84,15 +74,12 @@ struct AuthenticationView: View {
                 .foregroundStyle(.secondary)
             
             HStack(spacing: 4) {
-                Button("Terms of Service") {
-                    viewModel.showWebView(for: URL(string: "https://www.ompreetham.com")!)
-                }
+                TermsButton(title: "Terms of Service", url: "https://www.ompreetham.com", viewModel: safariViewModel)
                 Text("and")
                     .foregroundStyle(.secondary)
-                Button("Privacy Policy") {
-                    viewModel.showWebView(for: URL(string: "https://www.ompreetham.com")!)
-                }
+                TermsButton(title: "Privacy Policy", url: "https://www.ompreetham.com", viewModel: safariViewModel)
             }
+            .modifier(SafariViewControllerViewModifier(viewModel: safariViewModel))
             .font(.caption)
             
             Text("We use cookies to improve your experience.")
@@ -101,14 +88,36 @@ struct AuthenticationView: View {
         }
         .multilineTextAlignment(.center)
     }
+}
+
+struct AuthButton: View {
+    let title: String
+    let image: String
+    let action: () -> Void
     
-    private func authenticationButton(title: String, image: String, action: Binding<Bool>) -> some View {
-        Button {
-            action.wrappedValue.toggle()
-        } label: {
+    var body: some View {
+        Button(action: action) {
             Label(title, systemImage: image)
                 .padding()
                 .frame(maxWidth: .infinity)
+        }
+        .font(.body)
+        .fontWeight(.semibold)
+        .foregroundStyle(.background)
+        .background(.foreground)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+    }
+}
+
+struct TermsButton: View {
+    let title: String
+    let url: String
+    let viewModel: SafariViewModel
+    
+    var body: some View {
+        Button(title) {
+            viewModel.openURL(URL(string: url)!)
         }
     }
 }
