@@ -1,5 +1,5 @@
 //
-//  BoardsView.swift
+//  BoardsListView.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 10/3/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BoardListItem: Identifiable {
+struct BoardListItem: Identifiable, Hashable {
     let id = UUID()
     let title: String
     var content: String
@@ -24,14 +24,15 @@ struct BoardListItem: Identifiable {
     ]
 }
 
-struct BoardsView: View {
+struct BoardsListView: View {
     @State private var searchText: String = ""
+    
+    @State private var showingCreateBoardView: Bool = false
     
     let options = ["All", "Following"]
     @State private var selectedOption = "All"
     
     let staticBoards = BoardListItem.universityExamples
-    
     
     var body: some View {
         NavigationStack {
@@ -46,22 +47,39 @@ struct BoardsView: View {
                 
                 List(staticBoards) { item in
                     HStack {
-                        Image(systemName: item.systemImageName)
-                            .frame(width: 40, height: 40)
-                        VStack(alignment: .leading) {
-                            Text(item.title).font(.headline)
-                            Text(item.content).font(.subheadline)
+                        NavigationLink(destination: BoardDetailView(boardItem: item)) {
+                            Image(systemName: item.systemImageName)
+                                .frame(width: 40, height: 40)
+                            VStack(alignment: .leading) {
+                                Text(item.title).font(.headline)
+                                Text(item.content).font(.subheadline)
+                            }
                         }
+
                     }
+
                 }
                 .listStyle(.plain)
             }
             .navigationTitle("Boards")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        showingCreateBoardView.toggle()
+                    } label: {
+                        Label("Create", systemImage: "plus")
+                    }
+
+                }
+            }
+            .sheet(isPresented: $showingCreateBoardView) {
+                CreateBoardView()
+            }
             .searchable(text: $searchText, prompt: "Search Boards")
         }
     }
 }
 
 #Preview {
-    BoardsView()
+    BoardsListView()
 }

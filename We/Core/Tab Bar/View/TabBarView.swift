@@ -20,7 +20,7 @@ struct TabBarView: View {
                 .onAppear { selectedTab = 0 }
                 .tag(0)
             
-            BoardsView()
+            BoardsListView()
                 .tabItem {
                     Label("Boards", systemImage: selectedTab == 1 ? "square.grid.2x2.fill" : "square.grid.2x2")
                         .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
