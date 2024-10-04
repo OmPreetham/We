@@ -29,10 +29,10 @@ struct AuthScreenView: View {
             .padding()
         }
         .sheet(isPresented: $showingLogin) {
-            // Show sheet to loginview
+            LoginView()
         }
         .sheet(isPresented: $showingRegister) {
-            // Show sheet to Register View
+            VerifyView()
         }
     }
     
@@ -64,8 +64,12 @@ struct AuthScreenView: View {
     
     private var authenticationButtons: some View {
         VStack(spacing: 20) {
-            AuthButton(title: "Login", image: "chevron.compact.right", action: {})
-            AuthButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: {})
+            AuthButton(title: "Login", image: "chevron.compact.right", action: {
+                showingLogin.toggle()
+            })
+            AuthButton(title: "Verify & Sign Up", image: "chevron.compact.up", action: {
+                showingRegister.toggle()
+            })
         }
     }
     

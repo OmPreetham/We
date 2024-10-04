@@ -10,7 +10,7 @@ import SwiftUI
 struct ExploreView: View {
     @State private var searchText: String = ""
     
-    @State private var showingProfile: Bool = false
+    @State private var showingSettings: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -21,14 +21,14 @@ struct ExploreView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        showingProfile.toggle()
+                        showingSettings.toggle()
                     } label: {
-                        Image(systemName: "person.and.background.dotted")
+                        Image(systemName: "gear")
                     }
                 }
             }
-            .sheet(isPresented: $showingProfile) {
-                ProfileView()
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
             }
             .searchable(text: $searchText, prompt: "Search")
         }
