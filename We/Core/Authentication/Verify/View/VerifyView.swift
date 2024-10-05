@@ -35,7 +35,7 @@ struct VerifyView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
 
                             VStack(alignment: .leading) {
                                 Text("A verification code will be sent to your university email.")

@@ -11,6 +11,8 @@ struct HomeView: View {
     let options = ["For You", "Following"]
     @State private var selectedOption = "For You"
     
+    @State private var showingCreatePost: Bool = false
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -20,10 +22,23 @@ struct HomeView: View {
                             .tag(option)
                     }
                 }
-                .padding(.horizontal)
                 .pickerStyle(.segmented)
+                .padding(.horizontal)
             }
             .navigationTitle("Today")
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        showingCreatePost.toggle()
+                    } label: {
+                        Label("New Post", systemImage: "plus")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .sheet(isPresented: $showingCreatePost) {
+                CreatePostView()
+            }
         }
     }
 }

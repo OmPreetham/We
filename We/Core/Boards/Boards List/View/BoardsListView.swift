@@ -9,18 +9,19 @@ import SwiftUI
 
 struct BoardListItem: Identifiable, Hashable {
     let id = UUID()
-    let title: String
+    var title: String
     var content: String
-    let systemImageName: String
+    var symbolColor: Color
+    var systemImageName: String
     
     // Static examples
     static let universityExamples = [
-        BoardListItem(title: "Academic Affairs", content: "Oversees curriculum and academic standards", systemImageName: "book.closed"),
-        BoardListItem(title: "Student Life", content: "Focuses on student engagement and campus activities", systemImageName: "person.fill"),
-        BoardListItem(title: "Research Committee", content: "Manages research initiatives and funding", systemImageName: "magnifyingglass"),
-        BoardListItem(title: "Finance Board", content: "Handles budgeting and financial planning for the university", systemImageName: "dollarsign.circle"),
-        BoardListItem(title: "Ethics Committee", content: "Ensures all university activities uphold ethical standards", systemImageName: "scalemass"),
-        BoardListItem(title: "Sports Committee", content: "Coordinates intercollegiate and intramural sports programs", systemImageName: "sportscourt")
+        BoardListItem(title: "Academic Affairs", content: "Oversees curriculum and academic standards", symbolColor: .blue, systemImageName: "book.closed"),
+        BoardListItem(title: "Student Life", content: "Focuses on student engagement and campus activities", symbolColor: .red, systemImageName: "person.fill"),
+        BoardListItem(title: "Research Committee", content: "Manages research initiatives and funding", symbolColor: .orange, systemImageName: "magnifyingglass"),
+        BoardListItem(title: "Finance Board", content: "Handles budgeting and financial planning for the university", symbolColor: .yellow, systemImageName: "dollarsign.circle"),
+        BoardListItem(title: "Ethics Committee", content: "Ensures all university activities uphold ethical standards", symbolColor: .brown, systemImageName: "scalemass"),
+        BoardListItem(title: "Sports Committee", content: "Coordinates intercollegiate and intramural sports programs", symbolColor: .purple, systemImageName: "sportscourt")
     ]
 }
 
@@ -48,12 +49,23 @@ struct BoardsListView: View {
                 List(staticBoards) { item in
                     HStack {
                         NavigationLink(destination: BoardDetailView(boardItem: item)) {
-                            Image(systemName: item.systemImageName)
-                                .frame(width: 40, height: 40)
+                            ZStack {
+                                Rectangle()
+                                    .fill(item.symbolColor)
+                                    .clipShape(.rect(cornerRadius: 8))
+                                
+                                Image(systemName: item.systemImageName)
+                                    .foregroundStyle(.white)
+                            }
+                            .frame(width: 50, height: 50)
+                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .padding(.trailing, 8)
+
                             VStack(alignment: .leading) {
                                 Text(item.title).font(.headline)
                                 Text(item.content).font(.subheadline)
                             }
+                            .lineLimit(3)
                         }
 
                     }
@@ -69,7 +81,7 @@ struct BoardsListView: View {
                     } label: {
                         Label("Create", systemImage: "plus")
                     }
-
+                    .buttonStyle(.borderedProminent)
                 }
             }
             .sheet(isPresented: $showingCreateBoardView) {

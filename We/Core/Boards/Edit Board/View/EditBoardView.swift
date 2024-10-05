@@ -1,20 +1,20 @@
 //
-//  CreateBoardView.swift
+//  EditBoardView.swift
 //  We
 //
-//  Created by Om Preetham Bandi on 10/4/24.
+//  Created by Om Preetham Bandi on 10/5/24.
 //
 
 import SwiftUI
 
-struct CreateBoardView: View {
+struct EditBoardView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isSymbolPickerPresented = false
     
-    @State private var title = ""
-    @State private var content = ""
-    @State private var symbolColor: Color = .accentColor
-    @State private var systemImageName: String = "graduationcap"
+    @Binding var title: String
+    @Binding var content: String
+    @Binding var symbolColor: Color
+    @Binding var systemImageName: String
     
     var body: some View {
         NavigationStack {
@@ -42,7 +42,7 @@ struct CreateBoardView: View {
                     TextField("Description", text: $content, axis: .vertical)
                 }
             }
-            .navigationTitle("Create Board")
+            .navigationTitle("Edit Board")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -52,7 +52,7 @@ struct CreateBoardView: View {
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Create") {
+                    Button("Done") {
                         // Handle creation logic here
                         dismiss()
                     }
@@ -67,5 +67,5 @@ struct CreateBoardView: View {
 }
 
 #Preview {
-    CreateBoardView()
+    EditBoardView(title: .constant("Graduation"), content: .constant("This board is for graduation."), symbolColor: .constant(.accentColor), systemImageName: .constant("graduationcap.fill"))
 }

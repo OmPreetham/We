@@ -14,12 +14,12 @@ struct LogoCell: View {
                 Rectangle()
                     .frame(width: 6, height: 45)
                     .padding(.horizontal, 2)
-                    .foregroundStyle(.ultraThickMaterial)
+                    .foregroundStyle(.primary)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     .overlay {
                         Color.primary
                     }
-                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+                    .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  VerificationCodeInputCell.swift
+//  CodeInputCell.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 10/04/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VerificationCodeInput: View {
+struct CodeInputCell: View {
     @Binding var code: String
     let codeLength: Int
     
@@ -21,8 +21,8 @@ struct VerificationCodeInput: View {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(.ultraThinMaterial)
                             .frame(width: 50, height: 60)
-                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
-                        
+                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+
                         if index < code.count {
                             Text(String(code[code.index(code.startIndex, offsetBy: index)]))
                                 .font(.title)
@@ -50,5 +50,5 @@ struct VerificationCodeInput: View {
 }
 
 #Preview {
-    VerificationCodeInput(code: .constant("123"), codeLength: 6)
+    CodeInputCell(code: .constant("123"), codeLength: 6)
 }

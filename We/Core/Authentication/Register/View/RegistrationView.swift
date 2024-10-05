@@ -34,7 +34,7 @@ struct RegistrationView: View {
                         Spacer()
                         
                         VStack(spacing: 20)  {
-                            VerificationCodeInput(code: $verificationCode, codeLength: 6)
+                            CodeInputCell(code: $verificationCode, codeLength: 6)
                                 .padding(.bottom)
                                 .focused($focusedField, equals: .verificationCode)
                             
@@ -50,8 +50,8 @@ struct RegistrationView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
-                            
+                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+
                             PasswordStrengthView(password: $password)
                                 .padding(.horizontal)
                             
@@ -79,7 +79,7 @@ struct RegistrationView: View {
                                 .background(.primary)
                                 .opacity(isLoading ? 0.6 : 1)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+                                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
                             }
                             .disabled(isLoading)
                         }

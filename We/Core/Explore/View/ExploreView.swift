@@ -23,8 +23,9 @@ struct ExploreView: View {
                     Button {
                         showingSettings.toggle()
                     } label: {
-                        Image(systemName: "gear")
+                        Label("Settings", systemImage: "gear")
                     }
+                    .buttonStyle(.bordered)
                 }
             }
             .sheet(isPresented: $showingSettings) {
