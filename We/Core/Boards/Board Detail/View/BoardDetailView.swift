@@ -17,11 +17,8 @@ struct BoardDetailView: View {
     @State var boardItem: BoardListItem
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
-
-            }
-            .padding()
+        ZStack {
+            PostListView()
         }
         .navigationTitle(boardItem.title)
         .toolbar {

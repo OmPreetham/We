@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) var dismiss
+    
     @State private var searchText: String = ""
 
-    @Environment(\.dismiss) var dismiss
-
+    @State private var showingAuthScreen: Bool = false
+    
     var body: some View {
         NavigationStack {
             List {
@@ -26,11 +28,15 @@ struct SettingsView: View {
                 ToolbarItem(placement: .automatic) {
                     SignOutButton(action: {
                         // Call SignOut Function
+                        showingAuthScreen.toggle()
                         dismiss()
                     })
                 }
             }
             .searchable(text: $searchText, prompt: "Search")
+            .sheet(isPresented: $showingAuthScreen) {
+                AuthScreenView()
+            }
         }
     }
     

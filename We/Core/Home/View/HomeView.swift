@@ -25,6 +25,9 @@ struct HomeView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
+                .padding(.bottom)
+                
+                PostListView()
             }
             .navigationTitle("Today")
             .toolbar {
