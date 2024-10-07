@@ -25,7 +25,6 @@ struct ExploreView: View {
                     } label: {
                         Label("Settings", systemImage: "gear")
                     }
-                    .buttonStyle(.bordered)
                 }
             }
             .sheet(isPresented: $showingSettings) {

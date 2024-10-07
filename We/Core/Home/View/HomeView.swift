@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var selectedOption = "For You"
     
     @State private var showingCreatePost: Bool = false
+    @State private var showingProfile: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -27,14 +28,29 @@ struct HomeView: View {
             }
             .navigationTitle("Today")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingProfile.toggle()
+                    } label: {
+                        Label("Profile", systemImage: "person.crop.circle")
+                    }
+                    .buttonStyle(.bordered)
+                    .clipShape(.circle)
+                }
+                
                 ToolbarItem {
                     Button {
                         showingCreatePost.toggle()
                     } label: {
-                        Label("New Post", systemImage: "plus")
+                        Label("Post", systemImage: "plus")
+                            .labelStyle(.titleAndIcon)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
+                    .clipShape(.capsule)
                 }
+            }
+            .sheet(isPresented: $showingProfile) {
+                ProfileView()
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()

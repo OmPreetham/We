@@ -18,20 +18,29 @@ struct CreateBoardView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Rectangle()
-                    .fill(symbolColor)
-                    .frame(width: 100, height: 100)
-                    .clipShape(.rect(cornerRadius: 16))
-                
-                Image(systemName: systemImageName)
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(.white)
-                    .frame(width: 50, height: 50)
+            ZStack(alignment: .bottomTrailing) {
+                ZStack {
+                    Rectangle()
+                        .fill(symbolColor.gradient.materialActiveAppearance(.automatic))
+                        .frame(width: 100, height: 100)
+                        .clipShape(.rect(cornerRadius: 16))
+                    
+                    Image(systemName: systemImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                        .frame(width: 50, height: 50)
+                }
+                .padding()
+
+            Image(systemName: "plus.circle.fill")
+                .resizable()
+                .foregroundStyle(.white)
+                .frame(width: 30, height: 30)
+                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                .padding([.trailing, .bottom], 12)
             }
             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-            .padding()
             .onTapGesture {
                 isSymbolPickerPresented = true
             }
@@ -46,15 +55,21 @@ struct CreateBoardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark.circle.fill")
+                            .labelStyle(.titleOnly)
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Create") {
+                    Button {
                         // Handle creation logic here
                         dismiss()
+                    } label: {
+                        Label("Create", systemImage: "plus")
+                            .labelStyle(.titleOnly)
                     }
                     .disabled(title.isEmpty || content.isEmpty)
                 }

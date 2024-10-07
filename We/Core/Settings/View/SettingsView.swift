@@ -60,7 +60,7 @@ struct SettingsView: View {
     
     private var supportItems: [SettingsItem] {
         [
-            SettingsItem(title: "FAQs", icon: "questionmark.circle", destination: AnyView(Text("FAQs"))),
+            SettingsItem(title: "FAQs", icon: "questionmark.circle", destination: AnyView(FAQView())),
             SettingsItem(title: "Send Feedback", icon: "paperplane", destination: AnyView(Text("Send Feedback"))),
             SettingsItem(title: "What's New", icon: "star", destination: AnyView(Text("What's New")))
         ]

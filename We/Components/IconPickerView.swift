@@ -42,71 +42,78 @@ struct IconPickerView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Rectangle()
-                    .fill(selectedColor)
-                    .frame(width: 100, height: 100)
-                    .clipShape(.rect(cornerRadius: 16))
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(selectedColor)
+                        .frame(width: 100, height: 100)
+                        .clipShape(.rect(cornerRadius: 16))
+                    
+                    Image(systemName: selectedSymbol)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .frame(width: 50, height: 50)
+                }
+                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                .padding()
                 
-                Image(systemName: selectedSymbol)
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.white)
-                    .frame(width: 50, height: 50)
-            }
-            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-            .padding()
-            
-            List {
-                VStack(spacing: 20) {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 15) {
-                        ForEach(colors, id: \.self) { color in
-                            Circle()
-                                .fill(color)
-                                .frame(width: 40, height: 40)
-                                .padding(4)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.secondary.opacity(selectedColor == color ? 0.5 : 0), lineWidth: 4)
-                                )
-                                .onTapGesture {
-                                    selectedColor = color
-                                }
+                List {
+                    VStack(spacing: 20) {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 15) {
+                            ForEach(colors, id: \.self) { color in
+                                Circle()
+                                    .fill(color)
+                                    .frame(width: 40, height: 40)
+                                    .padding(4)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.secondary.opacity(selectedColor == color ? 0.5 : 0), lineWidth: 4)
+                                    )
+                                    .onTapGesture {
+                                        selectedColor = color
+                                    }
+                            }
                         }
-                    }
-                    
-                    Divider()
-                    
-                    LazyVGrid(columns: Array(repeating: GridItem(.adaptive(minimum: 50)), count: 6), spacing: 20) {
-                        ForEach(symbols, id: \.self) { symbol in
-                            Image(systemName: symbol)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .padding(12)
-                                .foregroundStyle(.white)
-                                .background(selectedSymbol == symbol ? selectedColor.opacity(0.5) : .init(uiColor: .secondaryLabel))
-                                .clipShape(.circle)
-                                .onTapGesture {
-                                    selectedSymbol = symbol
-                                }
+                        
+                        Divider()
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.adaptive(minimum: 50)), count: 6), spacing: 20) {
+                            ForEach(symbols, id: \.self) { symbol in
+                                Image(systemName: symbol)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .padding(12)
+                                    .background(selectedSymbol == symbol ? selectedColor.opacity(0.5) : .init(uiColor: .tertiaryLabel))
+                                    .clipShape(.circle)
+                                    .onTapGesture {
+                                        selectedSymbol = symbol
+                                    }
+                            }
                         }
                     }
                 }
+                .listStyle(.sidebar)
             }
-            .listStyle(.sidebar)
             .navigationTitle(viewTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark.circle.fill")
+                            .labelStyle(.titleOnly)
                     }
                 }
+
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
-                        // Handle the done action here
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Done", systemImage: "checkmark.circle.fill")
+                            .labelStyle(.titleOnly)
                     }
                 }
             }

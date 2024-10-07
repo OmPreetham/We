@@ -9,7 +9,7 @@ import SwiftUI
 
 enum AppIcon: String, CaseIterable {
     case appIcon = "Default"
-    case appIcon1 = "Rubik"
+    case appIcon1 = "Rozha"
     
     var iconValue: String? {
         if self == .appIcon {
@@ -21,14 +21,15 @@ enum AppIcon: String, CaseIterable {
     
     var previewImage: String {
         switch self {
-        case .appIcon: "Default"
-        case .appIcon1: "Rubik"
+        case .appIcon: return "Default"
+        case .appIcon1: return "Rozha"
         }
     }
 }
 
 struct AppIconView: View {
-    @State private var currentAppIcon = AppIcon.appIcon
+    // StateObject to hold the view model
+    @StateObject private var viewModel = AppIconViewModel()
     
     var body: some View {
         NavigationStack {
@@ -40,34 +41,24 @@ struct AppIconView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 60, height: 60)
-                                .clipShape(.rect(cornerRadius: 10))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
                             
                             Text(appIcon.rawValue)
                                 .fontWeight(.semibold)
                             
                             Spacer()
                             
-                            Image(systemName: currentAppIcon == appIcon ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(currentAppIcon == .appIcon ? .green : Color.primary)
-                            
+                            Image(systemName: viewModel.currentAppIcon == appIcon ? "checkmark.seal.fill" : "")
+                                .foregroundStyle(Color(red: 212/255, green: 175/255, blue: 55/255))
                         }
-                        .contentShape(.rect)
+                        .contentShape(Rectangle())
                         .onTapGesture {
-                            currentAppIcon = appIcon
-                            UIApplication.shared.setAlternateIconName(appIcon.rawValue, completionHandler: nil)
+                            viewModel.changeIcon(to: appIcon)
                         }
                     }
                 }
             }
             .navigationTitle("App Icons")
-        }
-        .onAppear {
-            if let alternativeAppIcon = UIApplication.shared.alternateIconName {
-                let appIcon = AppIcon(rawValue: alternativeAppIcon)!
-                currentAppIcon = appIcon
-            } else {
-                currentAppIcon = .appIcon
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Any Rubik.jpg",
+      "filename" : "Any.jpg",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -24,7 +24,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "Tinted Rubik.jpg",
+      "filename" : "Tinted.jpg",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

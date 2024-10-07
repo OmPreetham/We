@@ -8,8 +8,59 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Environment(\.dismiss) var dismiss
+
+    @State private var showingBookmarks = false
+    @State private var selectedPicker = 0
+    
+    @State private var username: String = "OmPreetham"
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                Picker("Select Content", selection: $selectedPicker) {
+                    Text("Posts").tag(0)
+                    Text("Replies").tag(1)
+                    Text("Upvotes").tag(2)
+                    Text("Downvotes").tag(3)
+                }
+                .pickerStyle(.segmented)
+                
+                // Content based on Picker Selection
+                if selectedPicker == 0 {
+                    Text("User's Posts")
+                } else if selectedPicker == 1 {
+                    Text("User's Replies")
+                } else if selectedPicker == 2 {
+                    Text("User's Upvotes")
+                } else {
+                    Text("User's Downvotes")
+                }
+            }
+            .padding()
+            .navigationTitle(username)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showingBookmarks.toggle()
+                    } label: {
+                        Label("Bookmarks", systemImage: "bookmark.fill")
+                    }
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Done", systemImage: "checkmark.circle.fill")
+                            .labelStyle(.titleOnly)
+                    }
+                }
+            }
+            .sheet(isPresented: $showingBookmarks) {
+                BookmarksView()
+            }
+        }
     }
 }
 

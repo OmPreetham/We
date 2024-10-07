@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EditBoardView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var isSymbolPickerPresented = false
+    
+    @State private var showingIconPicker = false
     
     @Binding var title: String
     @Binding var content: String
@@ -20,7 +21,7 @@ struct EditBoardView: View {
         NavigationStack {
             ZStack {
                 Rectangle()
-                    .fill(symbolColor)
+                    .fill(symbolColor.gradient.materialActiveAppearance(.automatic))
                     .frame(width: 100, height: 100)
                     .clipShape(.rect(cornerRadius: 16))
                 
@@ -33,7 +34,7 @@ struct EditBoardView: View {
             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
             .padding()
             .onTapGesture {
-                isSymbolPickerPresented = true
+                showingIconPicker.toggle()
             }
             
             Form {
@@ -46,20 +47,25 @@ struct EditBoardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark.circle.fill")
+                            .labelStyle(.titleOnly)
                     }
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
-                        // Handle creation logic here
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Done", systemImage: "checkmark.circle.fill")
+                            .labelStyle(.titleOnly)
                     }
                     .disabled(title.isEmpty || content.isEmpty)
                 }
             }
-            .sheet(isPresented: $isSymbolPickerPresented) {
+            .sheet(isPresented: $showingIconPicker) {
                 IconPickerView(viewTitle: "Board Icon", selectedColor: $symbolColor, selectedSymbol: $systemImageName)
             }
         }

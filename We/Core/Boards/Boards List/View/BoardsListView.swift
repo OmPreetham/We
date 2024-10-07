@@ -28,7 +28,7 @@ struct BoardListItem: Identifiable, Hashable {
 struct BoardsListView: View {
     @State private var searchText: String = ""
     
-    @State private var showingCreateBoardView: Bool = false
+    @State private var showingCreateBoard: Bool = false
     
     let options = ["All", "Following"]
     @State private var selectedOption = "All"
@@ -43,15 +43,15 @@ struct BoardsListView: View {
                         Text(option).tag(option)
                     }
                 }
-                .padding(.horizontal)
                 .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
                 List(staticBoards) { item in
                     HStack {
                         NavigationLink(destination: BoardDetailView(boardItem: item)) {
                             ZStack {
                                 Rectangle()
-                                    .fill(item.symbolColor)
+                                    .fill(item.symbolColor.gradient.materialActiveAppearance(.automatic))
                                     .clipShape(.rect(cornerRadius: 8))
                                 
                                 Image(systemName: item.systemImageName)
@@ -62,14 +62,15 @@ struct BoardsListView: View {
                             .padding(.trailing, 8)
 
                             VStack(alignment: .leading) {
-                                Text(item.title).font(.headline)
-                                Text(item.content).font(.subheadline)
+                                Text(item.title)
+                                    .font(.headline)
+                                
+                                Text(item.content)
+                                    .font(.subheadline)
                             }
                             .lineLimit(3)
                         }
-
                     }
-
                 }
                 .listStyle(.plain)
             }
@@ -77,14 +78,16 @@ struct BoardsListView: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        showingCreateBoardView.toggle()
+                        showingCreateBoard.toggle()
                     } label: {
-                        Label("Create", systemImage: "plus")
+                        Label("Board", systemImage: "plus")
+                            .labelStyle(.titleAndIcon)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
+                    .clipShape(.capsule)
                 }
             }
-            .sheet(isPresented: $showingCreateBoardView) {
+            .sheet(isPresented: $showingCreateBoard) {
                 CreateBoardView()
             }
             .searchable(text: $searchText, prompt: "Search Boards")
