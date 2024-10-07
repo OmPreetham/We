@@ -25,19 +25,18 @@ struct ProfileView: View {
                     Text("Downvotes").tag(3)
                 }
                 .pickerStyle(.segmented)
+                .padding(.horizontal)
                 
-                // Content based on Picker Selection
                 if selectedPicker == 0 {
-                    Text("User's Posts")
+                    PostListView()
                 } else if selectedPicker == 1 {
-                    Text("User's Replies")
+                    PostListView()
                 } else if selectedPicker == 2 {
-                    Text("User's Upvotes")
+                    PostListView()
                 } else {
-                    Text("User's Downvotes")
+                    PostListView()
                 }
             }
-            .padding()
             .navigationTitle(username)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

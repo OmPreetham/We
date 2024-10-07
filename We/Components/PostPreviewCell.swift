@@ -18,7 +18,7 @@ struct PostPreviewCell: View {
     var downvoteCount: String = "300"
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 2) {
                 Text(username)
                 
@@ -32,21 +32,19 @@ struct PostPreviewCell: View {
             }
             .font(.caption)
             
-            Divider()
-            
-            Text(postTitle)
-                .font(.headline)
-                .fontDesign(.serif)
-                .fontWeight(.bold)
-            
-            Text("")
-            
-            Text(postExcerpt)
-                .font(.callout)
-                .lineLimit(5)
-            
-            Divider()
-            
+            VStack(alignment: .leading) {
+                Text(postTitle)
+                    .font(.headline)
+                    .fontDesign(.serif)
+                    .fontWeight(.bold)
+                
+                Text("")
+                
+                Text(postExcerpt)
+                    .font(.callout)
+                    .lineLimit(5)
+            }
+                        
             HStack {
                 Button(action: {}) {
                     Label("Reply", systemImage: "arrowshape.turn.up.left")
@@ -81,12 +79,11 @@ struct PostPreviewCell: View {
                 }
                 .tint(.primary)
             }
-            .padding(.top, 4)
             .font(.callout)
         }
-        .padding()
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(12)
+        
+        Divider()
     }
 }
 

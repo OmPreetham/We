@@ -25,7 +25,6 @@ struct HomeView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
-                .padding(.bottom)
                 
                 PostListView()
             }

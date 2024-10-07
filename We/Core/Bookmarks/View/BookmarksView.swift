@@ -12,8 +12,8 @@ struct BookmarksView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                
+            ZStack {
+                PostListView()
             }
             .navigationTitle("Bookmarks")
             .toolbar {

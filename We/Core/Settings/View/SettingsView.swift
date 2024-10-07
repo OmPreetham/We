@@ -29,7 +29,7 @@ struct SettingsView: View {
                     SignOutButton(action: {
                         // Call SignOut Function
                         showingAuthScreen.toggle()
-                        dismiss()
+//                        dismiss()
                     })
                 }
             }
