@@ -13,7 +13,7 @@ struct BookmarksView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                PostListView()
+                PostListView(posts: samplePosts)
             }
             .navigationTitle("Bookmarks")
             .toolbar {

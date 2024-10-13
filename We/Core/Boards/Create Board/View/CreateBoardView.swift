@@ -9,11 +9,11 @@ import SwiftUI
 
 struct CreateBoardView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var isSymbolPickerPresented = false
+    @State private var showingIconPicker = false
     
     @State private var title = ""
     @State private var content = ""
-    @State private var symbolColor: Color = .accentColor
+    @State private var symbolColor: String = "33C1FF"
     @State private var systemImageName: String = "graduationcap"
     
     var body: some View {
@@ -21,7 +21,7 @@ struct CreateBoardView: View {
             ZStack(alignment: .bottomTrailing) {
                 ZStack {
                     Rectangle()
-                        .fill(symbolColor.gradient.materialActiveAppearance(.automatic))
+                        .fill(Color.init(hex: symbolColor).gradient.materialActiveAppearance(.automatic))
                         .frame(width: 100, height: 100)
                         .clipShape(.rect(cornerRadius: 16))
                     
@@ -42,7 +42,7 @@ struct CreateBoardView: View {
             }
             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
             .onTapGesture {
-                isSymbolPickerPresented = true
+                showingIconPicker = true
             }
             
             Form {
@@ -74,7 +74,7 @@ struct CreateBoardView: View {
                     .disabled(title.isEmpty || content.isEmpty)
                 }
             }
-            .sheet(isPresented: $isSymbolPickerPresented) {
+            .sheet(isPresented: $showingIconPicker) {
                 IconPickerView(viewTitle: "Board Icon", selectedColor: $symbolColor, selectedSymbol: $systemImageName)
             }
         }

@@ -26,7 +26,7 @@ struct HomeView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
                 
-                PostListView()
+                PostListView(posts: samplePosts)
             }
             .navigationTitle("Today")
             .toolbar {
@@ -36,8 +36,7 @@ struct HomeView: View {
                     } label: {
                         Label("Profile", systemImage: "person.crop.circle")
                     }
-                    .buttonStyle(.bordered)
-                    .clipShape(.circle)
+                    .buttonStyle(.borderless)
                 }
                 
                 ToolbarItem {
@@ -47,8 +46,7 @@ struct HomeView: View {
                         Label("Post", systemImage: "plus")
                             .labelStyle(.titleAndIcon)
                     }
-                    .buttonStyle(.bordered)
-                    .clipShape(.capsule)
+                    .buttonStyle(.borderless)
                 }
             }
             .sheet(isPresented: $showingProfile) {

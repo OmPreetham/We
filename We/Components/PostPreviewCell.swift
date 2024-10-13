@@ -8,85 +8,139 @@
 import SwiftUI
 
 struct PostPreviewCell: View {
-    var username: String = "@ShinjiIkari"
-    var boardName: String = "NERV Headquarters"
-    var postDate: String = "Mon, Sep 13 at 18:30"
-    var postTitle: String = "Unit-01 Synchronization Issues"
-    var postExcerpt: String = "Pilot report: Today’s synchronization test was more difficult than expected. The neural feedback loop from Unit-01 seemed unstable. Dr. Akagi suspects an AT Field interference, but no clear source was identified..."
-    var replyCount: String = "1.5K"
-    var upvoteCount: String = "5.2K"
-    var downvoteCount: String = "300"
+    let post: Post
+    let board: Board  // Adding a Board object
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 2) {
-                Text(username)
+        ZStack {
+            HStack(alignment: .top) {
+                // Updated Image to use the board's systemImageName and symbolColor
+                Image(systemName: board.systemImageName)
+                    .frame(width: 50, height: 50)
+                    .background(Color(hex: board.symbolColor))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .onTapGesture {
+                        // Add action for image tap if needed
+                    }
                 
-                Text("/")
-                
-                Text(boardName)
-                
-                Spacer()
-                
-                Text(postDate)
-            }
-            .font(.caption)
-            
-            VStack(alignment: .leading) {
-                Text(postTitle)
-                    .font(.headline)
-                    .fontDesign(.serif)
-                    .fontWeight(.bold)
-                
-                Text("")
-                
-                Text(postExcerpt)
-                    .font(.callout)
-                    .lineLimit(5)
-            }
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .top, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(board.title)  // Showing board title here
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            
+                            Text(post.username)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
                         
-            HStack {
-                Button(action: {}) {
-                    Label("Reply", systemImage: "arrowshape.turn.up.left")
-                        .labelStyle(.iconOnly)
-                    Text(replyCount)
+                        Text(post.createdAt.formatted(date: .numeric, time: .standard))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(post.title)
+                            .font(.title3)
+                            .fontDesign(.serif)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.primary)
+                        
+                        Group {
+                            Text(post.content)
+                                .font(.callout)
+                                .foregroundStyle(.primary)
+                                .lineLimit(8)
+                                .truncationMode(.tail)
+                                .overlay(
+                                    Label("Read More", systemImage: "greaterthan")
+                                        .labelStyle(.iconOnly)
+                                        .font(.callout)
+                                        .foregroundStyle(.teal)
+                                        .padding(.bottom, 4)
+                                        .opacity(post.content.count > 360 ? 1 : 0),
+                                    alignment: .bottomTrailing
+                                )
+                        }
+                        .lineSpacing(2)
+                    }
+                    
+                    HStack {
+                        Button {
+                            // Action for reply button
+                        } label: {
+                            Label("Comment", systemImage: "message")
+                                .labelStyle(.iconOnly)
+                            
+                            Text(String(post.commentCount))
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            // Action for upvote button
+                        } label: {
+                            Label("Upvote", systemImage: "hand.thumbsup")
+                                .labelStyle(.iconOnly)
+                            
+                            Text(String(post.upvoteCount))
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            // Action for downvote button
+                        } label: {
+                            Label("Downvote", systemImage: "hand.thumbsdown")
+                                .labelStyle(.iconOnly)
+                            
+                            Text(String(post.downvoteCount))
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            // Action for bookmark button
+                        } label: {
+                            Label("Bookmark", systemImage: "bookmark")
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                    .foregroundStyle(.secondary)
                 }
-                .tint(.primary)
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Label("Upvote", systemImage: "arrowshape.up")
-                        .labelStyle(.iconOnly)
-                    Text(upvoteCount)
-                }
-                .tint(.primary)
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Label("Downvote", systemImage: "arrowshape.down")
-                        .labelStyle(.iconOnly)
-                    Text(downvoteCount)
-                }
-                .tint(.primary)
-                
-                Spacer()
-                
-                Button(action: {}) {
-                    Label("Bookmark", systemImage: "bookmark")
-                        .labelStyle(.iconOnly)
-                }
-                .tint(.primary)
             }
-            .font(.callout)
         }
-        .padding(12)
-        
-        Divider()
     }
 }
 
 #Preview {
-    PostPreviewCell()
+    PostPreviewCell(
+        post: Post(
+            id: "610cda503b0f5a001e86534c",
+            title: "Best Study Spots on Campus?",
+            content: "Looking for quiet places to study...",
+            user: "610cd1cf3b0f5a001e86534b",
+            username: "@AnonStudent",
+            parentPost: nil,
+            path: ",",
+            upvoteCount: 1500,
+            downvoteCount: 20,
+            commentCount: 120,
+            viewCount: 1000,
+            board: "610cf9e03b0f5a001e86534d",
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+        board: Board(
+            id: "610cf9e03b0f5a001e86534d",
+            title: "Study Board",
+            description: "A board dedicated to finding great study spots",
+            userId: "610cd1cf3b0f5a001e86534b",
+            symbolColor: "#3333FF",
+            systemImageName: "books.vertical"
+        )
+    )
 }

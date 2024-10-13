@@ -11,18 +11,29 @@ struct BoardDetailView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var showingEditBoard = false
-    
     @State private var followingBoard = false
     
-    @State var boardItem: BoardListItem
+    @State var boardItem: Board
+    let posts: [Post]
+
+    var boardPosts: [Post] {
+        posts.filter { $0.board == boardItem.id }
+    }
 
     var body: some View {
-        ZStack {
-            PostListView()
+        VStack {
+            if boardPosts.isEmpty {
+                Text("No posts available for this board.")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .padding()
+            } else {
+                PostListView(posts: boardPosts) // Display filtered posts for the board
+            }
         }
         .navigationTitle(boardItem.title)
         .toolbar {
-            ToolbarItem {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     followingBoard.toggle()
                 } label: {
@@ -34,7 +45,7 @@ struct BoardDetailView: View {
                 }
             }
             
-            ToolbarItem {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     showingEditBoard.toggle()
                 } label: {
@@ -43,11 +54,21 @@ struct BoardDetailView: View {
             }
         }
         .sheet(isPresented: $showingEditBoard) {
-            EditBoardView(title: $boardItem.title, content: $boardItem.content, symbolColor: $boardItem.symbolColor, systemImageName: $boardItem.systemImageName)
+            EditBoardView(title: $boardItem.title, description: $boardItem.description, symbolColor: $boardItem.symbolColor, systemImageName: $boardItem.systemImageName)
         }
     }
 }
 
 #Preview {
-    BoardDetailView(boardItem: .init(title: "Board Title", content: "Board Content", symbolColor: .accentColor, systemImageName: ""))
+    BoardDetailView(
+        boardItem: Board(
+            id: "610cf9e03b0f5a001e86534d",
+            title: "Board Title",
+            description: "Board Description",
+            userId: "user_id",
+            symbolColor: "#FF5733",
+            systemImageName: "books.vertical"
+        ),
+        posts: samplePosts
+    )
 }

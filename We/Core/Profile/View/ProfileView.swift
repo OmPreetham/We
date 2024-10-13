@@ -13,7 +13,7 @@ struct ProfileView: View {
     @State private var showingBookmarks = false
     @State private var selectedPicker = 0
     
-    @State private var username: String = "OmPreetham"
+    @State private var username: String = "ShinjiIkariUnit01"
     
     var body: some View {
         NavigationStack {
@@ -28,13 +28,13 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 
                 if selectedPicker == 0 {
-                    PostListView()
+                    PostListView(posts: samplePosts)
                 } else if selectedPicker == 1 {
-                    PostListView()
+                    PostListView(posts: samplePosts)
                 } else if selectedPicker == 2 {
-                    PostListView()
+                    PostListView(posts: samplePosts)
                 } else {
-                    PostListView()
+                    PostListView(posts: samplePosts)
                 }
             }
             .navigationTitle(username)

@@ -23,6 +23,7 @@ struct SettingsView: View {
                 SettingsSectionView(title: "Support", items: supportItems)
                 SettingsSectionView(title: "More", items: moreItems)
             }
+            .listStyle(.plain)
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .automatic) {
@@ -39,12 +40,10 @@ struct SettingsView: View {
             }
         }
     }
-    
-    // MARK: - Settings Items
-    
+        
     private var accountItems: [SettingsItem] {
         [
-            SettingsItem(title: "Username", content: "OmPreetham", icon: "theatermask.and.paintbrush", destination: AnyView(UpdateUsernameView())),
+            SettingsItem(title: "Username", content: "ShinjiIkariUnit01", icon: "theatermask.and.paintbrush", destination: AnyView(UpdateUsernameView())),
             SettingsItem(title: "Password", icon: "key.viewfinder", destination: AnyView(ChangePasswordView()))
         ]
     }
@@ -74,12 +73,10 @@ struct SettingsView: View {
     
     private var moreItems: [SettingsItem] {
         [
-            SettingsItem(title: "About", icon: "info.circle", destination: AnyView(Text("About")))
+            SettingsItem(title: "About", icon: "info.circle", destination: AnyView(AboutView()))
         ]
     }
 }
-
-// MARK: - Supporting Views
 
 struct SettingsItem: Identifiable {
     let id = UUID()
@@ -94,7 +91,7 @@ struct SettingsSectionView: View {
     let items: [SettingsItem]
     
     var body: some View {
-        Section(header: Text(title)) {
+        Section {
             ForEach(items) { item in
                 NavigationLink(destination: item.destination) {
                     HStack {
@@ -113,6 +110,10 @@ struct SettingsSectionView: View {
                     }
                 }
             }
+        } header: {
+            Text(title)
+                .font(.caption)
+                .textCase(.uppercase)
         }
     }
 }

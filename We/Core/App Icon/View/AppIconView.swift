@@ -28,7 +28,6 @@ enum AppIcon: String, CaseIterable {
 }
 
 struct AppIconView: View {
-    // StateObject to hold the view model
     @StateObject private var viewModel = AppIconViewModel()
     
     var body: some View {
@@ -58,6 +57,7 @@ struct AppIconView: View {
                     }
                 }
             }
+            .listStyle(.plain)
             .navigationTitle("App Icons")
         }
     }

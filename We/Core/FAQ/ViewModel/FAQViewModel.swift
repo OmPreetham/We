@@ -8,41 +8,20 @@
 import SwiftUI
 
 class FAQViewModel: ObservableObject {
-    // Published variable to trigger view updates
-    @Published var faqList: [FAQ] = []
-    @Published var expandedSections: Set<FAQCategory> = []
+    @Published var faqs: [FAQ] = []
     
     init() {
         loadFAQs()
     }
     
-    // Function to load FAQ data (Could be from an API or database in a real-world app)
     func loadFAQs() {
-        self.faqList = [
-            // Sample FAQ Data
-            FAQ(category: .accountCreation, question: "How do I create an account?", answer: "To create an account, use your university email ID. You will receive a verification code in your email. Enter this code during the verification process to complete account creation."),
-            FAQ(category: .verificationProcess, question: "What is the verification process?", answer: "The platform sends a one-time OTP to your university email ID during registration. Once verified, your email is hashed, salted, and encrypted for security. We do not send any emails other than the OTPs."),
-            FAQ(category: .privacySecurity, question: "How is my privacy ensured?", answer: "Your email ID is securely encrypted, and even if a university wants to check the platform, they cannot see if you are registered. Multiple accounts can be created using the same email ID for anonymity, but no password reset feature is available to maintain security."),
-            FAQ(category: .anonymity, question: "Is my identity truly anonymous?", answer: "Yes. No one can see your email ID or real name. Even the platform administrators cannot see your original email once verified."),
-            FAQ(category: .universitySpecific, question: "Can I join other university boards?", answer: "No. You can only join and post in the boards linked to your own university. However, you can post on the General board, which is visible to everyone."),
-            FAQ(category: .appUsage, question: "How do I start using the app?", answer: "1. Create an account using your university email ID. 2. Verify your email with the OTP sent. 3. Choose a username. This is what will be visible on your posts. 4. Navigate to the boards using the side menu. 5. Start posting or commenting."),
-            FAQ(category: .postingGuidelines, question: "What are the rules for posting?", answer: "1. Do not harass or bully others. 2. No hate speech, discrimination, or personal attacks. 3. Posts must be respectful and contribute positively."),
-            FAQ(category: .boardsNavigation, question: "How do I navigate between boards?", answer: "Use the side menu to switch between the general board and your university-specific board."),
-            FAQ(category: .securityViolations, question: "What happens if I violate the guidelines?", answer: "Violations such as harassment, hate speech, or malicious behavior will result in a warning, post removal, or account suspension. Repeated offenses may lead to a permanent ban.")
+        self.faqs = [
+            FAQ(question: "How do I create an account?", answer: "To create an account, use your university email ID. A verification code will be sent to your email, and once entered, your account will be created. Remember, we hash, salt, and encrypt your email for security purposes."),
+            FAQ(question: "Can I create multiple accounts with the same email?", answer: "Yes, you can use the same university email to create multiple accounts. This is to maintain anonymity, and each account will have separate data and posts."),
+            FAQ(question: "Why isn't there a 'forgot password' option?", answer: "We do not offer a 'forgot password' option to maintain security. Once an account is created, we do not store email data in a retrievable format."),
+            FAQ(question: "What type of posts are allowed?", answer: "The platform is a space for students to express themselves freely. However, harassment, hate speech, or any form of discrimination will not be tolerated and can lead to account suspension."),
+            FAQ(question: "What boards can I post on?", answer: "Each university has specific boards. You can post on your university boards and the general board. Please respect the rules of each board."),
+            FAQ(question: "Can the university see my posts or account?", answer: "No, due to encryption and hashing, the university cannot link any specific email to an account. They can only see general activity, not the identity of users.")
         ]
-    }
-    
-    // Toggle the expanded state for a given category
-    func toggleCategory(_ category: FAQCategory) {
-        if expandedSections.contains(category) {
-            expandedSections.remove(category)
-        } else {
-            expandedSections.insert(category)
-        }
-    }
-    
-    // Check if a category is expanded
-    func isCategoryExpanded(_ category: FAQCategory) -> Bool {
-        expandedSections.contains(category)
     }
 }

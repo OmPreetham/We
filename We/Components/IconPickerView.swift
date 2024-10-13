@@ -11,11 +11,22 @@ struct IconPickerView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var viewTitle: String
-    @Binding var selectedColor: Color
+    @Binding var selectedColor: String // This will hold the selected color's hex value
     @Binding var selectedSymbol: String
     
-    // Predefined list of colors for selection
-    private let colors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .pink, .gray, .brown]
+    // Predefined list of colors with their hex codes
+    private let colorOptions: [(color: Color, hex: String)] = [
+        (.teal, "#008080"),
+        (.red, "#FF0000"),
+        (.orange, "#FFA500"),
+        (.yellow, "#FFFF00"),
+        (.green, "#008000"),
+        (.blue, "#0000FF"),
+        (.purple, "#800080"),
+        (.pink, "#FFC0CB"),
+        (.gray, "#808080"),
+        (.brown, "#A52A2A")
+    ]
     
     // Predefined SF Symbols for icon selection (you can expand this list)
     private let symbols: [String] = [
@@ -45,9 +56,9 @@ struct IconPickerView: View {
             VStack {
                 ZStack {
                     Rectangle()
-                        .fill(selectedColor)
+                        .fill(Color(hex: selectedColor)) // Color filled from selected hex
                         .frame(width: 100, height: 100)
-                        .clipShape(.rect(cornerRadius: 16))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                     
                     Image(systemName: selectedSymbol)
                         .resizable()
@@ -60,24 +71,26 @@ struct IconPickerView: View {
                 
                 List {
                     VStack(spacing: 20) {
+                        // Color Picker Grid
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 15) {
-                            ForEach(colors, id: \.self) { color in
+                            ForEach(colorOptions, id: \.hex) { option in
                                 Circle()
-                                    .fill(color)
+                                    .fill(option.color)
                                     .frame(width: 40, height: 40)
                                     .padding(4)
                                     .overlay(
                                         Circle()
-                                            .stroke(Color.secondary.opacity(selectedColor == color ? 0.5 : 0), lineWidth: 4)
+                                            .stroke(Color.secondary.opacity(selectedColor == option.hex ? 0.5 : 0), lineWidth: 4)
                                     )
                                     .onTapGesture {
-                                        selectedColor = color
+                                        selectedColor = option.hex // Update the hex code when color is selected
                                     }
                             }
                         }
                         
                         Divider()
                         
+                        // SF Symbol Picker Grid
                         LazyVGrid(columns: Array(repeating: GridItem(.adaptive(minimum: 50)), count: 6), spacing: 20) {
                             ForEach(symbols, id: \.self) { symbol in
                                 Image(systemName: symbol)
@@ -85,10 +98,10 @@ struct IconPickerView: View {
                                     .scaledToFit()
                                     .frame(width: 20, height: 20)
                                     .padding(12)
-                                    .background(selectedSymbol == symbol ? selectedColor.opacity(0.5) : .init(uiColor: .tertiaryLabel))
-                                    .clipShape(.circle)
+                                    .background(selectedSymbol == symbol ? Color(hex: selectedColor).opacity(0.5) : .init(uiColor: .tertiaryLabel))
+                                    .clipShape(Circle())
                                     .onTapGesture {
-                                        selectedSymbol = symbol
+                                        selectedSymbol = symbol // Update the selected symbol
                                     }
                             }
                         }
@@ -122,5 +135,5 @@ struct IconPickerView: View {
 }
 
 #Preview {
-    IconPickerView(viewTitle: "SwiftUI Icon Picker", selectedColor: .constant(.accentColor), selectedSymbol: .constant("graduationcap.fill"))
+    IconPickerView(viewTitle: "SwiftUI Icon Picker", selectedColor: .constant("#FFFFFF"), selectedSymbol: .constant("graduationcap.fill"))
 }

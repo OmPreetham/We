@@ -9,76 +9,42 @@ import SwiftUI
 
 struct FAQView: View {
     @ObservedObject var viewModel = FAQViewModel()
-    
+
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(FAQCategory.allCases) { category in
-                    Section(header: FAQHeaderView(category: category, isExpanded: viewModel.isCategoryExpanded(category)) {
-                        viewModel.toggleCategory(category)
-                    }) {
-                        if viewModel.isCategoryExpanded(category) {
-                            ForEach(viewModel.faqList.filter { $0.category == category }) { faq in
-                                FAQRow(faq: faq)
-                            }
-                        }
-                    }
+            List(viewModel.faqs) { faq in
+                NavigationLink(destination: FAQDetailView(faq: faq)) {
+                    Text(faq.question)
+                        .font(.headline)
+                        .padding(.vertical, 8)
                 }
             }
-            .navigationTitle("FAQs")
+            .listStyle(.plain)
+            .navigationBarTitle("FAQs")
         }
     }
 }
 
-// MARK: - FAQ Header View for Sections
-struct FAQHeaderView: View {
-    var category: FAQCategory
-    var isExpanded: Bool
-    var action: () -> Void
+struct FAQDetailView: View {
+    var faq: FAQ
     
     var body: some View {
-        HStack {
-            Text(category.rawValue)
-                .font(.headline)
-                .foregroundColor(.primary)
-            
-            Spacer()
-            
-            Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                .foregroundColor(.gray)
-        }
-        .onTapGesture {
-            action()
-        }
-    }
-}
-
-// MARK: - FAQ Row View
-struct FAQRow: View {
-    let faq: FAQ
-    
-    @State private var isExpanded: Bool = false
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Button(action: {
-                isExpanded.toggle()
-            }) {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 15) {
                 Text(faq.question)
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
-                    .padding(.vertical, 5)
-            }
-            
-            if isExpanded {
+                    .fontDesign(.serif)
+                    .font(.title2)
+                    .bold()
+                
                 Text(faq.answer)
                     .font(.body)
-                    .padding(.vertical, 5)
+                    .padding(.top, 10)
             }
+            .padding()
         }
+        .navigationBarTitle("FAQ", displayMode: .inline)
     }
 }
-
 #Preview {
     FAQView()
 }
