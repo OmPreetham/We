@@ -25,7 +25,16 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .toolbar {
-                ToolbarItem(placement: .automatic) {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
+                            .labelStyle(.titleOnly)
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
                     SignOutButton(action: {
                         // Call SignOut Function
                         showingAuthScreen.toggle()

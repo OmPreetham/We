@@ -58,6 +58,7 @@ struct BoardsListView: View {
                                 
                                 Text(board.description)
                                     .font(.subheadline)
+                                    .foregroundStyle(.secondary)
                             }
                             .lineLimit(3)
                         }
