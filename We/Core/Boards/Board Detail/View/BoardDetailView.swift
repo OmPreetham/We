@@ -10,8 +10,9 @@ import SwiftUI
 struct BoardDetailView: View {
     @Environment(\.dismiss) var dismiss
 
-    @State private var showingEditBoard = false
+    @State private var showingCreatePost: Bool = false
     @State private var followingBoard = false
+    @State private var showingEditBoard = false
     
     @State var boardItem: Board
     let posts: [Post]
@@ -21,19 +22,34 @@ struct BoardDetailView: View {
     }
 
     var body: some View {
-        VStack {
-            if boardPosts.isEmpty {
-                Text("No posts available for this board.")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-                    .padding()
-            } else {
-                PostListView(posts: boardPosts) // Display filtered posts for the board
+        ZStack {
+            VStack {
+                if boardPosts.isEmpty {
+                    Text("No posts available for this board.")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                        .padding()
+                } else {
+                    PostListView(posts: boardPosts) // Display filtered posts for the board
+                }
             }
+            
+            Button {
+                showingCreatePost.toggle()
+            } label: {
+                Label("New Post", systemImage: "plus")
+                    .font(.caption)
+            }
+            .padding(16)
+            .foregroundStyle(.primary)
+            .background(Color.teal.gradient.materialActiveAppearance(.automatic))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            .offset(x: -20, y: -20)
         }
         .navigationTitle(boardItem.title)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     followingBoard.toggle()
                 } label: {
@@ -45,13 +61,16 @@ struct BoardDetailView: View {
                 }
             }
             
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showingEditBoard.toggle()
                 } label: {
                     Label("Edit", systemImage: "slider.horizontal.3")
                 }
             }
+        }
+        .sheet(isPresented: $showingCreatePost) {
+            CreatePostView(selectedBoard: boardItem)
         }
         .sheet(isPresented: $showingEditBoard) {
             EditBoardView(title: $boardItem.title, description: $boardItem.description, symbolColor: $boardItem.symbolColor, systemImageName: $boardItem.systemImageName)

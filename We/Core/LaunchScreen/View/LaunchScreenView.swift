@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct LaunchScreenView: View {
-    @Binding var isPresented: Bool
     @StateObject private var viewModel = LaunchScreenViewModel()
+
+    @Binding var isPresented: Bool
     
     var body: some View {
         ZStack {
             Color.clear.edgesIgnoringSafeArea(.all)
+            
             
             LogoCell()
                 .offset(y: viewModel.offset)

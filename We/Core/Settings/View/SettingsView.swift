@@ -23,7 +23,6 @@ struct SettingsView: View {
                 SettingsSectionView(title: "Support", items: supportItems)
                 SettingsSectionView(title: "More", items: moreItems)
             }
-            .listStyle(.plain)
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .automatic) {

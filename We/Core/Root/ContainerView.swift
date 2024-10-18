@@ -16,7 +16,7 @@ struct ContainerView: View {
     var body: some View {
         ZStack {
             if isLoggedIn {
-                TabBarView()
+                NavigateView()
             } else {
                 AuthScreenView()
             }

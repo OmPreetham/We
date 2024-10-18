@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Board: Identifiable, Codable {
+struct Board: Identifiable, Codable, Hashable {
     var id: String
     var title: String
     var description: String
