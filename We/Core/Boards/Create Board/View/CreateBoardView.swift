@@ -54,15 +54,6 @@ struct CreateBoardView: View {
             .navigationTitle("Create Board")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Label("Cancel", systemImage: "xmark.circle.fill")
-                            .labelStyle(.titleOnly)
-                    }
-                }
-                
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
                         // Handle creation logic here

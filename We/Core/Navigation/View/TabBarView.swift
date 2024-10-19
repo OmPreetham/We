@@ -28,9 +28,9 @@ struct TabBarView: View {
                 .onAppear { selectedTab = 1 }
                 .tag(1)            
             
-            ExploreView()
+            AccountView()
                 .tabItem {
-                    Label("Explore", systemImage: "text.page.badge.magnifyingglass")
+                    Label("Account", systemImage: "person.crop.circle")
                         .environment(\.symbolVariants, selectedTab == 2 ? .fill : .none)
                 }
                 .onAppear { selectedTab = 2 }

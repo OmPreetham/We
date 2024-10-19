@@ -14,7 +14,7 @@ struct AuthScreenView: View {
     @State private var showingRegister: Bool = false
 
     var body: some View {
-        ZStack {
+        ZStack {            
             VStack(spacing: 45) {
                 headerSection
                     .frame(maxWidth: .infinity, alignment: .leading)

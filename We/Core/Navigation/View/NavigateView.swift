@@ -12,7 +12,6 @@ struct NavigateView: View {
     @State private var selectedPostId: Post.ID?
     @State private var searchText = ""
     @State private var isShowingCreatePost = false // State to control new post sheet
-    @State private var showingSettings: Bool = false
     
     enum PrimarySelection: Hashable {
         case profile
@@ -123,29 +122,17 @@ struct NavigateView: View {
             .listStyle(.sidebar)
             .navigationTitle("III")
             .searchable(text: $searchText)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingSettings.toggle()
-                    } label: {
-                        Label("Settings", systemImage: "gear")
-                    }
-                }
-            }
-            .sheet(isPresented: $showingSettings) {
-                SettingsView()
-            }
         } content: {
             // Content section based on selection
             if let selection = primarySelection {
                 switch selection {
                 case .profile:
-                    ProfileViewV()
+                    AccountView()
                         .navigationTitle("Profile")
                 case .forYou:
                     // 'For You' section with styled posts and floating buttons
                     ZStack {
-                        PostListViewV(posts: samplePosts, selectedPostId: $selectedPostId)
+                        PostListView(posts: samplePosts)
                             .navigationTitle("For You")
                     }
                     .toolbar {
@@ -177,7 +164,7 @@ struct NavigateView: View {
                 case .followingPosts:
                     // 'Following Posts' section with styled posts
                     ZStack {
-                        PostListViewV(posts: samplePosts, selectedPostId: $selectedPostId)
+                        PostListView(posts: samplePosts)
                             .navigationTitle("Following")
                     }
                     .toolbar {
@@ -208,12 +195,42 @@ struct NavigateView: View {
                     }
                 case .board(let boardId):
                     // Posts related to the selected board
-                    if let board = sampleBoards.first(where: { $0.id == boardId }) {
-                        let postsInBoard = samplePosts.filter { $0.board == boardId }
-                        PostListViewV(posts: postsInBoard, selectedPostId: $selectedPostId)
-                            .navigationTitle(board.title)
-                    } else {
-                        Text("Board not found")
+                    ZStack {
+                        if let board = sampleBoards.first(where: { $0.id == boardId }) {
+                            let postsInBoard = samplePosts.filter { $0.board == boardId }
+                            PostListView(posts: postsInBoard)
+                                .navigationTitle(board.title)
+                        } else {
+                            Text("Board not found")
+                        }
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .bottomBar) {
+                            HStack {
+                                // Filter button aligned to the left
+                                Button(action: {
+                                    // Add action for filter functionality
+                                    print("Filter button tapped")
+                                }) {
+                                    Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                                }
+                                
+                                Spacer() // Pushes the New Post button to the right
+                                
+                                // New Post button aligned to the right
+                                Button(action: {
+                                    // Show the Create Post view
+                                    isShowingCreatePost.toggle()
+                                }) {
+                                    Label("New Post", systemImage: "square.and.pencil")
+                                }
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $isShowingCreatePost) {
+                        if let board = sampleBoards.first(where: { $0.id == boardId }) {
+                            CreatePostView(selectedBoard: board)
+                        }
                     }
                 }
             } else {
@@ -230,6 +247,7 @@ struct NavigateView: View {
         }
     }
 }
+
 // Profile header view with a more visually appealing design
 struct ProfileHeaderView: View {
     var body: some View {
@@ -237,7 +255,7 @@ struct ProfileHeaderView: View {
             HStack(spacing: 8) {
                 Image(systemName: "person.crop.circle.fill")
                     .resizable()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 60, height: 60)
                     .foregroundColor(.blue)
                     .padding(.leading)
                 
@@ -246,7 +264,7 @@ struct ProfileHeaderView: View {
                         .font(.title3)
                         .fontWeight(.semibold)
                     
-                    Text("Profile, Personalization, Settings, and More")
+                    Text("We Account, Personalization, and more")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -255,94 +273,6 @@ struct ProfileHeaderView: View {
             .padding(.vertical, 8)
         }
         .cornerRadius(10)
-    }
-}
-
-// A view to display profile-related information (posts, replies, upvotes/downvotes)
-struct ProfileViewV: View {
-    var body: some View {
-        List {
-            Section(header: Text("Your Posts")) {
-                ForEach(samplePosts) { post in
-                    Text(post.title)
-                }
-            }
-            
-            Section(header: Text("Replies")) {
-                // Add your replies data here
-                Text("No replies yet")
-            }
-            
-            Section(header: Text("Upvotes & Downvotes")) {
-                // Add upvote/downvote tracking if needed
-                Text("Upvoted Posts: 5")
-                Text("Downvoted Posts: 2")
-            }
-        }
-    }
-}
-
-// A separate view to display the list of posts with navigation to post details
-struct PostListViewV: View {
-    var posts: [Post]
-    @Binding var selectedPostId: Post.ID?
-    
-    var body: some View {
-        List(posts) { post in
-            // NavigationLink to navigate to the post detail view
-            NavigationLink(destination: PostDetailView(post: post), tag: post.id, selection: $selectedPostId) {
-                HStack(alignment: .top) {
-                    // Board image (you can replace this placeholder with actual images)
-                    Image(systemName: "square.fill")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.blue)
-                        .padding(.trailing, 8)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(alignment: .top, spacing: 4) {
-                            VStack(alignment: .leading) {
-                                // Board title
-                                Text(boardTitle(for: post.board))
-                                    .font(.headline)
-                                
-                                // Username
-                                Text(post.username)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            Spacer()
-                            
-                            Text(post.createdAt.formatted(date: .abbreviated, time: .standard))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        
-                        // Post title
-                        Text(post.title)
-                            .font(.body)
-                            .fontWeight(.regular)
-                            .lineLimit(1)
-                        
-                        // Post content (limited to 4 lines)
-                        Text(post.content)
-                            .font(.body)
-                            .lineLimit(2)
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.vertical, 8)
-            }
-        }
-    }
-    
-    // Helper function to get the board title from the board ID
-    func boardTitle(for boardId: String) -> String {
-        if let board = sampleBoards.first(where: { $0.id == boardId }) {
-            return board.title
-        }
-        return "Unknown Board"
     }
 }
 

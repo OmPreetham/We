@@ -13,7 +13,7 @@ struct CreatePostView: View {
     @State var selectedBoard: Board? = nil
     @State private var title: String = ""
     @State private var content: String = ""
-    @State private var username: String = "@AnonUser"
+    @State private var username: String = "ShinjiIkari"
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var isSubmitting: Bool = false
@@ -23,38 +23,38 @@ struct CreatePostView: View {
     let boards: [Board] = sampleBoards
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Username")) {
-                    TextField("Enter your username", text: $username)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                }
-                
-                Section(header: Text("Select Board")) {
-                    Picker("Board", selection: $selectedBoard) {
-                        Text("Select a board").tag(Board?.none)
+        NavigationStack {
+            List {
+                Group {
+                    Picker("To:", selection: $selectedBoard) {
                         ForEach(boards, id: \.self) { board in
-                            HStack {
-                                Image(systemName: board.systemImageName)
-                                    .foregroundColor(Color(hex: board.symbolColor))
-                                Text(board.title)
-                            }
-                            .tag(Board?.some(board))
+                            Label(board.title, systemImage: board.systemImageName)
+                                .tag(Board?.some(board))
                         }
                     }
+                    .pickerStyle(.navigationLink)
+                    .listRowSeparator(.hidden, edges: .top)
+                    
+                    HStack {
+                        Text("From:")
+                        
+                        TextField("AnonUser", text: $username)
+                    }
+                    
+                    HStack {
+                        Text("Subject:")
+                        
+                        TextField("", text: $title)
+                    }
                 }
-                
-                Section(header: Text("Title")) {
-                    TextField("Enter post title", text: $title)
-                }
-                
-                Section(header: Text("Content")) {
-                    TextEditor(text: $content)
-                        .frame(minHeight: 150)
-                }
+                .disableAutocorrection(true)
+
+                TextField("", text: $content, prompt: Text("Write your message here..."), axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .listRowSeparator(.hidden, edges: .bottom)
             }
-            .navigationTitle("New Post")
+            .listStyle(.plain)
+            .navigationTitle("New Text")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
@@ -64,7 +64,7 @@ struct CreatePostView: View {
                             .labelStyle(.titleOnly)
                     }
                 }
-
+                
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
                         dismiss()

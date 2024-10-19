@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  AccountView.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 10/3/24.
@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
-    @Environment(\.dismiss) var dismiss
-    
+struct AccountView: View {
     @State private var searchText: String = ""
 
     @State private var showingAuthScreen: Bool = false
@@ -17,28 +15,20 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                SettingsSectionView(title: "Profile", items: profileItems)
                 SettingsSectionView(title: "Account", items: accountItems)
+                SettingsSectionView(title: "Authorized", items: authorizedItems)
                 SettingsSectionView(title: "Customize", items: customizeItems)
-                SettingsSectionView(title: "Extensions", items: extensionItems)
                 SettingsSectionView(title: "Support", items: supportItems)
                 SettingsSectionView(title: "More", items: moreItems)
             }
-            .navigationTitle("Settings")
+            .listStyle(.insetGrouped)
+            .navigationTitle("We Account")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Label("Cancel", systemImage: "xmark")
-                            .labelStyle(.titleOnly)
-                    }
-                }
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     SignOutButton(action: {
                         // Call SignOut Function
                         showingAuthScreen.toggle()
-//                        dismiss()
                     })
                 }
             }
@@ -49,10 +39,25 @@ struct SettingsView: View {
         }
     }
         
+    private var profileItems: [SettingsItem] {
+        [
+            SettingsItem(title: "Activity", icon: "heart.text.square", destination: AnyView(ActivityView())),
+            SettingsItem(title: "Bookmarks", icon: "bookmark", destination: AnyView(BookmarksView())),
+            SettingsItem(title: "Following", icon: "checkmark.rectangle.stack", destination: AnyView(BoardsListView(listTitle: "Following"))),
+        ]
+    }
+    
     private var accountItems: [SettingsItem] {
         [
             SettingsItem(title: "Username", content: "ShinjiIkariUnit01", icon: "theatermask.and.paintbrush", destination: AnyView(UpdateUsernameView())),
             SettingsItem(title: "Password", icon: "key.viewfinder", destination: AnyView(ChangePasswordView()))
+        ]
+    }
+    
+    private var authorizedItems: [SettingsItem] {
+        [
+            SettingsItem(title: "Your Boards", icon: "square.grid.2x2", destination: AnyView(BoardsListView(listTitle: "Your Boards"))),
+            SettingsItem(title: "Create Board", icon: "plus.square", destination: AnyView(CreateBoardView())),
         ]
     }
     
@@ -62,15 +67,7 @@ struct SettingsView: View {
             SettingsItem(title: "Theme", icon: "paintbrush", destination: AnyView(Text("Theme Settings View")))
         ]
     }
-    
-    private var extensionItems: [SettingsItem] {
-        [
-            SettingsItem(title: "Live Activities", icon: "widget.small", destination: AnyView(Text("Live Activities Settings"))),
-            SettingsItem(title: "Lock Screen Widgets", icon: "lock.rectangle.stack", destination: AnyView(Text("Lock Screen Widgets"))),
-            SettingsItem(title: "Home Screen Widgets", icon: "widget.large.badge.plus", destination: AnyView(Text("Home Screen Widgets")))
-        ]
-    }
-    
+
     private var supportItems: [SettingsItem] {
         [
             SettingsItem(title: "FAQs", icon: "questionmark.circle", destination: AnyView(FAQView())),
@@ -102,20 +99,20 @@ struct SettingsSectionView: View {
         Section {
             ForEach(items) { item in
                 NavigationLink(destination: item.destination) {
-                    HStack {
+                    HStack(spacing: 16) {
                         Image(systemName: item.icon)
-                            .frame(width: 40, height: 40)
                         
                         Text(item.title)
                         
                         Spacer()
                         
                         if !item.content.isEmpty {
-                            Text("@" + item.content)
-                                .font(.callout)
+                            Text(item.content)
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .padding(.vertical, 8)
                 }
             }
         } header: {
@@ -138,5 +135,5 @@ struct SignOutButton: View {
 }
 
 #Preview {
-    SettingsView()
+    AccountView()
 }

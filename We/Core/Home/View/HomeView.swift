@@ -50,7 +50,7 @@ struct HomeView: View {
                 }
             }
             .sheet(isPresented: $showingProfile) {
-                ProfileView()
+                ActivityView()
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()

@@ -10,7 +10,6 @@ import SwiftUI
 struct ContainerView: View {
     @AppStorage("onboarding") private var showingOnboarding: Bool = true
     
-    @State private var showingLogin: Bool = false
     @State private var isLoggedIn: Bool = true
 
     var body: some View {

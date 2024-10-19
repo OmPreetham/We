@@ -8,24 +8,12 @@
 import SwiftUI
 
 struct BookmarksView: View {
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
         NavigationStack {
             ZStack {
                 PostListView(posts: samplePosts)
             }
             .navigationTitle("Bookmarks")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Label("Done", systemImage: "checkmark.circle.fill")
-                            .labelStyle(.titleOnly)
-                    }
-                }
-            }
         }
     }
 }

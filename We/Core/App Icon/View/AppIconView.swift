@@ -57,7 +57,6 @@ struct AppIconView: View {
                     }
                 }
             }
-            .listStyle(.plain)
             .navigationTitle("App Icons")
         }
     }

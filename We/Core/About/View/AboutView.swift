@@ -80,7 +80,6 @@ struct AboutView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 8)
             }
-            .listStyle(.plain)
             .navigationBarTitle("About We")
         }
     }
