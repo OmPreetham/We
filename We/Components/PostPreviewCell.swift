@@ -23,7 +23,7 @@ struct PostPreviewCell: View {
                         // Add action for image tap if needed
                     }
                 
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .top, spacing: 8) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(board.title)  // Showing board title here
@@ -42,16 +42,14 @@ struct PostPreviewCell: View {
                             .foregroundStyle(.secondary)
                     }
                     
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading) {
                         Text(post.title)
-                            .font(.title3)
+                            .font(.headline)
                             .fontDesign(.serif)
-                            .fontWeight(.semibold)
                             .foregroundStyle(.primary)
                         
-                        Group {
                             Text(post.content)
-                                .font(.callout)
+                                .font(.body)
                                 .foregroundStyle(.primary)
                                 .lineLimit(8)
                                 .truncationMode(.tail)
@@ -64,9 +62,9 @@ struct PostPreviewCell: View {
                                         .opacity(post.content.count > 360 ? 1 : 0),
                                     alignment: .bottomTrailing
                                 )
-                        }
-                        .lineSpacing(2)
+                                .lineSpacing(2)
                     }
+                    .multilineTextAlignment(.leading)
                     
                     HStack {
                         Button {

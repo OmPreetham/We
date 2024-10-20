@@ -33,6 +33,9 @@ struct ActivityView: View {
                 }
             }
             .navigationTitle("Activity")
+            .refreshable {
+                
+            }
         }
     }
 }

@@ -11,15 +11,15 @@ struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var selectedBoard: Board? = nil
-    @State private var title: String = ""
+    @State private var subject: String = ""
     @State private var content: String = ""
     @State private var username: String = "ShinjiIkari"
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var isSubmitting: Bool = false
     
-    // For the sake of this example, we'll use sampleBoards.
-    // In a real application, you'd fetch this data from your backend.
+    @FocusState private var isContentFocused: Bool
+    
     let boards: [Board] = sampleBoards
     
     var body: some View {
@@ -27,34 +27,44 @@ struct CreatePostView: View {
             List {
                 Group {
                     Picker("To:", selection: $selectedBoard) {
+                        Label("Select a board", systemImage: "filemenu.and.selection")
+                            .tag(Board?.none)
+                        
                         ForEach(boards, id: \.self) { board in
                             Label(board.title, systemImage: board.systemImageName)
                                 .tag(Board?.some(board))
                         }
                     }
-                    .pickerStyle(.navigationLink)
+                    .pickerStyle(.menu)
                     .listRowSeparator(.hidden, edges: .top)
+                    .foregroundStyle(.secondary)
                     
                     HStack {
                         Text("From:")
+                            .foregroundStyle(.secondary)
                         
-                        TextField("AnonUser", text: $username)
+                        TextField("Enter anonymous username", text: $username)
                     }
                     
                     HStack {
                         Text("Subject:")
+                            .foregroundStyle(.secondary)
                         
-                        TextField("", text: $title)
+                        TextField("", text: $subject)
                     }
                 }
                 .disableAutocorrection(true)
 
-                TextField("", text: $content, prompt: Text("Write your message here..."), axis: .vertical)
+                TextField("", text: $content, axis: .vertical)
                     .textFieldStyle(.plain)
                     .listRowSeparator(.hidden, edges: .bottom)
+                    .focused($isContentFocused)
             }
             .listStyle(.plain)
-            .navigationTitle("New Text")
+            .onAppear {
+                isContentFocused = true
+            }
+            .navigationTitle(subject.isEmpty ? "New Post" : subject)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {

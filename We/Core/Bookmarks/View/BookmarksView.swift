@@ -14,6 +14,9 @@ struct BookmarksView: View {
                 PostListView(posts: samplePosts)
             }
             .navigationTitle("Bookmarks")
+            .refreshable {
+                
+            }
         }
     }
 }

@@ -10,15 +10,11 @@ import SwiftUI
 struct BoardsListView: View {
     @State var listTitle: String = "Boards"
     @State private var searchText: String = ""
-    
-    let options = ["All", "Following"]
-    @State private var selectedOption = "All"
-    
+        
     let boards: [Board] = sampleBoards
     let posts: [Post] = samplePosts
     
     var filteredBoards: [Board] {
-        // Filter boards based on the search text
         if searchText.isEmpty {
             return boards
         } else {

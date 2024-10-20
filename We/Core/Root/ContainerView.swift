@@ -20,7 +20,7 @@ struct ContainerView: View {
                 AuthScreenView()
             }
         }
-        .sheet(isPresented: $showingOnboarding) {
+        .fullScreenCover(isPresented: $showingOnboarding) {
             OnboardingView(isShowingOnboarding: $showingOnboarding)
         }
     }

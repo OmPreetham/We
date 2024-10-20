@@ -15,11 +15,19 @@ struct PostListView: View {
         ScrollView {
             LazyVStack {
                 if posts.isEmpty {
-                    ContentUnavailableView("No posts found", systemImage: "square.3.layers.3d.down.backward.slash.rtl", description: Text("No post found. Please create a post to see it here."))                } else {
+                    ContentUnavailableView(
+                        "No posts found",
+                        systemImage: "square.3.layers.3d.down.backward.slash.rtl",
+                        description: Text("No post found. Please create a post to see it here.")
+                    )
+                } else {
                     ForEach(posts) { post in
                         if let board = boards.first(where: { $0.id == post.board }) {
-                            PostPreviewCell(post: post, board: board)
-                                .padding(8)
+                            NavigationLink(destination: PostDetailView(post: post)) {
+                                PostPreviewCell(post: post, board: board)
+                                    .padding(8)
+                            }
+                            .foregroundStyle(.primary)
                             
                             Divider()
                                 .frame(height: 1)

@@ -30,6 +30,7 @@ struct OnboardingView: View {
                             
                             Text(info.label)
                                 .font(.largeTitle)
+                                .fontDesign(.serif)
                                 .fontWeight(.bold)
                                 .padding()
                                 .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
@@ -37,9 +38,11 @@ struct OnboardingView: View {
                             if let content = info.content {
                                 Text(content)
                                     .font(.subheadline)
+                                    .fontDesign(.monospaced)
                                     .padding()
                             }
                         }
+                        .multilineTextAlignment(.center)
                         .padding()
                     }
                 }

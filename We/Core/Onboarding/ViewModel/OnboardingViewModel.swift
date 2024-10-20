@@ -10,7 +10,7 @@ import SwiftUI
 func colorForSystemImage(systemName: String) -> Color {
     switch systemName {
     case "quote.bubble.fill":
-        return .blue
+        return .teal
     case "shield.fill":
         return .green
     case "eye.slash.fill":

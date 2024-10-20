@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct RegistrationView: View {
-    @Environment(\.presentationMode) var presentationMode
-    
     @FocusState private var focusedField: FocusField?
     
     enum FocusField {
@@ -90,16 +88,6 @@ struct RegistrationView: View {
                         AccountCreatedView()
                     })
                     .padding()
-                    .toolbar {
-                        ToolbarItem(placement: .automatic) {
-                            Button {
-                                self.presentationMode.wrappedValue.dismiss()
-                                self.presentationMode.wrappedValue.dismiss()
-                            } label: {
-                                Text("Cancel")
-                            }
-                        }
-                    }
                     .interactiveDismissDisabled()
                 }
             }

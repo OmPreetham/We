@@ -14,9 +14,6 @@ struct LaunchScreenView: View {
     
     var body: some View {
         ZStack {
-            Color.clear.edgesIgnoringSafeArea(.all)
-            
-            
             LogoCell()
                 .offset(y: viewModel.offset)
                 .rotationEffect(.degrees(viewModel.rotation))

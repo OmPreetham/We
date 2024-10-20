@@ -2,7 +2,7 @@
 //  BoardDetailView.swift
 //  We
 //
-//  Created by Om Preetham Bandi on 10/4/24.
+//  Created by Om Preetham Bandi on 10/20/24.
 //
 
 import SwiftUI
@@ -10,7 +10,6 @@ import SwiftUI
 struct BoardDetailView: View {
     @Environment(\.dismiss) var dismiss
 
-    @State private var showingCreatePost: Bool = false
     @State private var followingBoard = false
     @State private var showingEditBoard = false
     
@@ -33,19 +32,6 @@ struct BoardDetailView: View {
                     PostListView(posts: boardPosts) // Display filtered posts for the board
                 }
             }
-            
-            Button {
-                showingCreatePost.toggle()
-            } label: {
-                Label("New Post", systemImage: "plus")
-                    .font(.caption)
-            }
-            .padding(16)
-            .foregroundStyle(.primary)
-            .background(Color.teal.gradient.materialActiveAppearance(.automatic))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            .offset(x: -20, y: -20)
         }
         .navigationTitle(boardItem.title)
         .toolbar {
@@ -69,11 +55,11 @@ struct BoardDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingCreatePost) {
-            CreatePostView(selectedBoard: boardItem)
-        }
         .sheet(isPresented: $showingEditBoard) {
             EditBoardView(title: $boardItem.title, description: $boardItem.description, symbolColor: $boardItem.symbolColor, systemImageName: $boardItem.systemImageName)
+        }
+        .refreshable {
+            
         }
     }
 }

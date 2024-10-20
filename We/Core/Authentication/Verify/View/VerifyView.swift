@@ -70,7 +70,7 @@ struct VerifyView: View {
                     })
                     .padding()
                     .toolbar {
-                        ToolbarItem(placement: .automatic) {
+                        ToolbarItem(placement: .cancellationAction) {
                             Button {
                                 dismiss()
                             } label: {
