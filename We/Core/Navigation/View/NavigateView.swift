@@ -19,9 +19,11 @@ struct NavigateView: View {
         case followingPosts
         case board(Board.ID)
     }
+    
+    @State private var columnVisibility = NavigationSplitViewVisibility.doubleColumn
 
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             NavigationSidebarView(primarySelection: $primarySelection)
         } content: {
             NavigationContentView(
@@ -31,6 +33,7 @@ struct NavigateView: View {
         } detail: {
             NavigationDetailView(selectedPostId: $selectedPostId)
         }
+        .navigationSplitViewStyle(.balanced)
     }
 }
 

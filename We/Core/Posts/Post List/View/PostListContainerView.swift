@@ -58,7 +58,7 @@ struct PostListContainerView: View {
                         Text("02:00 PM")
                             .foregroundStyle(.secondary)
                     }
-                    .font(.caption)
+                    .font(.caption2)
                     
                     Spacer()
                     

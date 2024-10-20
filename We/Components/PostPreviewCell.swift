@@ -9,12 +9,11 @@ import SwiftUI
 
 struct PostPreviewCell: View {
     let post: Post
-    let board: Board  // Adding a Board object
+    let board: Board
     
     var body: some View {
         ZStack {
             HStack(alignment: .top) {
-                // Updated Image to use the board's systemImageName and symbolColor
                 Image(systemName: board.systemImageName)
                     .frame(width: 50, height: 50)
                     .background(Color(hex: board.symbolColor))
@@ -26,7 +25,7 @@ struct PostPreviewCell: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .top, spacing: 8) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(board.title)  // Showing board title here
+                            Text(board.title)
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                             
@@ -37,20 +36,19 @@ struct PostPreviewCell: View {
 
                         Spacer()
                         
-                        Text(post.createdAt.formatted(date: .numeric, time: .standard))
+                        Text(post.createdAt.relativeDate())
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                     
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text(post.title)
                             .font(.headline)
                             .fontDesign(.serif)
-                            .foregroundStyle(.primary)
-                        
+                            .fontWeight(.bold)
+
                             Text(post.content)
                                 .font(.body)
-                                .foregroundStyle(.primary)
                                 .lineLimit(8)
                                 .truncationMode(.tail)
                                 .overlay(
