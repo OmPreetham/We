@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showingLaunchScreen: Bool = true
+    @StateObject private var viewModel = AuthViewModel()
     
     var body: some View {
         ZStack {
@@ -16,10 +17,11 @@ struct ContentView: View {
                 LaunchScreenView(isPresented: $showingLaunchScreen)
             } else {
                 ContainerView()
+                    .environmentObject(viewModel)
             }
         }
         .onAppear {
-            // Check login status
+            viewModel.checkLoginStatus()
         }
     }
 }
@@ -27,4 +29,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

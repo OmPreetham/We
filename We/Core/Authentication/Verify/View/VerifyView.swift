@@ -9,11 +9,7 @@ import SwiftUI
 
 struct VerifyView: View {
     @Environment(\.dismiss) var dismiss
-        
-    @State private var isLoading: Bool = false
-    @State private var isCodeSent: Bool = false
-    
-    @State private var emailAddress: String = ""
+    @ObservedObject var viewModel: AuthViewModel
 
     var body: some View {
         ZStack {
@@ -22,30 +18,40 @@ struct VerifyView: View {
                     VStack(spacing: 10) {
                         AuthenticationHeaderCell()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
+
                         Spacer()
-                        
+
                         VStack(spacing: 20)  {
                             Group {
-                                TextField("Enter university email..", text: $emailAddress)
+                                TextField("Enter university email..", text: $viewModel.emailAddress)
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
+                                    .onChange(of: viewModel.emailAddress) {
+                                        viewModel.errorMessage = nil
+                                    }
                             }
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
 
+                            if !viewModel.isEmailValid && !viewModel.emailAddress.isEmpty {
+                                Text("Please enter a valid university email ending with @islander.tamucc.edu")
+                                    .foregroundStyle(.red)
+                                    .font(.caption)
+                                    .multilineTextAlignment(.center)
+                            }
+
                             VStack(alignment: .leading) {
                                 Text("A verification code will be sent to your university email.")
                                     .font(.footnote)
                             }
-                                                        
+
                             Button {
-                                isCodeSent.toggle()
+                                viewModel.requestVerificationCode()
                             } label: {
-                                if isLoading {
+                                if viewModel.isLoading {
                                     ProgressView()
                                 } else {
                                     Label("Send Code", systemImage: "chevron.compact.up")
@@ -55,19 +61,19 @@ struct VerifyView: View {
                                         .fontWeight(.semibold)
                                         .frame(maxWidth: .infinity)
                                         .background(.primary)
-                                        .opacity(emailAddress.isEmpty || isLoading ? 0.6 : 1)
+                                        .opacity(viewModel.isSendCodeButtonDisabled ? 0.6 : 1)
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                                         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
                                 }
                             }
-                            .disabled(emailAddress.isEmpty || isLoading)
+                            .disabled(viewModel.isSendCodeButtonDisabled)
                         }
                     }
                     .navigationTitle("Verify")
                     .navigationBarTitleDisplayMode(.inline)
-                    .navigationDestination(isPresented: $isCodeSent, destination: {
-                        RegistrationView()
-                    })
+                    .navigationDestination(isPresented: $viewModel.isCodeSent) {
+                        RegistrationView(viewModel: viewModel)
+                    }
                     .padding()
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -79,6 +85,24 @@ struct VerifyView: View {
                         }
                     }
                     .interactiveDismissDisabled()
+                    .alert(isPresented: Binding<Bool>(
+                        get: { viewModel.errorMessage != nil },
+                        set: { _ in viewModel.errorMessage = nil }
+                    )) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text(viewModel.errorMessage ?? "An error occurred."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                }
+                
+                Button(action: {
+                    viewModel.isCodeSent = true
+                }) {
+                    Text("Already have a code?")
+                        .font(.footnote)
+                        .underline()
                 }
             }
         }
@@ -86,5 +110,5 @@ struct VerifyView: View {
 }
 
 #Preview {
-    VerifyView()
+    VerifyView(viewModel: AuthViewModel())
 }

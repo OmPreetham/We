@@ -8,38 +8,62 @@
 import SwiftUI
 
 struct UpdateUsernameView: View {
+    @EnvironmentObject var viewModel: AuthViewModel
+    
     @State private var newUsername = ""
-    @State private var isUsernameUpdated = false
 
     var body: some View {
         NavigationStack {
             Form {
                 Section(header: Text("New Username")) {
-                    TextField("Enter new username", text: $newUsername)
+                    TextField("Your current username is \(viewModel.currentUser?.username ?? "Shinji")", text: $newUsername)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
                 }
                 
+                if viewModel.isUsernameUpdated {
+                    Text("Username updated successfully")
+                }
+
                 Section {
-                    Button("Update Username") {
-                        updateUsername()
+                    Button(action: {
+                        viewModel.updateUsername(newUsername: newUsername)
+                    }) {
+                        if viewModel.isLoading {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
+                        } else {
+                            Text("Update Username")
+                                .frame(maxWidth: .infinity)
+                        }
                     }
-                    .disabled(newUsername.isEmpty)
+                    .disabled(newUsername.isEmpty || viewModel.isLoading)
                 }
             }
             .navigationBarTitle("Update Username")
-            .alert(isPresented: $isUsernameUpdated) {
-                Alert(title: Text("Success"), message: Text("Your username has been updated."), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $viewModel.isUsernameUpdated) {
+                Alert(
+                    title: Text("Success"),
+                    message: Text("Your username has been updated."),
+                    dismissButton: .default(Text("OK"), action: {
+                        viewModel.isUsernameUpdated = false
+                    })
+                )
+            }
+            .alert(isPresented: Binding<Bool>(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "An error occurred."), dismissButton: .default(Text("OK")))
             }
         }
-    }
-    
-    func updateUsername() {
-        // Implement the logic to update the username.
-        // This could involve calling a backend service.
-        print("Username updated to: \(newUsername)")
-        isUsernameUpdated = true // Trigger the alert indicating success.
     }
 }
 
 #Preview {
     UpdateUsernameView()
+        .environmentObject(AuthViewModel())
 }

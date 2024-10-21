@@ -8,19 +8,14 @@
 import SwiftUI
 
 struct RegistrationView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: AuthViewModel
     @FocusState private var focusedField: FocusField?
-    
+
     enum FocusField {
         case verificationCode, username, password
     }
-    
-    @State private var isAccountCreated = false
-    @State private var isLoading: Bool = false
-    
-    @State private var verificationCode: String = ""
-    @State private var username: String = ""
-    @State private var password: String = ""
-        
+
     var body: some View {
         ZStack {
             NavigationStack {
@@ -28,42 +23,42 @@ struct RegistrationView: View {
                     VStack(spacing: 20) {
                         AuthenticationHeaderCell()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
+
                         Spacer()
-                        
+
                         VStack(spacing: 20)  {
-                            CodeInputCell(code: $verificationCode, codeLength: 6)
+                            CodeInputCell(code: $viewModel.verificationCode, codeLength: 6)
                                 .padding(.bottom)
                                 .focused($focusedField, equals: .verificationCode)
-                            
+
                             Group {
-                                TextField("Enter username..", text: $username)
+                                TextField("Enter username..", text: $viewModel.username)
                                     .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
                                     .focused($focusedField, equals: .username)
 
-                                SecureField("Create password..", text: $password)
+                                SecureField("Create password..", text: $viewModel.password)
                                     .focused($focusedField, equals: .password)
                             }
-                            .autocorrectionDisabled()
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
 
-                            PasswordStrengthView(password: $password)
+                            PasswordStrengthView(password: $viewModel.password)
                                 .padding(.horizontal)
-                            
+
                             VStack(alignment: .leading) {
                                 Text("There is no option to recover a forgotten password.")
                                     .font(.footnote)
                                     .lineLimit(4)
                             }
-                            
+
                             Button {
-                                isAccountCreated.toggle()
+                                viewModel.registerUser()
                             } label: {
                                 Group {
-                                    if isLoading {
+                                    if viewModel.isLoading {
                                         ProgressView()
                                     } else {
                                         Label("Create Account", systemImage: "chevron.compact.up")
@@ -75,20 +70,30 @@ struct RegistrationView: View {
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity)
                                 .background(.primary)
-                                .opacity(isLoading ? 0.6 : 1)
+                                .opacity(viewModel.isRegisterButtonDisabled ? 0.6 : 1)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                                 .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
                             }
-                            .disabled(isLoading)
+                            .disabled(viewModel.isRegisterButtonDisabled)
                         }
                     }
                     .navigationTitle("Register")
                     .navigationBarTitleDisplayMode(.inline)
-                    .navigationDestination(isPresented: $isAccountCreated, destination: {
+                    .navigationDestination(isPresented: $viewModel.isAccountCreated) {
                         AccountCreatedView()
-                    })
+                    }
                     .padding()
                     .interactiveDismissDisabled()
+                    .alert(isPresented: Binding<Bool>(
+                        get: { viewModel.errorMessage != nil },
+                        set: { _ in viewModel.errorMessage = nil }
+                    )) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text(viewModel.errorMessage ?? "An error occurred."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
             }
         }
@@ -101,5 +106,5 @@ struct RegistrationView: View {
 }
 
 #Preview {
-    RegistrationView()
+    RegistrationView(viewModel: AuthViewModel())
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AccountView: View {
+    @EnvironmentObject var viewModel: AuthViewModel
     @State private var searchText: String = ""
     @State private var showingAuthScreen: Bool = false
     @State private var showSignOutAlert: Bool = false
@@ -40,8 +41,7 @@ struct AccountView: View {
             }
             .alert("Sign Out", isPresented: $showSignOutAlert) {
                 Button("Sign Out", role: .destructive) {
-                    // Call SignOut function
-                    showingAuthScreen.toggle()
+                    viewModel.logout() // Call the logout function
                 }
                 Button("Cancel", role: .cancel) { }
             } message: {

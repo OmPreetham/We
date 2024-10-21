@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NavigateView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     @State private var primarySelection: PrimarySelection? = .forYou
     @State private var selectedPostId: Post.ID?
     @State private var searchText = ""
@@ -25,6 +27,7 @@ struct NavigateView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             NavigationSidebarView(primarySelection: $primarySelection)
+                .environmentObject(authViewModel)
         } content: {
             NavigationContentView(
                 primarySelection: $primarySelection,
@@ -39,4 +42,5 @@ struct NavigateView: View {
 
 #Preview {
     NavigateView()
+        .environmentObject(AuthViewModel())
 }

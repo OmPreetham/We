@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NavigationSidebarView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @Binding var primarySelection: NavigateView.PrimarySelection?
 
     @State private var username: String = "ShinjiIkariUnit01"
@@ -17,7 +19,7 @@ struct NavigationSidebarView: View {
             Section {
                 NavigationLink(value: NavigateView.PrimarySelection.account) {
                     SidebarItemView(
-                        title: username,
+                        title: authViewModel.currentUser?.username ?? "Loading...",
                         description: "We Account, Personalization, and more.",
                         imageName: "person.fill",
                         gradientColor: .teal,
@@ -25,7 +27,7 @@ struct NavigationSidebarView: View {
                     )
                 }
             }
-
+            
             Section(header: Text("Personalized")) {
                 NavigationLink(value: NavigateView.PrimarySelection.forYou) {
                     SidebarItemView(
@@ -63,11 +65,17 @@ struct NavigationSidebarView: View {
         .navigationTitle("III")
         .searchable(text: .constant(""))
         .refreshable {
-            
+            authViewModel.fetchCurrentUser()
+        }
+        .onAppear {
+            if authViewModel.currentUser == nil {
+                authViewModel.fetchCurrentUser()
+            }
         }
     }
 }
 
 #Preview {
     NavigationSidebarView(primarySelection: Binding(.constant(.forYou)))
+        .environmentObject(AuthViewModel())
 }

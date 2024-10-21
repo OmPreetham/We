@@ -9,15 +9,16 @@ import SwiftUI
 
 struct ContainerView: View {
     @AppStorage("onboarding") private var showingOnboarding: Bool = true
+    @EnvironmentObject var viewModel: AuthViewModel
     
-    @State private var isLoggedIn: Bool = true
-
     var body: some View {
         ZStack {
-            if isLoggedIn {
+            if viewModel.isLoggedIn {
                 NavigateView()
+                    .environmentObject(viewModel)
             } else {
                 AuthScreenView()
+                    .environmentObject(viewModel)
             }
         }
         .fullScreenCover(isPresented: $showingOnboarding) {
@@ -28,4 +29,5 @@ struct ContainerView: View {
 
 #Preview {
     ContainerView()
+        .environmentObject(AuthViewModel())
 }

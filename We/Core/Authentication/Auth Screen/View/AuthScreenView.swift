@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AuthScreenView: View {
     @StateObject private var safariViewModel = SafariViewModel()
-    
+    @EnvironmentObject var viewModel: AuthViewModel
     @State private var showingLogin: Bool = false
     @State private var showingRegister: Bool = false
 
@@ -29,10 +29,10 @@ struct AuthScreenView: View {
             .padding()
         }
         .sheet(isPresented: $showingLogin) {
-            LoginView()
+            LoginView(viewModel: viewModel)
         }
         .sheet(isPresented: $showingRegister) {
-            VerifyView()
+            VerifyView(viewModel: viewModel)
         }
     }
     

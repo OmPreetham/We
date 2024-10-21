@@ -9,14 +9,8 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: AuthViewModel
     
-    @State private var isLoading: Bool = false
-    @State private var isLoggedIn: Bool = false
-    
-    @State private var emailAddress: String = ""
-    @State private var username: String = ""
-    @State private var password: String = ""
-
     var body: some View {
         ZStack {
             NavigationStack {
@@ -29,27 +23,37 @@ struct LoginView: View {
                         
                         VStack(spacing: 20)  {
                             Group {
-                                TextField("Enter university email..", text: $emailAddress)
+                                TextField("Enter university email..", text: $viewModel.loginEmail)
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
                                 
-                                TextField("Enter username..", text: $username)
+                                TextField("Enter username..", text: $viewModel.loginUsername)
                                     .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
                                 
-                                SecureField("Enter password..", text: $password)
+                                SecureField("Enter password..", text: $viewModel.loginPassword)
+                                    .autocorrectionDisabled()
                             }
-                            .autocorrectionDisabled()
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-                            .disabled(isLoading)
+                            .disabled(viewModel.isLoading)
+                            
+                            // Show validation error if email is invalid
+                            if !viewModel.isLoginEmailValid && !viewModel.loginEmail.isEmpty {
+                                Text("Please enter a valid university email ending with @islander.tamucc.edu")
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                    .multilineTextAlignment(.center)
+                            }
                             
                             Button {
-                                
+                                viewModel.loginUser()
                             } label: {
                                 Group {
-                                    if isLoading {
+                                    if viewModel.isLoading {
                                         ProgressView()
                                     } else {
                                         Label("Login", systemImage: "chevron.compact.right")
@@ -63,9 +67,9 @@ struct LoginView: View {
                                 .background(.primary)
                                 .cornerRadius(8)
                                 .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
-                                .opacity(isLoading ? 0.6 : 1)
+                                .opacity(viewModel.isLoginButtonDisabled ? 0.6 : 1)
                             }
-                            .disabled(isLoading)
+                            .disabled(viewModel.isLoginButtonDisabled)
                         }
                     }
                     .navigationTitle("Login")
@@ -81,12 +85,25 @@ struct LoginView: View {
                         }
                     }
                     .interactiveDismissDisabled()
+                    .alert(isPresented: Binding<Bool>(
+                        get: { viewModel.errorMessage != nil },
+                        set: { _ in viewModel.errorMessage = nil }
+                    )) {
+                        Alert(
+                            title: Text("Error"),
+                            message: Text(viewModel.errorMessage ?? "An error occurred."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
             }
+        }
+        .onAppear {
+            viewModel.isLoggedIn = false
         }
     }
 }
 
 #Preview {
-    LoginView()
+    LoginView(viewModel: AuthViewModel())
 }
