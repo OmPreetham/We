@@ -54,7 +54,7 @@ struct AccountView: View {
         [
             SettingsItem(title: "Activity", description: "View your recent activities", icon: "heart.text.square", destination: AnyView(ActivityView())),
             SettingsItem(title: "Bookmarks", description: "Access your saved bookmarks", icon: "bookmark", destination: AnyView(BookmarksView())),
-            SettingsItem(title: "Following", description: "See who you are following", icon: "checkmark.rectangle.stack", destination: AnyView(BoardsListView(listTitle: "Following"))),
+            SettingsItem(title: "Following", description: "See who you are following", icon: "checkmark.rectangle.stack", destination: AnyView(FollowedBoardsView())),
         ]
     }
     
@@ -67,7 +67,7 @@ struct AccountView: View {
     
     private var authorizedItems: [SettingsItem] {
         [
-            SettingsItem(title: "My Boards", description: "View all your created boards", icon: "square.grid.2x2", destination: AnyView(BoardsListView(listTitle: "My Boards"))),
+            SettingsItem(title: "My Boards", description: "View all your created boards", icon: "square.grid.2x2", destination: AnyView(MyBoardsView())),
             SettingsItem(title: "Create Board", description: "Create a new board", icon: "plus.square", destination: AnyView(CreateBoardView())),
         ]
     }

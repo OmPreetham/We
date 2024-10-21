@@ -134,9 +134,9 @@ struct PostPreviewCell: View {
             id: "610cf9e03b0f5a001e86534d",
             title: "Study Board",
             description: "A board dedicated to finding great study spots",
-            userId: "610cd1cf3b0f5a001e86534b",
-            symbolColor: "#3333FF",
-            systemImageName: "books.vertical"
+            symbolColor: "#FF5733", // Orange color
+            systemImageName: "books.vertical",
+            userId: "610cd1cf3b0f5a001e86534b"
         )
     )
 }

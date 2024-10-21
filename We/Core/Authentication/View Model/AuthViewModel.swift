@@ -34,6 +34,28 @@ class AuthViewModel: ObservableObject {
         @Published var newPassword: String = ""
         @Published var confirmPassword: String = ""
         @Published var isPasswordChangeSuccessful: Bool = false
+    
+    // MARK: - All Boards
+
+    @Published var allBoards: [Board] = []
+    @Published var isLoadingAllBoards: Bool = false
+    
+    // MARK: - Boards Created by User
+
+    @Published var userBoards: [Board] = []
+    @Published var isLoadingBoards: Bool = false
+    
+    // MARK: - Followed Boards
+
+    @Published var followedBoards: [Board] = []
+    @Published var isLoadingFollowedBoards: Bool = false
+    
+    // MARK: - Selected Board
+
+    @Published var selectedBoard: Board?
+    @Published var isLoadingSelectedBoard: Bool = false
+    @Published var boardErrorMessage: String?
+
 
     // Common properties
     @Published var isLoading: Bool = false
@@ -244,6 +266,86 @@ class AuthViewModel: ObservableObject {
                 case .success():
                     self?.currentUser?.username = newUsername
                     self?.isUsernameUpdated = true
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch All Boards
+
+    /// Fetches all available boards.
+    func fetchAllBoards() {
+        isLoadingAllBoards = true
+        errorMessage = nil
+
+        AuthService.shared.fetchAllBoards { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingAllBoards = false
+                switch result {
+                case .success(let boards):
+                    self?.allBoards = boards
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch User Boards
+
+    /// Fetches the boards created by the authenticated user.
+    func fetchUserBoards() {
+        isLoadingBoards = true
+        errorMessage = nil
+
+        AuthService.shared.fetchUserBoards { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingBoards = false
+                switch result {
+                case .success(let boards):
+                    self?.userBoards = boards
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch Followed Boards
+
+    /// Fetches the boards followed by the authenticated user.
+    func fetchFollowedBoards() {
+        isLoadingFollowedBoards = true
+        errorMessage = nil
+
+        AuthService.shared.fetchFollowedBoards { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingFollowedBoards = false
+                switch result {
+                case .success(let boards):
+                    self?.followedBoards = boards
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch Board by ID
+    
+    /// Fetches a board by its ID.
+    func fetchBoard(by boardId: String) {
+        isLoadingSelectedBoard = true
+        errorMessage = nil
+        
+        AuthService.shared.fetchBoardById(boardId: boardId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingSelectedBoard = false
+                switch result {
+                case .success(let board):
+                    self?.selectedBoard = board
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                 }

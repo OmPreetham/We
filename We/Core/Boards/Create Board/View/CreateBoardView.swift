@@ -9,64 +9,97 @@ import SwiftUI
 
 struct CreateBoardView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @State private var showingIconPicker = false
-    
+    @State private var isCreatingBoard = false
+    @State private var errorMessage: String?
+
     @State private var title = ""
-    @State private var content = ""
+    @State private var description = ""
     @State private var symbolColor: String = "33C1FF"
     @State private var systemImageName: String = "graduationcap"
-    
+
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                ZStack {
-                    Rectangle()
-                        .fill(Color.init(hex: symbolColor).gradient.materialActiveAppearance(.automatic))
-                        .frame(width: 100, height: 100)
-                        .clipShape(.rect(cornerRadius: 16))
-                    
-                    Image(systemName: systemImageName)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(.white)
-                        .frame(width: 50, height: 50)
-                }
-                .padding()
+            VStack {
+                // Board Icon and Color Section
+                ZStack(alignment: .bottomTrailing) {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color(hex: symbolColor).gradient)
+                            .frame(width: 100, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
 
-            Image(systemName: "plus.circle.fill")
-                .resizable()
-                .foregroundStyle(.white)
-                .frame(width: 30, height: 30)
-                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-                .padding([.trailing, .bottom], 12)
-            }
-            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-            .onTapGesture {
-                showingIconPicker = true
-            }
-            
-            Form {
-                Section("Board Details") {
-                    TextField("Title", text: $title, axis: .vertical)
-                    TextField("Description", text: $content, axis: .vertical)
-                }
-            }
-            .navigationTitle("Create Board")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        // Handle creation logic here
-                        dismiss()
-                    } label: {
-                        Label("Create", systemImage: "plus")
-                            .labelStyle(.titleOnly)
+                        Image(systemName: systemImageName)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.white)
+                            .frame(width: 50, height: 50)
                     }
-                    .disabled(title.isEmpty || content.isEmpty)
+                    .padding()
+
+                    Image(systemName: "plus.circle.fill")
+                        .resizable()
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
+                        .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                        .padding([.trailing, .bottom], 12)
+                        .onTapGesture {
+                            showingIconPicker = true
+                        }
+                }
+                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+
+                Form {
+                    Section("Board Details") {
+                        TextField("Title", text: $title)
+                        TextField("Description", text: $description)
+                    }
+                }
+                .navigationTitle("Create Board")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(action: {
+                            createBoard()
+                        }) {
+                            if isCreatingBoard {
+                                ProgressView()
+                            } else {
+                                Text("Create")
+                            }
+                        }
+                        .disabled(title.isEmpty || description.isEmpty || isCreatingBoard)
+                    }
+                }
+                .sheet(isPresented: $showingIconPicker) {
+                    IconPickerView(viewTitle: "Board Icon", selectedColor: $symbolColor, selectedSymbol: $systemImageName)
+                }
+                .alert(isPresented: Binding<Bool>(
+                    get: { errorMessage != nil },
+                    set: { _ in errorMessage = nil }
+                )) {
+                    Alert(title: Text("Error"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
                 }
             }
-            .sheet(isPresented: $showingIconPicker) {
-                IconPickerView(viewTitle: "Board Icon", selectedColor: $symbolColor, selectedSymbol: $systemImageName)
+        }
+    }
+
+    func createBoard() {
+        isCreatingBoard = true
+        errorMessage = nil
+
+        AuthService.shared.createBoard(title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { result in
+            DispatchQueue.main.async {
+                self.isCreatingBoard = false
+                switch result {
+                case .success(_):
+                    // Optionally, add the new board to a list of boards in your view model
+                    dismiss()
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }
     }
@@ -74,4 +107,5 @@ struct CreateBoardView: View {
 
 #Preview {
     CreateBoardView()
+        .environmentObject(AuthViewModel())
 }

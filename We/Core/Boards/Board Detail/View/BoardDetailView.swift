@@ -8,72 +8,92 @@
 import SwiftUI
 
 struct BoardDetailView: View {
-    @Environment(\.dismiss) var dismiss
-
-    @State private var followingBoard = false
-    @State private var showingEditBoard = false
+    @EnvironmentObject var authViewModel: AuthViewModel
+    var boardId: String
     
-    @State var boardItem: Board
-    let posts: [Post]
-
-    var boardPosts: [Post] {
-        posts.filter { $0.board == boardItem.id }
-    }
-
     var body: some View {
-        ZStack {
-            VStack {
-                if boardPosts.isEmpty {
-                    Text("No posts available for this board.")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                        .padding()
-                } else {
-                    PostListView(posts: boardPosts) // Display filtered posts for the board
+        VStack {
+            if authViewModel.isLoadingSelectedBoard {
+                ProgressView("Loading...")
+                    .navigationTitle("Board Details")
+            } else if let board = authViewModel.selectedBoard {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(hex: board.symbolColor).gradient)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .frame(width: 100, height: 100)
+                                
+                                Image(systemName: board.systemImageName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundStyle(.white)
+                                    .frame(width: 50, height: 50)
+                            }
+                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            
+                            VStack(alignment: .leading) {
+                                Text(board.title)
+                                    .font(.largeTitle)
+                                    .bold()
+                                
+                                Text(board.description)
+                                    .font(.body)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        // Display user info
+                        HStack {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                            
+                            VStack(alignment: .leading) {
+                                Text(board.userId)
+                                    .font(.headline)
+                            }
+                        }
+                        
+                        // Add other board details or actions here
+                        
+                        Spacer()
+                    }
+                    .padding()
                 }
-            }
-        }
-        .navigationTitle(boardItem.title)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    followingBoard.toggle()
-                } label: {
-                    if followingBoard {
-                        Label("Unfollow", systemImage: "checkmark.circle.fill")
-                    } else {
-                        Label("Follow", systemImage: "plus")
+                .navigationTitle(board.title)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            // Example action: follow/unfollow
+                            // Implement follow/unfollow functionality if desired
+                        }) {
+                            Text("Action")
+                        }
                     }
                 }
-            }
-            
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showingEditBoard.toggle()
-                } label: {
-                    Label("Edit", systemImage: "slider.horizontal.3")
-                }
+            } else {
+                Text("Board not found.")
+                    .foregroundStyle(.secondary)
+                    .navigationTitle("Board Details")
             }
         }
-        .sheet(isPresented: $showingEditBoard) {
-            EditBoardView(title: $boardItem.title, description: $boardItem.description, symbolColor: $boardItem.symbolColor, systemImageName: $boardItem.systemImageName)
+        .onAppear {
+            authViewModel.fetchBoard(by: boardId)
         }
-        .refreshable {
-            
+        .alert(isPresented: Binding<Bool>(
+            get: { authViewModel.errorMessage != nil },
+            set: { _ in authViewModel.errorMessage = nil }
+        )) {
+            Alert(title: Text("Error"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 #Preview {
-    BoardDetailView(
-        boardItem: Board(
-            id: "610cf9e03b0f5a001e86534d",
-            title: "Board Title",
-            description: "Board Description",
-            userId: "user_id",
-            symbolColor: "#FF5733",
-            systemImageName: "books.vertical"
-        ),
-        posts: samplePosts
-    )
+    BoardDetailView(boardId: "6716d55d9384d14d52370eec")
+        .environmentObject(AuthViewModel())
 }

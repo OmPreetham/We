@@ -26,19 +26,19 @@ struct CreatePostView: View {
         NavigationStack {
             List {
                 Group {
-                    Picker("To:", selection: $selectedBoard) {
-                        Label("Select a board", systemImage: "filemenu.and.selection")
-                            .tag(Board?.none)
-                        
-                        ForEach(boards, id: \.self) { board in
-                            Label(board.title, systemImage: board.systemImageName)
-                                .tag(Board?.some(board))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .listRowSeparator(.hidden, edges: .top)
-                    .foregroundStyle(.secondary)
-                    
+//                    Picker("To:", selection: $selectedBoard) {
+//                        Label("Select a board", systemImage: "filemenu.and.selection")
+//                            .tag(Board?.none)
+//                        
+//                        ForEach(boards, id: \.self) { board in
+//                            Label(board.title, systemImage: board.systemImageName)
+//                                .tag(Board?.some(board))
+//                        }
+//                    }
+//                    .pickerStyle(.menu)
+//                    .listRowSeparator(.hidden, edges: .top)
+//                    .foregroundStyle(.secondary)
+//                    
                     HStack {
                         Text("From:")
                             .foregroundStyle(.secondary)

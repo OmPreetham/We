@@ -9,13 +9,29 @@ import SwiftUI
 
 struct NavigationSidebarView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-
     @Binding var primarySelection: NavigateView.PrimarySelection?
 
-    @State private var username: String = "ShinjiIkariUnit01"
+    @State private var searchText: String = ""
+
+    var filteredBoards: [Board] {
+        if searchText.isEmpty {
+            return authViewModel.allBoards
+        } else {
+            return authViewModel.allBoards.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
     
+    var filteredFollowedBoards: [Board] {
+        if searchText.isEmpty {
+            return authViewModel.followedBoards
+        } else {
+            return authViewModel.followedBoards.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+
     var body: some View {
         List(selection: $primarySelection) {
+            // Account Section
             Section {
                 NavigationLink(value: NavigateView.PrimarySelection.account) {
                     SidebarItemView(
@@ -27,7 +43,8 @@ struct NavigationSidebarView: View {
                     )
                 }
             }
-            
+
+            // Personalized Section
             Section(header: Text("Personalized")) {
                 NavigationLink(value: NavigateView.PrimarySelection.forYou) {
                     SidebarItemView(
@@ -37,7 +54,7 @@ struct NavigationSidebarView: View {
                         gradientColor: .blue
                     )
                 }
-                
+
                 NavigationLink(value: NavigateView.PrimarySelection.followingPosts) {
                     SidebarItemView(
                         title: "Following",
@@ -47,30 +64,75 @@ struct NavigationSidebarView: View {
                     )
                 }
             }
+            
+            // Followed Boards Section
+            Section(header: Text("Followed Boards")) {
+                if authViewModel.isLoadingFollowedBoards {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else if filteredFollowedBoards.isEmpty {
+                    Text("You have not followed any boards.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(filteredFollowedBoards) { board in
+                        NavigationLink(value: NavigateView.PrimarySelection.board(board.id)) {
+                            SidebarItemView(
+                                title: board.title,
+                                description: board.description,
+                                imageName: board.systemImageName,
+                                gradientColor: Color(hex: board.symbolColor)
+                            )
+                        }
+                    }
+                }
+            }
 
-            Section(header: Text("Boards")) {
-                ForEach(sampleBoards) { board in
-                    NavigationLink(value: NavigateView.PrimarySelection.board(board.id)) {
-                        SidebarItemView(
-                            title: board.title,
-                            description: board.description,
-                            imageName: board.systemImageName,
-                            gradientColor: Color(hex: board.symbolColor)
-                        )
+            // Boards Section
+            Section(header: Text("All Boards")) {
+                if authViewModel.isLoadingAllBoards {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else if filteredBoards.isEmpty {
+                    Text("No boards available.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(filteredBoards) { board in
+                        NavigationLink(value: NavigateView.PrimarySelection.board(board.id)) {
+                            SidebarItemView(
+                                title: board.title,
+                                description: board.description,
+                                imageName: board.systemImageName,
+                                gradientColor: Color(hex: board.symbolColor)
+                            )
+                        }
                     }
                 }
             }
         }
         .listStyle(.sidebar)
         .navigationTitle("III")
-        .searchable(text: .constant(""))
+        .searchable(text: $searchText, prompt: "Search Boards")
         .refreshable {
+            authViewModel.fetchAllBoards()
+            authViewModel.fetchFollowedBoards()
             authViewModel.fetchCurrentUser()
         }
         .onAppear {
             if authViewModel.currentUser == nil {
                 authViewModel.fetchCurrentUser()
             }
+            if authViewModel.allBoards.isEmpty {
+                authViewModel.fetchAllBoards()
+            }
+            if authViewModel.followedBoards.isEmpty {
+                authViewModel.fetchFollowedBoards()
+            }
+        }
+        .alert(isPresented: Binding<Bool>(
+            get: { authViewModel.errorMessage != nil },
+            set: { _ in authViewModel.errorMessage = nil }
+        )) {
+            Alert(title: Text("Error"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }
