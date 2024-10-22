@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Board: Codable, Identifiable {
+struct Board: Codable, Identifiable, Equatable {
     let id: String
     let title: String
     let description: String

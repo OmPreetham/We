@@ -13,12 +13,23 @@ struct AccountView: View {
     @State private var showingAuthScreen: Bool = false
     @State private var showSignOutAlert: Bool = false
     
+    // Computed property to check if the user is admin or moderator
+    private var isAdminOrModerator: Bool {
+        guard let role = viewModel.currentUser?.role else { return false }
+        return role.lowercased() == "admin" || role.lowercased() == "moderator"
+    }
+    
     var body: some View {
         NavigationStack {
             List {
                 SettingsSectionView(title: "Profile", items: profileItems)
                 SettingsSectionView(title: "Account", items: accountItems)
-                SettingsSectionView(title: "Authorized", items: authorizedItems)
+                
+                // Conditionally include the Authorized section
+                if isAdminOrModerator {
+                    SettingsSectionView(title: "Authorized", items: authorizedItems)
+                }
+                
                 SettingsSectionView(title: "Customize", items: customizeItems)
                 SettingsSectionView(title: "Support", items: supportItems)
                 SettingsSectionView(title: "More", items: moreItems)
@@ -28,7 +39,7 @@ struct AccountView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                            showSignOutAlert = true
+                        showSignOutAlert = true
                     } label: {
                         Label("Sign Out", systemImage: "power")
                     }
@@ -47,6 +58,9 @@ struct AccountView: View {
             } message: {
                 Text("Are you sure you want to sign out?")
             }
+        }
+        .onAppear {
+            viewModel.fetchCurrentUser() // Ensure the current user is fetched
         }
     }
     
@@ -120,7 +134,6 @@ struct SettingsSectionView: View {
                                 Text(item.title)
                                     .font(.headline)
                                 
-                                
                                 if !item.description.isEmpty {
                                     Text(item.description)
                                         .font(.subheadline)
@@ -141,4 +154,5 @@ struct SettingsSectionView: View {
 
 #Preview {
     AccountView()
+        .environmentObject(AuthViewModel())
 }

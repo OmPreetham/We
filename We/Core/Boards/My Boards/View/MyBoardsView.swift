@@ -59,7 +59,7 @@ struct MyBoardsView: View {
                 get: { authViewModel.errorMessage != nil },
                 set: { _ in authViewModel.errorMessage = nil }
             )) {
-                Alert(title: Text("Error"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
             }
         }
     }

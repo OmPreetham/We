@@ -80,7 +80,7 @@ struct CreateBoardView: View {
                     get: { errorMessage != nil },
                     set: { _ in errorMessage = nil }
                 )) {
-                    Alert(title: Text("Error"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
+                    Alert(title: Text("Alert"), message: Text(errorMessage ?? ""), dismissButton: .default(Text("OK")))
                 }
             }
         }

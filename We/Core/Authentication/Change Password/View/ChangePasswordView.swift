@@ -64,7 +64,7 @@ struct ChangePasswordView: View {
                 get: { viewModel.errorMessage != nil },
                 set: { _ in viewModel.errorMessage = nil }
             )) {
-                Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "An error occurred."), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Alert"), message: Text(viewModel.errorMessage ?? "An error occurred."), dismissButton: .default(Text("OK")))
             }
         }
     }

@@ -13,7 +13,7 @@ class AuthViewModel: ObservableObject {
     
     @Published var currentUser: User?
     @Published var isUsernameUpdated: Bool = false
-
+    
     // Registration properties
     @Published var emailAddress: String = ""
     @Published var verificationCode: String = ""
@@ -21,7 +21,7 @@ class AuthViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isCodeSent: Bool = false
     @Published var isAccountCreated: Bool = false
-
+    
     // Login properties
     @Published var loginEmail: String = ""
     @Published var loginUsername: String = ""
@@ -29,40 +29,40 @@ class AuthViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     
     // MARK: - Change Password Properties
-
-        @Published var currentPassword: String = ""
-        @Published var newPassword: String = ""
-        @Published var confirmPassword: String = ""
-        @Published var isPasswordChangeSuccessful: Bool = false
+    
+    @Published var currentPassword: String = ""
+    @Published var newPassword: String = ""
+    @Published var confirmPassword: String = ""
+    @Published var isPasswordChangeSuccessful: Bool = false
     
     // MARK: - All Boards
-
+    
     @Published var allBoards: [Board] = []
     @Published var isLoadingAllBoards: Bool = false
     
     // MARK: - Boards Created by User
-
+    
     @Published var userBoards: [Board] = []
     @Published var isLoadingBoards: Bool = false
     
     // MARK: - Followed Boards
-
+    
     @Published var followedBoards: [Board] = []
     @Published var isLoadingFollowedBoards: Bool = false
     
     // MARK: - Selected Board
-
+    
     @Published var selectedBoard: Board?
     @Published var isLoadingSelectedBoard: Bool = false
     @Published var boardErrorMessage: String?
-
-
+    
+    
     // Common properties
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
-
+    
     // MARK: - Validation Properties
-
+    
     // Registration validation
     var isEmailValid: Bool {
         // Validate email ending with @islander.tamucc.edu
@@ -70,28 +70,32 @@ class AuthViewModel: ObservableObject {
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailPredicate.evaluate(with: emailAddress)
     }
-
+    
     var isVerificationCodeValid: Bool {
         let codeRegex = "^[0-9]{6}$"
         let codePredicate = NSPredicate(format: "SELF MATCHES %@", codeRegex)
         return codePredicate.evaluate(with: verificationCode)
     }
-
+    
     var isUsernameValid: Bool {
         return username.count >= 4
     }
-
+    
     var isPasswordValid: Bool {
         // Password must be at least 8 characters, with at least one uppercase, one lowercase, one number, and one special character
         let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$"
         let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
         return passwordPredicate.evaluate(with: password)
     }
-
-    var isRegisterButtonDisabled: Bool {
-        return isLoading || !isVerificationCodeValid || !isUsernameValid || !isPasswordValid
+    
+    var doPasswordsMatch: Bool {
+        return password == confirmPassword
     }
-
+    
+    var isRegisterButtonDisabled: Bool {
+        return isLoading || !isVerificationCodeValid || !isUsernameValid || !isPasswordValid || !doPasswordsMatch
+    }
+    
     // Login validation
     var isLoginEmailValid: Bool {
         // Validate email ending with @islander.tamucc.edu
@@ -99,43 +103,43 @@ class AuthViewModel: ObservableObject {
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailPredicate.evaluate(with: loginEmail)
     }
-
+    
     var isLoginButtonDisabled: Bool {
         return isLoading || !isLoginEmailValid || loginUsername.isEmpty || loginPassword.isEmpty
     }
-
+    
     // Send code button disabled state
     var isSendCodeButtonDisabled: Bool {
         return isLoading || !isEmailValid
     }
     
-
-        /// Validates the new password.
-        var isNewPasswordValid: Bool {
-            // Use your existing password validation logic
-            return isPasswordValid(newPassword)
-        }
-
-        /// Checks if the change password button should be disabled.
-        var isChangePasswordButtonDisabled: Bool {
-            return isLoading ||
-                currentPassword.isEmpty ||
-                newPassword.isEmpty ||
-                confirmPassword.isEmpty ||
-                newPassword != confirmPassword ||
-                !isNewPasswordValid
-        }
-
+    
+    /// Validates the new password.
+    var isNewPasswordValid: Bool {
+        // Use your existing password validation logic
+        return isPasswordValid(newPassword)
+    }
+    
+    /// Checks if the change password button should be disabled.
+    var isChangePasswordButtonDisabled: Bool {
+        return isLoading ||
+        currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty ||
+        newPassword != confirmPassword ||
+        !isNewPasswordValid
+    }
+    
     // MARK: - Registration Methods
-
+    
     /// Requests a verification code to be sent to the user's email.
     func requestVerificationCode() {
         // Ensure the email is valid before proceeding
         guard !isSendCodeButtonDisabled else { return }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.requestVerificationCode(email: emailAddress) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -148,15 +152,15 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
     /// Registers a new user using the verification code, username, and password.
     func registerUser() {
         // Ensure inputs are valid before proceeding
         guard !isRegisterButtonDisabled else { return }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.registerUser(code: verificationCode, username: username, password: password) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -169,17 +173,17 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
     // MARK: - Login Methods
-
+    
     /// Logs in the user with the provided credentials.
     func loginUser() {
         // Ensure inputs are valid before proceeding
         guard !isLoginButtonDisabled else { return }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.login(email: loginEmail, username: loginUsername, password: loginPassword) { [weak self] success, errorMessage in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -195,12 +199,12 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
     /// Checks if the user is logged in by verifying the presence of the access token.
     func checkLoginStatus() {
         isLoggedIn = AuthService.shared.isLoggedIn()
     }
-
+    
     /// Logs out the user by clearing tokens and updating the login status.
     func logout() {
         AuthService.shared.logout()
@@ -214,10 +218,10 @@ class AuthViewModel: ObservableObject {
             self.errorMessage = "Please ensure all fields are filled, passwords match, and meet the criteria."
             return
         }
-
+        
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.changePassword(oldPassword: currentPassword, newPassword: newPassword) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -238,7 +242,7 @@ class AuthViewModel: ObservableObject {
     func fetchCurrentUser() {
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.fetchCurrentUser { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -253,12 +257,12 @@ class AuthViewModel: ObservableObject {
     }
     
     // MARK: - Update Username Method
-
+    
     /// Updates the user's username.
     func updateUsername(newUsername: String) {
         isLoading = true
         errorMessage = nil
-
+        
         AuthService.shared.updateUsername(newUsername: newUsername) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
@@ -273,13 +277,45 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Update Board
+    
+    /// Updates a board with new details.
+    func updateBoard(boardId: String, title: String, description: String, symbolColor: String, systemImageName: String) {
+        isLoading = true
+        errorMessage = nil
+        
+        AuthService.shared.updateBoard(boardId: boardId, title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let updatedBoard):
+                    // Update the selectedBoard with the updated details
+                    self?.selectedBoard = updatedBoard
+                    
+                    // Update in userBoards and followedBoards if necessary
+                    if let index = self?.userBoards.firstIndex(where: { $0.id == updatedBoard.id }) {
+                        self?.userBoards[index] = updatedBoard
+                    }
+                    
+                    if let index = self?.followedBoards.firstIndex(where: { $0.id == updatedBoard.id }) {
+                        self?.followedBoards[index] = updatedBoard
+                    }
+                    
+                    self?.errorMessage = nil
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
     // MARK: - Fetch All Boards
-
+    
     /// Fetches all available boards.
     func fetchAllBoards() {
         isLoadingAllBoards = true
         errorMessage = nil
-
+        
         AuthService.shared.fetchAllBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingAllBoards = false
@@ -294,12 +330,12 @@ class AuthViewModel: ObservableObject {
     }
     
     // MARK: - Fetch User Boards
-
+    
     /// Fetches the boards created by the authenticated user.
     func fetchUserBoards() {
         isLoadingBoards = true
         errorMessage = nil
-
+        
         AuthService.shared.fetchUserBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingBoards = false
@@ -314,12 +350,12 @@ class AuthViewModel: ObservableObject {
     }
     
     // MARK: - Fetch Followed Boards
-
+    
     /// Fetches the boards followed by the authenticated user.
     func fetchFollowedBoards() {
         isLoadingFollowedBoards = true
         errorMessage = nil
-
+        
         AuthService.shared.fetchFollowedBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingFollowedBoards = false
@@ -336,11 +372,11 @@ class AuthViewModel: ObservableObject {
     // MARK: - Fetch Board by ID
     
     /// Fetches a board by its ID.
-    func fetchBoard(by boardId: String) {
+    func fetchBoard(by id: String) {
         isLoadingSelectedBoard = true
         errorMessage = nil
         
-        AuthService.shared.fetchBoardById(boardId: boardId) { [weak self] result in
+        AuthService.shared.fetchBoardById(boardId: id) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingSelectedBoard = false
                 switch result {
@@ -352,7 +388,46 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
+    // MARK: - Follow/Unfollow Board
+    
+    /// Follows a board with the given boardId.
+    func followBoard(boardId: String) {
+        isLoading = true
+        errorMessage = nil
+        
+        AuthService.shared.followBoard(boardId: boardId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success():
+                    // Refresh the followed boards list
+                    self?.fetchFollowedBoards()
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    /// Unfollows a board with the given boardId.
+    func unfollowBoard(boardId: String) {
+        isLoading = true
+        errorMessage = nil
+        
+        AuthService.shared.unfollowBoard(boardId: boardId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success():
+                    // Refresh the followed boards list
+                    self?.fetchFollowedBoards()
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
         // Password validation logic (same as before)
@@ -360,9 +435,9 @@ class AuthViewModel: ObservableObject {
         let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
         return passwordPredicate.evaluate(with: password)
     }
-
+    
     // MARK: - Helper Methods
-
+    
     /// Resets registration properties.
     func resetRegistration() {
         emailAddress = ""
@@ -373,7 +448,7 @@ class AuthViewModel: ObservableObject {
         isAccountCreated = false
         errorMessage = nil
     }
-
+    
     /// Resets login properties.
     func resetLogin() {
         loginEmail = ""

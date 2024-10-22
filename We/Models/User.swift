@@ -7,16 +7,16 @@
 
 import Foundation
 
-struct User: Codable {
+struct User: Codable, Identifiable {
     let id: String
     var username: String
     let email: String
-    // Add other fields as needed, matching the backend response
+    let role: String // e.g., "admin", "moderator", "user"
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case username
         case email
-        // Add other coding keys if necessary
+        case role
     }
 }

@@ -16,16 +16,20 @@ struct IconPickerView: View {
     
     // Predefined list of colors with their hex codes
     private let colorOptions: [(color: Color, hex: String)] = [
-        (.teal, "#008080"),
-        (.red, "#FF0000"),
-        (.orange, "#FFA500"),
-        (.yellow, "#FFFF00"),
-        (.green, "#008000"),
-        (.blue, "#0000FF"),
-        (.purple, "#800080"),
-        (.pink, "#FFC0CB"),
-        (.gray, "#808080"),
-        (.brown, "#A52A2A")
+        (.teal, "#30B0C7"),
+        (.red, "#FF3B30"),
+        (.orange, "#FF9400"),
+        (.mint, "#00C7BE"),
+        (.yellow, "#FFCC00"),
+        (.green, "#34C759"),
+        (.indigo, "#5856D6"),
+        (.blue, "#007AFF"),
+        (.purple, "#AF52DE"),
+        (.pink, "#FF2D55"),
+        (.gray, "#8E8E93"),
+        (.brown, "#A2845E"),
+        (.black, "#000000"),
+        (.cyan, "#32ADE6"),
     ]
     
     // Predefined SF Symbols for icon selection (you can expand this list)
@@ -75,7 +79,7 @@ struct IconPickerView: View {
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 15) {
                             ForEach(colorOptions, id: \.hex) { option in
                                 Circle()
-                                    .fill(option.color)
+                                    .fill(option.color.gradient.materialActiveAppearance(.automatic))
                                     .frame(width: 40, height: 40)
                                     .padding(4)
                                     .overlay(
@@ -135,5 +139,5 @@ struct IconPickerView: View {
 }
 
 #Preview {
-    IconPickerView(viewTitle: "SwiftUI Icon Picker", selectedColor: .constant("#FFFFFF"), selectedSymbol: .constant("graduationcap.fill"))
+    IconPickerView(viewTitle: "SwiftUI Icon Picker", selectedColor: .constant("#30B0C7"), selectedSymbol: .constant("graduationcap.fill"))
 }

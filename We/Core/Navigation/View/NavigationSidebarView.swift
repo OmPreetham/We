@@ -58,7 +58,7 @@ struct NavigationSidebarView: View {
                 NavigationLink(value: NavigateView.PrimarySelection.followingPosts) {
                     SidebarItemView(
                         title: "Following",
-                        description: "Posts from people you follow.",
+                        description: "Posts from boards you follow.",
                         imageName: "checkmark.seal.fill",
                         gradientColor: Color(red: 212/255, green: 175/255, blue: 55/255)
                     )
@@ -132,7 +132,7 @@ struct NavigationSidebarView: View {
             get: { authViewModel.errorMessage != nil },
             set: { _ in authViewModel.errorMessage = nil }
         )) {
-            Alert(title: Text("Error"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }

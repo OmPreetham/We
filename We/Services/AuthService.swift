@@ -14,7 +14,7 @@ class AuthService {
     
     // Base URL of your backend API
     private let baseURL = "http://192.168.5.92:5500/api"
-
+    
     // Keychain keys
     let accessTokenKey = "accessToken"
     let refreshTokenKey = "refreshToken"
@@ -215,7 +215,7 @@ class AuthService {
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
+        
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -270,18 +270,18 @@ class AuthService {
     }
     
     // MARK: - Fetch Current User
-
+    
     /// Fetches the current authenticated user.
     func fetchCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/user/current-user") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.httpShouldHandleCookies = true
-
+        
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -295,25 +295,26 @@ class AuthService {
         sessionConfig.httpCookieStorage = HTTPCookieStorage.shared
         sessionConfig.httpShouldSetCookies = true
         let session = URLSession(configuration: sessionConfig)
-
+        
         session.dataTask(with: request) { data, response, error in
             // Handle networking errors
             if let error = error {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the user data
                 do {
                     if let data = data {
                         let user = try JSONDecoder().decode(User.self, from: data)
+                        print("User Data: \(user)")
                         DispatchQueue.main.async {
                             completion(.success(user))
                         }
@@ -332,14 +333,14 @@ class AuthService {
     }
     
     // MARK: - Update Username
-
+    
     /// Updates the user's username.
     func updateUsername(newUsername: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/user/update-user") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
@@ -360,26 +361,26 @@ class AuthService {
             completion(.failure(error))
             return
         }
-
+        
         // Configure the session
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.httpCookieStorage = HTTPCookieStorage.shared
         sessionConfig.httpShouldSetCookies = true
         let session = URLSession(configuration: sessionConfig)
-
+        
         session.dataTask(with: request) { data, response, error in
             // Handle networking errors
             if let error = error {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Success
                 DispatchQueue.main.async {
@@ -394,18 +395,18 @@ class AuthService {
     }
     
     // MARK: - Create Board
-
+    
     /// Creates a new board.
     func createBoard(title: String, description: String, symbolColor: String, systemImageName: String, completion: @escaping (Result<Board, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/boards/create") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
+        
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -413,7 +414,7 @@ class AuthService {
             completion(.failure(AuthError.noAccessToken))
             return
         }
-
+        
         // Prepare the request body
         let body: [String: String] = [
             "title": title,
@@ -427,7 +428,7 @@ class AuthService {
             completion(.failure(error))
             return
         }
-
+        
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -435,13 +436,13 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the Board object from the response
                 do {
@@ -464,24 +465,42 @@ class AuthService {
         }.resume()
     }
     
-    // MARK: - Fetch All Boards
-
-    /// Fetches all available boards.
-    func fetchAllBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/") else {
+    // MARK: - Update Board
+    
+    /// Updates a board with the given boardId and new details.
+    func updateBoard(boardId: String, title: String, description: String, symbolColor: String, systemImageName: String, completion: @escaping (Result<Board, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/\(boardId)") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-
-        // If your backend requires authentication for this endpoint, include the access token
-        // If not, you can omit this block
+        request.httpMethod = "PUT"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
         }
-
+        
+        // Prepare the request body
+        let body: [String: Any] = [
+            "title": title,
+            "description": description,
+            "symbolColor": symbolColor,
+            "systemImageName": systemImageName
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -489,13 +508,75 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the updated Board object from the response
+                do {
+                    if let data = data {
+                        // Print the raw response data for debugging
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        
+                        let decoder = JSONDecoder()
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let updatedBoard = try decoder.decode(Board.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(updatedBoard))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
+    // MARK: - Fetch All Boards
+    
+    /// Fetches all available boards.
+    func fetchAllBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // If your backend requires authentication for this endpoint, include the access token
+        // If not, you can omit this block
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the array of Board objects from the response
                 do {
@@ -504,7 +585,7 @@ class AuthService {
                         if let dataString = String(data: data, encoding: .utf8) {
                             print("Response Data: \(dataString)")
                         }
-
+                        
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let boards = try decoder.decode([Board].self, from: data)
@@ -527,17 +608,17 @@ class AuthService {
     }
     
     // MARK: - Fetch Boards Created by User
-
+    
     /// Fetches the boards created by the authenticated user.
     func fetchUserBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/boards/myboards") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
+        
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -545,7 +626,7 @@ class AuthService {
             completion(.failure(AuthError.noAccessToken))
             return
         }
-
+        
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -553,13 +634,13 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the array of Board objects from the response
                 do {
@@ -568,7 +649,7 @@ class AuthService {
                         if let dataString = String(data: data, encoding: .utf8) {
                             print("Response Data: \(dataString)")
                         }
-
+                        
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let boards = try decoder.decode([Board].self, from: data)
@@ -589,18 +670,20 @@ class AuthService {
             }
         }.resume()
     }
-    // MARK: - Fetch Followed Boards
-
-    /// Fetches the boards followed by the authenticated user.
-    func fetchFollowedBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/following") else {
+    
+    // MARK: - Follow Board
+    
+    /// Follows a board with the given boardId.
+    func followBoard(boardId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/follow") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -608,7 +691,7 @@ class AuthService {
             completion(.failure(AuthError.noAccessToken))
             return
         }
-
+        
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -616,13 +699,105 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                DispatchQueue.main.async {
+                    completion(.success(()))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
+    // MARK: - Unfollow Board
+    
+    /// Unfollows a board with the given boardId.
+    func unfollowBoard(boardId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/unfollow") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                DispatchQueue.main.async {
+                    completion(.success(()))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    // MARK: - Fetch Followed Boards
+    
+    /// Fetches the boards followed by the authenticated user.
+    func fetchFollowedBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/following") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the array of Board objects from the response
                 do {
@@ -631,7 +806,7 @@ class AuthService {
                         if let dataString = String(data: data, encoding: .utf8) {
                             print("Response Data: \(dataString)")
                         }
-
+                        
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let boards = try decoder.decode([Board].self, from: data)
@@ -654,22 +829,22 @@ class AuthService {
     }
     
     // MARK: - Fetch Board by ID
-
+    
     /// Fetches a specific board by its ID.
     func fetchBoardById(boardId: String, completion: @escaping (Result<Board, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/boards/\(boardId)") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
+        
         // Include the access token in the Authorization header if required
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
-
+        
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -677,13 +852,13 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-
+            
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-
+            
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the Board object from the response
                 do {
@@ -692,7 +867,7 @@ class AuthService {
                         if let dataString = String(data: data, encoding: .utf8) {
                             print("Response Data: \(dataString)")
                         }
-
+                        
                         let decoder = JSONDecoder()
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let board = try decoder.decode(Board.self, from: data)
@@ -713,7 +888,7 @@ class AuthService {
             }
         }.resume()
     }
-
+    
     /// Clears all cookies from the shared HTTPCookieStorage.
     private func clearCookies() {
         let cookieStorage = HTTPCookieStorage.shared
@@ -795,7 +970,7 @@ class AuthService {
     }
     
     // MARK: - Error Types
-
+    
     enum AuthError: LocalizedError {
         case invalidURL
         case invalidResponse
@@ -803,7 +978,7 @@ class AuthService {
         case noData
         case serverError(message: String)
         case noAccessToken
-
+        
         var errorDescription: String? {
             switch self {
             case .invalidURL:

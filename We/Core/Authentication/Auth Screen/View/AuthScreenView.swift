@@ -14,19 +14,23 @@ struct AuthScreenView: View {
     @State private var showingRegister: Bool = false
 
     var body: some View {
-        ZStack {            
-            VStack(spacing: 45) {
-                headerSection
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                authenticationButtons
-                
-                Spacer()
-                
+        ZStack {
+            VStack {
+                ScrollView {
+                    VStack(spacing: 45) {
+                        headerSection
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        authenticationButtons
+                        
+                        Spacer()
+                    }
+                    .padding()
+                }
+
                 termsAndPrivacySection
+                    .padding(.bottom, 20)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .padding()
         }
         .sheet(isPresented: $showingLogin) {
             LoginView(viewModel: viewModel)
@@ -130,5 +134,6 @@ struct TermsButton: View {
 
 #Preview {
     AuthScreenView()
+        .environmentObject(AuthViewModel())
 }
 

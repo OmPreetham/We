@@ -90,7 +90,7 @@ struct VerifyView: View {
                         set: { _ in viewModel.errorMessage = nil }
                     )) {
                         Alert(
-                            title: Text("Error"),
+                            title: Text("Alert"),
                             message: Text(viewModel.errorMessage ?? "An error occurred."),
                             dismissButton: .default(Text("OK"))
                         )
@@ -104,6 +104,7 @@ struct VerifyView: View {
                         .font(.footnote)
                         .underline()
                 }
+                .padding(.bottom)
             }
         }
     }
