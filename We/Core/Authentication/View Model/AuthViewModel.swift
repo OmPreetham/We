@@ -57,6 +57,11 @@ class AuthViewModel: ObservableObject {
     @Published var isLoadingSelectedBoard: Bool = false
     @Published var boardErrorMessage: String?
     
+    // MARK: - Following Posts
+    
+    @Published var followingPosts: [Post] = []
+    @Published var isLoadingFollowingPosts: Bool = false
+    
     
     // Common properties
     @Published var isLoading: Bool = false
@@ -203,7 +208,7 @@ class AuthViewModel: ObservableObject {
     
     /// Checks if the user is logged in by verifying the presence of the access token.
     func checkLoginStatus() {
-        isLoggedIn = AuthService.shared.isLoggedIn()
+        isLoggedIn = AuthService.shared.isLoggedIn() && AuthService.shared.getAccessToken() != nil
     }
     
     /// Logs out the user by clearing tokens and updating the login status.
@@ -407,6 +412,26 @@ class AuthViewModel: ObservableObject {
                     self?.fetchFollowedBoards()
                     // Optionally, you can use the message to inform the user
                     print(message)
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch Following Posts
+    
+    /// Fetches the posts from the boards the user is following.
+    func fetchFollowingPosts() {
+        isLoadingFollowingPosts = true
+        errorMessage = nil
+        
+        AuthService.shared.fetchFollowingPosts { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingFollowingPosts = false
+                switch result {
+                case .success(let posts):
+                    self?.followingPosts = posts
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                 }

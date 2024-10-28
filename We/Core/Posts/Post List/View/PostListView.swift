@@ -13,10 +13,8 @@ struct PostListView: View {
     
     var body: some View {
         List(posts, id: \.id) { post in
-            if let board = sampleBoards.first(where: { $0.id == post.board }) {
-                NavigationLink(destination: PostDetailView(post: post)) {
-                    PostPreviewCell(post: post, board: board)
-                }
+            NavigationLink(destination: PostDetailView(post: post)) {
+                PostPreviewCell(post: post)
             }
         }
         .listStyle(.plain)

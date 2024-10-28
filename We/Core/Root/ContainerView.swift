@@ -24,6 +24,9 @@ struct ContainerView: View {
         .fullScreenCover(isPresented: $showingOnboarding) {
             OnboardingView(isShowingOnboarding: $showingOnboarding)
         }
+        .onAppear {
+            viewModel.checkLoginStatus()
+        }
     }
 }
 

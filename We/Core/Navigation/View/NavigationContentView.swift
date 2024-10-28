@@ -24,11 +24,7 @@ struct NavigationContentView: View {
                     isShowingCreatePost: $isShowingCreatePost
                 )
             case .followingPosts:
-                PostListContainerView(
-                    title: "Following",
-                    posts: samplePosts,
-                    isShowingCreatePost: $isShowingCreatePost
-                )
+                FollowingPostsView()
             case .board(let boardId):
                 BoardDetailView(boardId: boardId)
             }
