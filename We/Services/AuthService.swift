@@ -671,19 +671,19 @@ class AuthService {
         }.resume()
     }
     
-    // MARK: - Follow Board
-    
-    /// Follows a board with the given boardId.
-    func followBoard(boardId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/follow") else {
+    // MARK: - Toggle Follow Board
+
+    /// Toggles following or unfollowing a board with the given boardId.
+    func toggleFollowBoard(boardId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/toggleFollow") else {
             completion(.failure(AuthError.invalidURL))
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        
+
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -691,7 +691,7 @@ class AuthService {
             completion(.failure(AuthError.noAccessToken))
             return
         }
-        
+
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -699,63 +699,31 @@ class AuthService {
                 completion(.failure(error))
                 return
             }
-            
+
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(AuthError.invalidResponse))
                 return
             }
-            
+
+            // Handle server response
             if (200...299).contains(httpResponse.statusCode) {
-                DispatchQueue.main.async {
-                    completion(.success(()))
-                }
-            } else {
-                // Handle server-side errors
-                let errorMessage = self.parseErrorMessage(data: data)
-                completion(.failure(AuthError.serverError(message: errorMessage)))
-            }
-        }.resume()
-    }
-    
-    // MARK: - Unfollow Board
-    
-    /// Unfollows a board with the given boardId.
-    func unfollowBoard(boardId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/unfollow") else {
-            completion(.failure(AuthError.invalidURL))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        
-        // Include the access token in the Authorization header
-        if let accessToken = getAccessToken() {
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        } else {
-            completion(.failure(AuthError.noAccessToken))
-            return
-        }
-        
-        // Create the data task
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // Handle networking errors
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Check for valid HTTP response
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(AuthError.invalidResponse))
-                return
-            }
-            
-            if (200...299).contains(httpResponse.statusCode) {
-                DispatchQueue.main.async {
-                    completion(.success(()))
+                // Parse the message from the response
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let message = json["message"] as? String {
+                            DispatchQueue.main.async {
+                                completion(.success(message))
+                            }
+                        } else {
+                            completion(.failure(AuthError.invalidData))
+                        }
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(AuthError.noData))
                 }
             } else {
                 // Handle server-side errors

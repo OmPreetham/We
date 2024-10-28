@@ -49,6 +49,7 @@ class AuthViewModel: ObservableObject {
     
     @Published var followedBoards: [Board] = []
     @Published var isLoadingFollowedBoards: Bool = false
+    @Published var isTogglingFollow: Bool = false
     
     // MARK: - Selected Board
     
@@ -351,19 +352,20 @@ class AuthViewModel: ObservableObject {
     
     // MARK: - Fetch Followed Boards
     
-    /// Fetches the boards followed by the authenticated user.
-    func fetchFollowedBoards() {
+    func fetchFollowedBoards(completion: (() -> Void)? = nil) {
         isLoadingFollowedBoards = true
         errorMessage = nil
-        
+
         AuthService.shared.fetchFollowedBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingFollowedBoards = false
                 switch result {
                 case .success(let boards):
                     self?.followedBoards = boards
+                    completion?()
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
+                    completion?()
                 }
             }
         }
@@ -389,20 +391,22 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Follow/Unfollow Board
-    
-    /// Follows a board with the given boardId.
-    func followBoard(boardId: String) {
-        isLoading = true
+    // MARK: - Toggle Follow Board
+
+    /// Toggles following or unfollowing a board with the given boardId.
+    func toggleFollowBoard(boardId: String) {
+        isTogglingFollow = true
         errorMessage = nil
-        
-        AuthService.shared.followBoard(boardId: boardId) { [weak self] result in
+
+        AuthService.shared.toggleFollowBoard(boardId: boardId) { [weak self] result in
             DispatchQueue.main.async {
-                self?.isLoading = false
+                self?.isTogglingFollow = false
                 switch result {
-                case .success():
-                    // Refresh the followed boards list
+                case .success(let message):
+                    // Update the followed boards list
                     self?.fetchFollowedBoards()
+                    // Optionally, you can use the message to inform the user
+                    print(message)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                 }
@@ -410,24 +414,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    /// Unfollows a board with the given boardId.
-    func unfollowBoard(boardId: String) {
-        isLoading = true
-        errorMessage = nil
-        
-        AuthService.shared.unfollowBoard(boardId: boardId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success():
-                    // Refresh the followed boards list
-                    self?.fetchFollowedBoards()
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
         // Password validation logic (same as before)

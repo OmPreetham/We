@@ -26,11 +26,11 @@ struct MyBoardsView: View {
                     HStack {
                         ZStack {
                             Rectangle()
-                                .fill(Color(hex: board.symbolColor).gradient)
+                                .fill(Color(hex: board.symbolColor).materialActiveAppearance(.active))
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
                             Image(systemName: board.systemImageName)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.primary)
                         }
                         .frame(width: 50, height: 50)
                         .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)

@@ -13,24 +13,28 @@ struct PostPreviewCell: View {
     
     var body: some View {
         ZStack {
-            HStack(alignment: .top) {
-                Image(systemName: board.systemImageName)
-                    .frame(width: 50, height: 50)
-                    .background(Color(hex: board.symbolColor))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .onTapGesture {
-                        // Add action for image tap if needed
-                    }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(alignment: .top, spacing: 8) {
+            HStack(alignment: .top, spacing: 16) {
+                ZStack {
+                    Rectangle()
+                        .fill(Color(hex: board.symbolColor).materialActiveAppearance(.active))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                    Image(systemName: board.systemImageName)
+                        .foregroundStyle(.primary)
+                }
+                .frame(width: 50, height: 50)
+                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+
+                VStack(alignment: .leading) {
+                    HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(board.title)
                                 .font(.headline)
+                                .fontWeight(.medium)
                                 .foregroundStyle(.primary)
                             
                             Text(post.username)
-                                .font(.subheadline)
+                                .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
 
@@ -41,71 +45,15 @@ struct PostPreviewCell: View {
                             .foregroundStyle(.secondary)
                     }
                     
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading) {
                         Text(post.title)
-                            .font(.headline)
-                            .fontDesign(.serif)
-                            .fontWeight(.bold)
 
                             Text(post.content)
-                                .font(.body)
-                                .lineLimit(8)
-                                .truncationMode(.tail)
-                                .overlay(
-                                    Label("Read More", systemImage: "greaterthan")
-                                        .labelStyle(.iconOnly)
-                                        .font(.callout)
-                                        .foregroundStyle(.teal)
-                                        .padding(.bottom, 4)
-                                        .opacity(post.content.count > 360 ? 1 : 0),
-                                    alignment: .bottomTrailing
-                                )
-                                .lineSpacing(2)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(2)
                     }
+                    .font(.callout)
                     .multilineTextAlignment(.leading)
-                    
-                    HStack {
-                        Button {
-                            // Action for reply button
-                        } label: {
-                            Label("Comment", systemImage: "message")
-                                .labelStyle(.iconOnly)
-                            
-                            Text(String(post.commentCount))
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            // Action for upvote button
-                        } label: {
-                            Label("Upvote", systemImage: "hand.thumbsup")
-                                .labelStyle(.iconOnly)
-                            
-                            Text(String(post.upvoteCount))
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            // Action for downvote button
-                        } label: {
-                            Label("Downvote", systemImage: "hand.thumbsdown")
-                                .labelStyle(.iconOnly)
-                            
-                            Text(String(post.downvoteCount))
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            // Action for bookmark button
-                        } label: {
-                            Label("Bookmark", systemImage: "bookmark")
-                                .labelStyle(.iconOnly)
-                        }
-                    }
-                    .foregroundStyle(.secondary)
                 }
             }
         }

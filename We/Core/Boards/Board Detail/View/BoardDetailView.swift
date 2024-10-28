@@ -10,110 +10,52 @@ import SwiftUI
 struct BoardDetailView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     var boardId: String
-
-    // Local state to manage follow status and edit sheet
+    
     @State private var isFollowing: Bool = false
-    @State private var showSuccessAlert: Bool = false
-    @State private var showErrorAlert: Bool = false
-    @State private var alertMessage: String = ""
     @State private var showingEditSheet: Bool = false
+    @State private var isLoading: Bool = false
     
     var body: some View {
-        VStack {
-            if authViewModel.isLoadingSelectedBoard {
-                ProgressView("Loading...")
-                    .navigationTitle("Board Details")
-            } else if let board = authViewModel.selectedBoard {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            ZStack {
-                                Rectangle()
-                                    .fill(Color(hex: board.symbolColor).gradient)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .frame(width: 100, height: 100)
-                                
-                                Image(systemName: board.systemImageName)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundStyle(.white)
-                                    .frame(width: 50, height: 50)
-                            }
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-                            
-                            VStack(alignment: .leading) {
-                                Text(board.title)
-                                    .font(.largeTitle)
-                                    .bold()
-                                
-                                Text("Created by \(board.userId)") // Ideally, display username
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        
-                        // Additional board details can be added here
-                        Text(board.description)
-                            .font(.body)
-                            .padding(.top, 8)
-                        
-                        Spacer()
-                    }
-                    .padding()
+        ZStack {
+            PostListView(posts: samplePosts)
+        }
+        .navigationTitle(authViewModel.selectedBoard?.title ?? "Board Details")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                // Follow/Unfollow Button
+                Button {
+                    handleToggleFollow()
+                } label: {
+                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "minus.circle.fill" : "plus.circle.fill")
+                        .font(.callout)
+                        .labelStyle(.titleOnly)
                 }
-                .navigationTitle(board.title)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        HStack {
-                            // Follow/Unfollow Button
-                            Button(action: {
-                                if isFollowing {
-                                    authViewModel.unfollowBoard(boardId: board.id)
-                                    isFollowing = false
-                                    alertMessage = "Successfully unfollowed the board."
-                                    showSuccessAlert = true
-                                } else {
-                                    authViewModel.followBoard(boardId: board.id)
-                                    isFollowing = true
-                                    alertMessage = "Successfully followed the board."
-                                    showSuccessAlert = true
-                                }
-                            }) {
-                                Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "minus.circle.fill" : "plus.circle.fill")
-                                    .labelStyle(.iconOnly)
-                                    .foregroundStyle(isFollowing ? .red : .accentColor)
-                            }
-                            .accessibilityLabel(isFollowing ? "Unfollow Board" : "Follow Board")
-                            
-                            // Edit Button (Only for Admins and Moderators)
-                            if isAdminOrModerator {
-                                Button(action: {
-                                    showingEditSheet = true
-                                }) {
-                                    Label("Edit", systemImage: "pencil")
-                                        .labelStyle(.titleOnly)
-                                }
-                                .accessibilityLabel("Edit Board")
-                            }
-                        }
+                .buttonStyle(.bordered)
+                .clipShape(.capsule)
+                .accessibilityLabel(isFollowing ? "Unfollow" : "Follow")
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                if isAdminOrModerator {
+                    Button(action: {
+                        showingEditSheet = true
+                    }) {
+                        Label("Edit", systemImage: "slider.horizontal.3")
                     }
+                    .buttonStyle(.bordered)
+                    .clipShape(.capsule)
+                    .accessibilityLabel("Edit Board")
                 }
-            } else {
-                Text("Board not found.")
-                    .foregroundStyle(.secondary)
-                    .navigationTitle("Board Details")
             }
         }
         .onAppear {
-            authViewModel.fetchBoard(by: boardId)
-            checkIfFollowing()
+            loadData()
         }
         .onChange(of: authViewModel.followedBoards) {
             checkIfFollowing()
         }
         .refreshable {
-            checkIfFollowing()
-            authViewModel.fetchBoard(by: boardId)
+            loadData()
         }
         .sheet(isPresented: $showingEditSheet) {
             if let board = authViewModel.selectedBoard {
@@ -125,13 +67,9 @@ struct BoardDetailView: View {
                 )
                 .environmentObject(authViewModel)
                 .onDisappear {
-                    // Refresh board details after editing
                     authViewModel.fetchBoard(by: boardId)
                 }
             }
-        }
-        .alert(isPresented: $showSuccessAlert) {
-            Alert(title: Text("Success"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         .alert(isPresented: Binding<Bool>(
             get: { authViewModel.errorMessage != nil },
@@ -141,13 +79,19 @@ struct BoardDetailView: View {
         }
     }
     
-    // Computed property to check if the user is admin or moderator
-    private var isAdminOrModerator: Bool {
-        guard let role = authViewModel.currentUser?.role else { return false }
-        return role.lowercased() == "admin" || role.lowercased() == "moderator"
+    // MARK: - Helper Methods
+    
+    // Load initial data
+    private func loadData() {
+        isLoading = true
+        authViewModel.fetchBoard(by: boardId)
+        authViewModel.fetchFollowedBoards {
+            self.checkIfFollowing()
+            isLoading = false
+        }
     }
     
-    // Helper function to check follow status
+    // Check if the user is following this board
     private func checkIfFollowing() {
         guard let board = authViewModel.selectedBoard else {
             isFollowing = false
@@ -155,11 +99,25 @@ struct BoardDetailView: View {
         }
         isFollowing = authViewModel.followedBoards.contains { $0.id == board.id }
     }
+    
+    // Handle toggle follow action
+    private func handleToggleFollow() {
+        guard let board = authViewModel.selectedBoard else { return }
+        authViewModel.toggleFollowBoard(boardId: board.id)
+    }
+    
+    // Check if user has admin or moderator role
+    private var isAdminOrModerator: Bool {
+        guard let role = authViewModel.currentUser?.role else { return false }
+        return role.lowercased() == "admin" || role.lowercased() == "moderator"
+    }
 }
 
-#Preview {
-    NavigationView {
-        BoardDetailView(boardId: "6716d55d9384d14d52370eec")
-            .environmentObject(AuthViewModel())
+struct BoardDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            BoardDetailView(boardId: "6716d55d9384d14d52370eec")
+                .environmentObject(AuthViewModel())
+        }
     }
 }
