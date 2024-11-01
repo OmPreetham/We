@@ -23,7 +23,7 @@ struct SidebarItemView: View {
                     .clipShape(RoundedRectangle(cornerRadius: isAccount ? 30 : 8))
                 
                 Image(systemName: imageName)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.background)
             }
             .frame(width: isAccount ? 60 : 50, height: isAccount ? 60 : 50)
             .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
@@ -32,12 +32,13 @@ struct SidebarItemView: View {
             VStack(alignment: .leading) {
                 Text(title)
                     .font(.headline)
+                    .lineLimit(1)
                 
                 Text(description)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .lineLimit(2)
             }
-            .lineLimit(2)
         }
     }
 }

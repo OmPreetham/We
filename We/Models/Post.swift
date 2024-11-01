@@ -69,5 +69,53 @@ let samplePosts: [Post] = [
         createdAt: Date(),
         updatedAt: Date()
     ),
+    Post(
+        id: "610cda503b0f5a001e86534c",
+        title: "Best Study Spots on Campus?",
+        content: "Looking for the best quiet places to study...",
+        user: sampleUsers[0],
+        username: "@AnonStudent",
+        parentPost: nil,
+        path: ",",
+        upvoteCount: 1500,
+        downvoteCount: 20,
+        commentCount: 120,
+        viewCount: 1000,
+        board: sampleBoards[0],
+        createdAt: Date(),
+        updatedAt: Date()
+    ),
+    Post(
+        id: "610cda503b0f5a001e86534c",
+        title: "Best Study Spots on Campus?",
+        content: "Looking for the best quiet places to study...",
+        user: sampleUsers[0],
+        username: "@AnonStudent",
+        parentPost: nil,
+        path: ",",
+        upvoteCount: 1500,
+        downvoteCount: 20,
+        commentCount: 120,
+        viewCount: 1000,
+        board: sampleBoards[0],
+        createdAt: Date(),
+        updatedAt: Date()
+    ),
+    Post(
+        id: "610cda503b0f5a001e86534c",
+        title: "Best Study Spots on Campus?",
+        content: "Looking for the best quiet places to study...",
+        user: sampleUsers[0],
+        username: "@AnonStudent",
+        parentPost: nil,
+        path: ",",
+        upvoteCount: 1500,
+        downvoteCount: 20,
+        commentCount: 120,
+        viewCount: 1000,
+        board: sampleBoards[0],
+        createdAt: Date(),
+        updatedAt: Date()
+    ),
     // More posts following the same structure...
 ]

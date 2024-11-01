@@ -1,5 +1,5 @@
 //
-//  FollowingPostsView.swift
+//  BookmarksView.swift
 //  We
 //
 //  Created by Om Preetham Bandi on 10/28/24.
@@ -7,26 +7,26 @@
 
 import SwiftUI
 
-struct FollowingPostsView: View {
+struct BookmarksView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var searchText: String = ""
     @State private var showingCreatePost: Bool = false
-        
+    
     var filteredPosts: [Post] {
         if searchText.isEmpty {
-            return authViewModel.followingPosts
+            return authViewModel.bookmarkPosts
         } else {
-            return authViewModel.followingPosts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
+            return authViewModel.bookmarkPosts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if authViewModel.isLoadingFollowingPosts {
+                if authViewModel.isLoadingBookmarkPosts {
                     ProgressView()
                 } else if filteredPosts.isEmpty {
-                    ContentUnavailableView("", systemImage: "", description: Text(""))
+                    ContentUnavailableView("No Bookmarks", systemImage: "bookmark", description: Text("You haven't bookmarked any posts yet."))
                 } else {
                     ScrollView {
                         LazyVStack {
@@ -40,7 +40,7 @@ struct FollowingPostsView: View {
                     }
                 }
             }
-            .navigationTitle("Following Posts")
+            .navigationTitle("Bookmarks")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
@@ -74,14 +74,14 @@ struct FollowingPostsView: View {
                 CreatePostView()
             }
             .onAppear {
-                if authViewModel.followingPosts.isEmpty {
-                    authViewModel.fetchFollowingPosts()
+                if authViewModel.bookmarkPosts.isEmpty {
+                    authViewModel.fetchBookmarkPosts()
                 }
             }
             .refreshable {
-                authViewModel.fetchFollowingPosts()
+                authViewModel.fetchBookmarkPosts()
             }
-            .searchable(text: $searchText, prompt: "Search Following")
+            .searchable(text: $searchText, prompt: "Search Bookmarks")
             .alert(isPresented: Binding<Bool>(
                 get: { authViewModel.errorMessage != nil },
                 set: { _ in authViewModel.errorMessage = nil }
@@ -93,6 +93,6 @@ struct FollowingPostsView: View {
 }
 
 #Preview {
-    FollowingPostsView()
+    BookmarksView()
         .environmentObject(AuthViewModel())
 }

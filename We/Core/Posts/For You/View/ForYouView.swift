@@ -1,32 +1,33 @@
 //
-//  FollowingPostsView.swift
+//  ForYouView.swift
 //  We
 //
-//  Created by Om Preetham Bandi on 10/28/24.
+//  Created by Om Preetham Bandi on 11/1/24.
 //
 
 import SwiftUI
 
-struct FollowingPostsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+struct ForYouView: View {
+    var posts: [Post]
+    
     @State private var searchText: String = ""
-    @State private var showingCreatePost: Bool = false
-        
+    @State var showingCreatePost: Bool = false
+    
     var filteredPosts: [Post] {
         if searchText.isEmpty {
-            return authViewModel.followingPosts
+            return posts
         } else {
-            return authViewModel.followingPosts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
+            return posts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
         }
     }
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if authViewModel.isLoadingFollowingPosts {
-                    ProgressView()
+                if filteredPosts.isEmpty && posts.isEmpty {
+                    ContentUnavailableView("No Posts Available", systemImage: "rectangle.stack", description: Text("No posts to show right now."))
                 } else if filteredPosts.isEmpty {
-                    ContentUnavailableView("", systemImage: "", description: Text(""))
+                    ProgressView("Loading...")
                 } else {
                     ScrollView {
                         LazyVStack {
@@ -40,7 +41,8 @@ struct FollowingPostsView: View {
                     }
                 }
             }
-            .navigationTitle("Following Posts")
+            .padding(.horizontal, 8)
+            .navigationTitle("For You")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
@@ -73,26 +75,15 @@ struct FollowingPostsView: View {
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
             }
-            .onAppear {
-                if authViewModel.followingPosts.isEmpty {
-                    authViewModel.fetchFollowingPosts()
-                }
-            }
             .refreshable {
-                authViewModel.fetchFollowingPosts()
+                // Add refresh logic if necessary
             }
-            .searchable(text: $searchText, prompt: "Search Following")
-            .alert(isPresented: Binding<Bool>(
-                get: { authViewModel.errorMessage != nil },
-                set: { _ in authViewModel.errorMessage = nil }
-            )) {
-                Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
-            }
+            .searchable(text: $searchText, prompt: "Search Posts")
         }
     }
 }
 
 #Preview {
-    FollowingPostsView()
+    ForYouView(posts: samplePosts)
         .environmentObject(AuthViewModel())
 }

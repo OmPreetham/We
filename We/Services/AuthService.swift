@@ -924,6 +924,74 @@ class AuthService {
         }.resume()
     }
     
+    // MARK: - Fetch Bookmark Posts
+    
+    /// Fetches posts from the boards the user is following.
+    func fetchBookmarkPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/bookmarks") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        // Debugging: print the response data
+                        #if DEBUG
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        #endif
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    
     /// Clears all cookies from the shared HTTPCookieStorage.
     private func clearCookies() {
         let cookieStorage = HTTPCookieStorage.shared

@@ -26,12 +26,12 @@ struct BoardDetailView: View {
                 Button {
                     handleToggleFollow()
                 } label: {
-                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "minus.circle.fill" : "plus.circle.fill")
+                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
                         .font(.callout)
-                        .labelStyle(.titleOnly)
+                        .fontWeight(.semibold)
                 }
                 .buttonStyle(.bordered)
-                .clipShape(.capsule)
+                .clipShape(.circle)
                 .accessibilityLabel(isFollowing ? "Unfollow" : "Follow")
             }
             
@@ -41,9 +41,11 @@ struct BoardDetailView: View {
                         showingEditSheet = true
                     }) {
                         Label("Edit", systemImage: "slider.horizontal.3")
+                            .font(.callout)
+                            .fontWeight(.semibold)
                     }
                     .buttonStyle(.bordered)
-                    .clipShape(.capsule)
+                    .clipShape(.circle)
                     .accessibilityLabel("Edit Board")
                 }
             }

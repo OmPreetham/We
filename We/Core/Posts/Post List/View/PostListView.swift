@@ -12,12 +12,16 @@ struct PostListView: View {
     let boards: [Board] = sampleBoards // Use a static list for boards or pass dynamically if needed
     
     var body: some View {
-        List(posts, id: \.id) { post in
-            NavigationLink(destination: PostDetailView(post: post)) {
-                PostPreviewCell(post: post)
+        ScrollView {
+            LazyVStack {
+                ForEach(posts, id: \.id) { post in
+                    NavigationLink(destination: PostDetailView(post: post)) {
+                        PostPreviewCell(post: post)
+                    }
+                    .foregroundStyle(.foreground)
+                }
             }
         }
-        .listStyle(.plain)
     }
 }
 

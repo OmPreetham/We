@@ -18,11 +18,7 @@ struct NavigationContentView: View {
                 AccountView()
                     .navigationTitle("Profile")
             case .forYou:
-                PostListContainerView(
-                    title: "For You",
-                    posts: samplePosts,
-                    isShowingCreatePost: $isShowingCreatePost
-                )
+                ForYouView(posts: samplePosts)
             case .followingPosts:
                 FollowingPostsView()
             case .board(let boardId):

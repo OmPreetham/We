@@ -30,7 +30,7 @@ struct MyBoardsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
                             Image(systemName: board.systemImageName)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(.background)
                         }
                         .frame(width: 50, height: 50)
                         .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
@@ -39,12 +39,13 @@ struct MyBoardsView: View {
                         VStack(alignment: .leading) {
                             Text(board.title)
                                 .font(.headline)
+                                .lineLimit(1)
 
                             Text(board.description)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                                .lineLimit(2)
                         }
-                        .lineLimit(3)
                     }
                 }
             }
@@ -60,6 +61,9 @@ struct MyBoardsView: View {
                 set: { _ in authViewModel.errorMessage = nil }
             )) {
                 Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+            }
+            .refreshable {
+                authViewModel.fetchUserBoards()
             }
         }
     }

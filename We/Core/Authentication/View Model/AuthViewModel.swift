@@ -62,7 +62,11 @@ class AuthViewModel: ObservableObject {
     @Published var followingPosts: [Post] = []
     @Published var isLoadingFollowingPosts: Bool = false
     
+    // MARK: - Following Posts
     
+    @Published var bookmarkPosts: [Post] = []
+    @Published var isLoadingBookmarkPosts: Bool = false
+
     // Common properties
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
@@ -438,6 +442,27 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Fetch Bookmark Posts
+    
+    /// Fetches the posts from the boards the user is following.
+    func fetchBookmarkPosts() {
+        isLoadingBookmarkPosts = true
+        errorMessage = nil
+        
+        AuthService.shared.fetchBookmarkPosts { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingBookmarkPosts = false
+                switch result {
+                case .success(let posts):
+                    self?.bookmarkPosts = posts
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
     
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
