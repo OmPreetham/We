@@ -38,7 +38,7 @@ struct LoginView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                             .disabled(viewModel.isLoading)
                             
                             // Show validation error if email is invalid
@@ -66,7 +66,7 @@ struct LoginView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(.primary)
                                 .cornerRadius(8)
-                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+                                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                                 .opacity(viewModel.isLoginButtonDisabled ? 0.6 : 1)
                             }
                             .disabled(viewModel.isLoginButtonDisabled)

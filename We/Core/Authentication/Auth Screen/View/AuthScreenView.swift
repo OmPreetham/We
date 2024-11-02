@@ -116,7 +116,7 @@ struct AuthButton: View {
         .foregroundStyle(.background.materialActiveAppearance(.active))
         .background(.foreground)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
     }
 }
 

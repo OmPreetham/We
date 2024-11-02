@@ -9,35 +9,17 @@ import SwiftUI
 
 struct BookmarksView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var searchText: String = ""
     @State private var showingCreatePost: Bool = false
-    
-    var filteredPosts: [Post] {
-        if searchText.isEmpty {
-            return authViewModel.bookmarkPosts
-        } else {
-            return authViewModel.bookmarkPosts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
     
     var body: some View {
         NavigationStack {
             ZStack {
                 if authViewModel.isLoadingBookmarkPosts {
                     ProgressView()
-                } else if filteredPosts.isEmpty {
-                    ContentUnavailableView("No Bookmarks", systemImage: "bookmark", description: Text("You haven't bookmarked any posts yet."))
+                } else if authViewModel.bookmarkPosts.isEmpty {
+                    ContentUnavailableView("No Bookmarks", systemImage: "bookmark.slash.fill", description: Text("You haven't bookmarked any posts yet."))
                 } else {
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(filteredPosts, id: \.id) { post in
-                                NavigationLink(destination: PostDetailView(post: post)) {
-                                    PostPreviewCell(post: post)
-                                }
-                                .foregroundStyle(.foreground)
-                            }
-                        }
-                    }
+                    PostListView(posts: authViewModel.bookmarkPosts)
                 }
             }
             .navigationTitle("Bookmarks")
@@ -81,7 +63,6 @@ struct BookmarksView: View {
             .refreshable {
                 authViewModel.fetchBookmarkPosts()
             }
-            .searchable(text: $searchText, prompt: "Search Bookmarks")
             .alert(isPresented: Binding<Bool>(
                 get: { authViewModel.errorMessage != nil },
                 set: { _ in authViewModel.errorMessage = nil }

@@ -44,7 +44,7 @@ struct FollowedBoardsView: View {
                                     .foregroundStyle(.background)
                             }
                             .frame(width: 50, height: 50)
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                             .padding(.trailing, 8)
 
                             VStack(alignment: .leading) {

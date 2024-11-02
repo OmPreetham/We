@@ -9,35 +9,17 @@ import SwiftUI
 
 struct FollowingPostsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var searchText: String = ""
     @State private var showingCreatePost: Bool = false
-        
-    var filteredPosts: [Post] {
-        if searchText.isEmpty {
-            return authViewModel.followingPosts
-        } else {
-            return authViewModel.followingPosts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
     
     var body: some View {
         NavigationStack {
             ZStack {
                 if authViewModel.isLoadingFollowingPosts {
                     ProgressView()
-                } else if filteredPosts.isEmpty {
-                    ContentUnavailableView("", systemImage: "", description: Text(""))
+                } else if authViewModel.followingPosts.isEmpty {
+                    ContentUnavailableView("No Following Posts", systemImage: "star.slash.fill", description: Text("You haven't followed any boards yet."))
                 } else {
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(filteredPosts, id: \.id) { post in
-                                NavigationLink(destination: PostDetailView(post: post)) {
-                                    PostPreviewCell(post: post)
-                                }
-                                .foregroundStyle(.foreground)
-                            }
-                        }
-                    }
+                    PostListView(posts: authViewModel.followingPosts)
                 }
             }
             .navigationTitle("Following Posts")
@@ -81,7 +63,6 @@ struct FollowingPostsView: View {
             .refreshable {
                 authViewModel.fetchFollowingPosts()
             }
-            .searchable(text: $searchText, prompt: "Search Following")
             .alert(isPresented: Binding<Bool>(
                 get: { authViewModel.errorMessage != nil },
                 set: { _ in authViewModel.errorMessage = nil }

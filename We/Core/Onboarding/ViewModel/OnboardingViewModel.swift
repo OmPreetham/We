@@ -30,7 +30,7 @@ func colorForSystemImage(systemName: String) -> Color {
 
 let onboardingData: [OnboardingInfo] = [
     OnboardingInfo(
-        label: "Welcome to We",
+        label: "’Ello! We",
         content: "We is your platform for open discussions with fellow university students. Share your thoughts, ask questions, and connect with others in a safe and welcoming environment.",
         systemName: "quote.bubble.fill"
     ),

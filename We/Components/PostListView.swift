@@ -9,11 +9,10 @@ import SwiftUI
 
 struct PostListView: View {
     let posts: [Post] // Accept posts as an input parameter
-    let boards: [Board] = sampleBoards // Use a static list for boards or pass dynamically if needed
     
     var body: some View {
         ScrollView {
-            LazyVStack {
+            LazyVStack(alignment: .leading, spacing: 16) {
                 ForEach(posts, id: \.id) { post in
                     NavigationLink(destination: PostDetailView(post: post)) {
                         PostPreviewCell(post: post)

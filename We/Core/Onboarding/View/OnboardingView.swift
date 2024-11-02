@@ -25,7 +25,7 @@ struct OnboardingView: View {
                                 .scaledToFit()
                                 .frame(width: 100, height: 100)
                                 .padding()
-                                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                                 .foregroundStyle(colorForSystemImage(systemName: info.systemName))
                             
                             Text(info.label)
@@ -33,8 +33,8 @@ struct OnboardingView: View {
                                 .fontDesign(.serif)
                                 .fontWeight(.bold)
                                 .padding()
-                                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-                            
+                                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
+
                             if let content = info.content {
                                 Text(content)
                                     .font(.subheadline)

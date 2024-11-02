@@ -34,7 +34,7 @@ struct VerifyView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
 
                             if !viewModel.isEmailValid && !viewModel.emailAddress.isEmpty {
                                 Text("Please enter a valid university email ending with @islander.tamucc.edu")
@@ -63,7 +63,7 @@ struct VerifyView: View {
                                         .background(.primary)
                                         .opacity(viewModel.isSendCodeButtonDisabled ? 0.6 : 1)
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 3)
+                                        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                                 }
                             }
                             .disabled(viewModel.isSendCodeButtonDisabled)

@@ -50,8 +50,8 @@ struct RegistrationView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
-                            
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
+
                             PasswordStrengthView(password: $viewModel.password)
                                 .padding(.horizontal)
                             
@@ -89,7 +89,7 @@ There is no option to recover a forgotten password.**
                                 .background(.primary)
                                 .opacity(viewModel.isRegisterButtonDisabled ? 0.6 : 1)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                             }
                             .disabled(viewModel.isRegisterButtonDisabled)
                         }

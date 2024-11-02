@@ -20,9 +20,6 @@ struct ContentView: View {
                     .environmentObject(viewModel)
             }
         }
-        .onAppear {
-            viewModel.checkLoginStatus()
-        }
     }
 }
 

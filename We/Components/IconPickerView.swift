@@ -70,7 +70,7 @@ struct IconPickerView: View {
                         .foregroundColor(.white)
                         .frame(width: 50, height: 50)
                 }
-                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                 .padding()
                 
                 List {

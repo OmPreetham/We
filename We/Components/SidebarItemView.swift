@@ -26,7 +26,7 @@ struct SidebarItemView: View {
                     .foregroundStyle(.background)
             }
             .frame(width: isAccount ? 60 : 50, height: isAccount ? 60 : 50)
-            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
             .padding(.trailing, 8)
 
             VStack(alignment: .leading) {
@@ -49,6 +49,6 @@ struct SidebarItemView: View {
         description: "Your personal account settings",
         imageName: "person.crop.circle",
         gradientColor: .blue,
-        isAccount: true // Test with isAccount as true
+        isAccount: true
     )
 }

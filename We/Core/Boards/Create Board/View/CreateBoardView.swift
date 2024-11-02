@@ -43,13 +43,13 @@ struct CreateBoardView: View {
                         .resizable()
                         .foregroundStyle(.white)
                         .frame(width: 30, height: 30)
-                        .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                         .padding([.trailing, .bottom], 12)
                         .onTapGesture {
                             showingIconPicker = true
                         }
                 }
-                .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
 
                 Form {
                     Section("Board Details") {

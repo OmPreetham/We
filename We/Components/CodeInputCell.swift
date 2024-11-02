@@ -21,7 +21,7 @@ struct CodeInputCell: View {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(.ultraThinMaterial)
                             .frame(width: 50, height: 60)
-                            .shadow(color: .primary.opacity(0.1), radius: 4, x: 0, y: 3)
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
 
                         if index < code.count {
                             Text(String(code[code.index(code.startIndex, offsetBy: index)]))

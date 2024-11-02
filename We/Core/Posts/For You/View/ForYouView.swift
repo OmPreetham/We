@@ -10,38 +10,17 @@ import SwiftUI
 struct ForYouView: View {
     var posts: [Post]
     
-    @State private var searchText: String = ""
     @State var showingCreatePost: Bool = false
-    
-    var filteredPosts: [Post] {
-        if searchText.isEmpty {
-            return posts
-        } else {
-            return posts.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.content.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if filteredPosts.isEmpty && posts.isEmpty {
-                    ContentUnavailableView("No Posts Available", systemImage: "rectangle.stack", description: Text("No posts to show right now."))
-                } else if filteredPosts.isEmpty {
-                    ProgressView("Loading...")
+                if posts.isEmpty {
+                    ContentUnavailableView("No Posts Available", systemImage: "sharedwithyou.slash", description: Text("No posts to show right now."))
                 } else {
-                    ScrollView {
-                        LazyVStack {
-                            ForEach(filteredPosts, id: \.id) { post in
-                                NavigationLink(destination: PostDetailView(post: post)) {
-                                    PostPreviewCell(post: post)
-                                }
-                                .foregroundStyle(.foreground)
-                            }
-                        }
-                    }
+                    PostListView(posts: posts)
                 }
             }
-            .padding(.horizontal, 8)
             .navigationTitle("For You")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -78,7 +57,6 @@ struct ForYouView: View {
             .refreshable {
                 // Add refresh logic if necessary
             }
-            .searchable(text: $searchText, prompt: "Search Posts")
         }
     }
 }

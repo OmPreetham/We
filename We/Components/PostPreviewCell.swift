@@ -9,74 +9,50 @@ import SwiftUI
 
 struct PostPreviewCell: View {
     let post: Post
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Title
-            Text(post.title)
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundStyle(.primary)
-            
-            // Content
-            Text(post.content)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .lineLimit(4)
-                .multilineTextAlignment(.leading)
-            
-            // Board, Username, and Date Info
-            HStack(alignment: .center, spacing: 8) {
-                // Board Pill
-                HStack(spacing: 4) {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color(hex: post.board.symbolColor).materialActiveAppearance(.active))
-                            .clipShape(.circle)
-                        
-                        Image(systemName: post.board.systemImageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(.background)
-                    }
-                    .frame(width: 20, height: 20)
-                    
-                    Text(post.board.title)
-                        .font(.footnote)
-                        .foregroundStyle(.primary)
-                }
-                .padding(.vertical, 4)
-                .padding(.horizontal, 8)
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .lineLimit(1)
-                .truncationMode(.tail)
+        VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(post.title)
+                    .font(.headline)
+                    .lineLimit(3)
                 
-                // Anonymous User Pill
-                Text(post.username)
-                    .font(.footnote)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(Color(.systemGray5))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .foregroundStyle(.secondary)
+                Text(post.content)
+                    .font(.subheadline)
+                    .lineLimit(9)
+            }
+            .multilineTextAlignment(.leading)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+            
+            Divider()
+            
+            HStack(alignment: .center) {
+                Label(post.board.title, systemImage: post.board.systemImageName)
                 
                 Spacer()
                 
-                // Time Pill
+                Text(post.username)
+                
+                Spacer()
+                
                 Text(post.createdAt.relativeDate())
-                    .font(.caption)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .foregroundStyle(.secondary)
             }
+            .font(.footnote)
+            .lineLimit(1)
+            .truncationMode(.tail)
+            .foregroundStyle(.secondary)
+            .fontWeight(.medium)
+            .padding(4)
         }
-        .padding()
+        .padding(8)
+        .background(.background)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
+        .padding(.horizontal)
     }
 }
 
 #Preview {
-    PostPreviewCell(post: samplePosts[0])
+    PostPreviewCell(post: samplePosts[2])
 }

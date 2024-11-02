@@ -10,29 +10,37 @@ import SwiftUI
 struct BoardDetailView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     var boardId: String
-    
-    @State private var isFollowing: Bool = false
+
     @State private var showingEditSheet: Bool = false
     @State private var isLoading: Bool = false
-    
+
+    private var isFollowing: Bool {
+        guard let board = authViewModel.selectedBoard else { return false }
+        return authViewModel.followedBoards.contains { $0.id == board.id }
+    }
+
     var body: some View {
         ZStack {
-            PostListView(posts: samplePosts)
+            if authViewModel.isLoadingBoardPosts {
+                ProgressView()
+            } else {
+                VStack {
+                    if authViewModel.boardPosts.isEmpty {
+                        ContentUnavailableView("No Posts", systemImage: "square.stack.3d.up.slash.fill", description: Text("No posts are available for this Board"))
+                    } else {
+                        PostListView(posts: authViewModel.boardPosts)
+                    }
+                }
+            }
         }
         .navigationTitle(authViewModel.selectedBoard?.title ?? "Board Details")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                // Follow/Unfollow Button
                 Button {
                     handleToggleFollow()
                 } label: {
                     Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
-                        .font(.callout)
-                        .fontWeight(.semibold)
                 }
-                .buttonStyle(.bordered)
-                .clipShape(.circle)
-                .accessibilityLabel(isFollowing ? "Unfollow" : "Follow")
             }
             
             ToolbarItem(placement: .topBarTrailing) {
@@ -40,21 +48,13 @@ struct BoardDetailView: View {
                     Button(action: {
                         showingEditSheet = true
                     }) {
-                        Label("Edit", systemImage: "slider.horizontal.3")
-                            .font(.callout)
-                            .fontWeight(.semibold)
+                        Label("Edit", systemImage: "ellipsis")
                     }
-                    .buttonStyle(.bordered)
-                    .clipShape(.circle)
-                    .accessibilityLabel("Edit Board")
                 }
             }
         }
         .onAppear {
             loadData()
-        }
-        .onChange(of: authViewModel.followedBoards) {
-            checkIfFollowing()
         }
         .refreshable {
             loadData()
@@ -83,43 +83,26 @@ struct BoardDetailView: View {
     
     // MARK: - Helper Methods
     
-    // Load initial data
     private func loadData() {
         isLoading = true
         authViewModel.fetchBoard(by: boardId)
-        authViewModel.fetchFollowedBoards {
-            self.checkIfFollowing()
-            isLoading = false
-        }
+        authViewModel.fetchBoardPosts(for: boardId)
+        authViewModel.fetchFollowedBoards()
     }
     
-    // Check if the user is following this board
-    private func checkIfFollowing() {
-        guard let board = authViewModel.selectedBoard else {
-            isFollowing = false
-            return
-        }
-        isFollowing = authViewModel.followedBoards.contains { $0.id == board.id }
-    }
-    
-    // Handle toggle follow action
     private func handleToggleFollow() {
         guard let board = authViewModel.selectedBoard else { return }
         authViewModel.toggleFollowBoard(boardId: board.id)
     }
     
-    // Check if user has admin or moderator role
     private var isAdminOrModerator: Bool {
         guard let role = authViewModel.currentUser?.role else { return false }
         return role.lowercased() == "admin" || role.lowercased() == "moderator"
     }
 }
-
-struct BoardDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            BoardDetailView(boardId: "6716d55d9384d14d52370eec")
-                .environmentObject(AuthViewModel())
-        }
+#Preview {
+    NavigationView {
+        BoardDetailView(boardId: "6720220991dfa7246a92ef7c")
+            .environmentObject(AuthViewModel())
     }
 }
