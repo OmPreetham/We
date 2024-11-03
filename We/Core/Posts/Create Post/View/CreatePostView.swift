@@ -25,7 +25,7 @@ struct CreatePostView: View {
         NavigationStack {
             List {
                 // Board Picker
-                Picker("Board", selection: $selectedBoard) {
+                Picker("Board:", selection: $selectedBoard) {
                     ForEach(authViewModel.allBoards, id: \.id) { board in
                         Label(board.title, systemImage: board.systemImageName)
                             .tag(board as Board?)

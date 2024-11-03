@@ -66,6 +66,7 @@ class AuthViewModel: ObservableObject {
     
     @Published var bookmarkPosts: [Post] = []
     @Published var isLoadingBookmarkPosts: Bool = false
+    @Published var isTogglingBookmark: Bool = false
 
     // MARK: - Board Posts
     
@@ -75,6 +76,11 @@ class AuthViewModel: ObservableObject {
     // Common properties
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var showAlert: Bool = false
+    
+    @Published var isLoadingSelectedPost: Bool = false
+    @Published var selectedPost: Post?
+    @Published var isBookmarked: Bool = false
     
     // MARK: - Validation Properties
     
@@ -486,8 +492,59 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Fetch Post by ID
     
+    /// Fetches a post by its ID.
+    func fetchPost(by id: String) {
+        isLoadingSelectedPost = true
+        errorMessage = nil
+        
+        AuthService.shared.fetchPostById(postId: id) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingSelectedPost = false
+                switch result {
+                case .success(let post):
+                    self?.selectedPost = post
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
     
+    // MARK: - Toggle Bookmark Post
+    
+    func toggleBookmarkPost(postId: String) {
+        guard selectedPost != nil else { return }
+        
+        AuthService.shared.toggleBookmarkPost(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let message):
+                    self?.isBookmarked.toggle()
+                    self?.errorMessage = message
+                    self?.showAlert = true
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
+
+    func checkIfPostIsBookmarked(postId: String) {
+        AuthService.shared.isPostBookmarked(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let isBookmarked):
+                    self?.isBookmarked = isBookmarked
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
         // Password validation logic (same as before)

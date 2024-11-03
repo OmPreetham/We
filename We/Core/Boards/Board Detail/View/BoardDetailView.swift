@@ -125,7 +125,6 @@ struct BoardDetailView: View {
         lastLoadedBoardId = boardId
         authViewModel.fetchBoard(by: boardId)
         authViewModel.fetchBoardPosts(for: boardId)
-        authViewModel.fetchFollowedBoards()
     }
     
     private func handleToggleFollow() {

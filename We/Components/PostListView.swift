@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct PostListView: View {
-    let posts: [Post] // Accept posts as an input parameter
+    let posts: [Post]
     
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 16) {
                 ForEach(posts, id: \.id) { post in
-                    NavigationLink(destination: PostDetailView(post: post)) {
+                    NavigationLink(destination: PostDetailView(postId: post.id)) {
                         PostPreviewCell(post: post)
                     }
                     .foregroundStyle(.foreground)

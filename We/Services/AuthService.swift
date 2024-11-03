@@ -732,6 +732,7 @@ class AuthService {
             }
         }.resume()
     }
+    
     // MARK: - Fetch Followed Boards
     
     /// Fetches the boards followed by the authenticated user.
@@ -1134,6 +1135,185 @@ class AuthService {
     
     struct PostCreationResponse: Codable {
         let success: String
+    }
+    
+    // MARK: - Toggle Bookmark Post
+
+    /// Toggles following or unfollowing a board with the given boardId.
+    func toggleBookmarkPost(postId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)/bookmark") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+
+            // Handle server response
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the message from the response
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let message = json["message"] as? String {
+                            DispatchQueue.main.async {
+                                completion(.success(message))
+                            }
+                        } else {
+                            completion(.failure(AuthError.invalidData))
+                        }
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(AuthError.noData))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
+    // MARK: - Fetch Post by ID
+    
+    /// Fetches a specific post by its ID.
+    func fetchPostById(postId: String, completion: @escaping (Result<Post, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header if required
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Board object from the response
+                do {
+                    if let data = data {
+                        // Print the raw response data for debugging
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let post = try decoder.decode(Post.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(post))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
+    // MARK: - Check if Post is Bookmarked
+    
+    /// Checks if a post is bookmarked by the authenticated user.
+    func isPostBookmarked(postId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)/isBookmarked") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                do {
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        let result = try decoder.decode([String: Bool].self, from: data)
+                        if let isBookmarked = result["isBookmarked"] {
+                            completion(.success(isBookmarked))
+                        } else {
+                            completion(.failure(AuthError.invalidData))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
     }
 
     /// Clears all cookies from the shared HTTPCookieStorage.
