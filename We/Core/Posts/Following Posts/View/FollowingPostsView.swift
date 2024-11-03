@@ -22,7 +22,7 @@ struct FollowingPostsView: View {
                     PostListView(posts: authViewModel.followingPosts)
                 }
             }
-            .navigationTitle("Following Posts")
+            .navigationTitle("Following")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {

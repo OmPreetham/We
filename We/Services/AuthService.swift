@@ -1059,7 +1059,83 @@ class AuthService {
         }.resume()
     }
 
+    // MARK: - Create Post
     
+    /// Creates a new post.
+    func createPost(username: String, title: String, content: String, boardId: String, completion: @escaping (Result<PostCreationResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/create") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Prepare the request body
+        let body: [String: Any] = [
+            "username": username,
+            "title": title,
+            "content": content,
+            "boardId": boardId
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the PostCreationResponse object from the response
+                do {
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        let response = try decoder.decode(PostCreationResponse.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(response))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
+    struct PostCreationResponse: Codable {
+        let success: String
+    }
+
     /// Clears all cookies from the shared HTTPCookieStorage.
     private func clearCookies() {
         let cookieStorage = HTTPCookieStorage.shared

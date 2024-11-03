@@ -64,7 +64,7 @@ struct NavigationSidebarView: View {
                     )
                 }
             }
-            
+
             // Followed Boards Section
             Section(header: Text("Followed Boards")) {
                 if authViewModel.isLoadingFollowedBoards {
@@ -111,7 +111,7 @@ struct NavigationSidebarView: View {
         }
         .listStyle(.sidebar)
         .navigationTitle("III")
-        .searchable(text: $searchText, prompt: "Search Boards")
+        .searchable(text: $searchText, prompt: "Search We")
         .refreshable {
             authViewModel.fetchAllBoards()
             authViewModel.fetchFollowedBoards()

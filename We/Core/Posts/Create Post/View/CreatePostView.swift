@@ -10,58 +10,56 @@ import SwiftUI
 struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State var selectedBoard: Board? = nil
     @State private var subject: String = ""
     @State private var content: String = ""
-    @State private var username: String = "ShinjiIkari"
+    @State private var username: String = ""
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var isSubmitting: Bool = false
-    
+        
     @FocusState private var isContentFocused: Bool
-    
-    let boards: [Board] = sampleBoards
     
     var body: some View {
         NavigationStack {
             List {
-                Group {
-//                    Picker("To:", selection: $selectedBoard) {
-//                        Label("Select a board", systemImage: "filemenu.and.selection")
-//                            .tag(Board?.none)
-//                        
-//                        ForEach(boards, id: \.self) { board in
-//                            Label(board.title, systemImage: board.systemImageName)
-//                                .tag(Board?.some(board))
-//                        }
-//                    }
-//                    .pickerStyle(.menu)
-//                    .listRowSeparator(.hidden, edges: .top)
-//                    .foregroundStyle(.secondary)
-//                    
-                    HStack {
-                        Text("From:")
-                            .foregroundStyle(.secondary)
-                        
-                        TextField("Enter anonymous username", text: $username)
-                    }
-                    
-                    HStack {
-                        Text("Subject:")
-                            .foregroundStyle(.secondary)
-                        
-                        TextField("", text: $subject)
+                // Board Picker
+                Picker("Board", selection: $selectedBoard) {
+                    ForEach(authViewModel.allBoards, id: \.id) { board in
+                        Label(board.title, systemImage: board.systemImageName)
+                            .tag(board as Board?)
                     }
                 }
-                .disableAutocorrection(true)
+                .pickerStyle(.menu)
+                .listRowSeparator(.hidden, edges: .top)
+                .foregroundStyle(.secondary)
 
-                TextField("", text: $content, axis: .vertical)
-                    .textFieldStyle(.plain)
-                    .listRowSeparator(.hidden, edges: .bottom)
+                // Username Field
+                HStack {
+                    Text("From:")
+                        .foregroundStyle(.secondary)
+                    
+                    TextField("Enter username", text: $username)
+                }
+                
+                // Subject Field
+                HStack {
+                    Text("Subject:")
+                        .foregroundStyle(.secondary)
+                    
+                    TextField("", text: $subject)
+                }
+                
+                // Content Field
+                TextEditor(text: $content)
+                    .frame(minHeight: 200)
                     .focused($isContentFocused)
+                    .listRowSeparator(.hidden, edges: .bottom)
             }
             .listStyle(.plain)
             .onAppear {
+                username = authViewModel.currentUser?.username ?? ""
                 isContentFocused = true
             }
             .navigationTitle(subject.isEmpty ? "New Post" : subject)
@@ -77,7 +75,7 @@ struct CreatePostView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
-                        dismiss()
+                        createPost()
                     } label: {
                         HStack {
                             if isSubmitting {
@@ -88,6 +86,7 @@ struct CreatePostView: View {
                             }
                         }
                     }
+                    .disabled(subject.isEmpty || content.isEmpty || selectedBoard == nil)
                 }
             }
             .alert(isPresented: $showAlert) {
@@ -95,8 +94,34 @@ struct CreatePostView: View {
             }
         }
     }
+    
+    // Function to create a post
+    private func createPost() {
+        guard let boardId = selectedBoard?.id else {
+            alertMessage = "Please select a board."
+            showAlert = true
+            return
+        }
+        
+        isSubmitting = true
+        alertMessage = ""
+        
+        AuthService.shared.createPost(username: username, title: subject, content: content, boardId: boardId) { result in
+            DispatchQueue.main.async {
+                self.isSubmitting = false
+                switch result {
+                case .success(_):
+                    dismiss() // Close the view upon success
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert = true
+                }
+            }
+        }
+    }
 }
 
 #Preview {
     CreatePostView()
+        .environmentObject(AuthViewModel()) // Ensure your AuthViewModel is injected
 }

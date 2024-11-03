@@ -486,6 +486,8 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    
+    
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
         // Password validation logic (same as before)

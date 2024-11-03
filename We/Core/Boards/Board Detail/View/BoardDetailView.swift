@@ -12,7 +12,9 @@ struct BoardDetailView: View {
     var boardId: String
 
     @State private var showingEditSheet: Bool = false
+    @State private var showingCreatePost: Bool = false
     @State private var isLoading: Bool = false
+    @State private var lastLoadedBoardId: String?
 
     private var isFollowing: Bool {
         guard let board = authViewModel.selectedBoard else { return false }
@@ -52,9 +54,39 @@ struct BoardDetailView: View {
                     }
                 }
             }
+            
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    Button(action: {
+                        // Add action for filter functionality
+                        print("Filter button tapped")
+                    }) {
+                        Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Text("Updated Just Now")
+                        Text("02:00 PM")
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.caption2)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        showingCreatePost.toggle()
+                    }) {
+                        Label("New Post", systemImage: "square.and.pencil")
+                    }
+                }
+            }
         }
         .onAppear {
-            loadData()
+            if lastLoadedBoardId != boardId {
+                loadData()
+            }
         }
         .refreshable {
             loadData()
@@ -73,6 +105,11 @@ struct BoardDetailView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingCreatePost) {
+            if let board = authViewModel.selectedBoard {
+                CreatePostView(selectedBoard: board)
+            }
+        }
         .alert(isPresented: Binding<Bool>(
             get: { authViewModel.errorMessage != nil },
             set: { _ in authViewModel.errorMessage = nil }
@@ -85,6 +122,7 @@ struct BoardDetailView: View {
     
     private func loadData() {
         isLoading = true
+        lastLoadedBoardId = boardId
         authViewModel.fetchBoard(by: boardId)
         authViewModel.fetchBoardPosts(for: boardId)
         authViewModel.fetchFollowedBoards()
@@ -100,6 +138,7 @@ struct BoardDetailView: View {
         return role.lowercased() == "admin" || role.lowercased() == "moderator"
     }
 }
+
 #Preview {
     NavigationView {
         BoardDetailView(boardId: "6720220991dfa7246a92ef7c")
