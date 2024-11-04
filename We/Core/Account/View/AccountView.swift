@@ -12,6 +12,7 @@ struct AccountView: View {
     @State private var searchText: String = ""
     @State private var showingAuthScreen: Bool = false
     @State private var showSignOutAlert: Bool = false
+    @Environment(\.openURL) var openURL
     
     // Computed property to check if the user is admin or moderator
     private var isAdminOrModerator: Bool {
@@ -32,6 +33,7 @@ struct AccountView: View {
                 
                 SettingsSectionView(title: "Customize", items: customizeItems)
                 SettingsSectionView(title: "Support", items: supportItems)
+                    .foregroundStyle(.primary)
                 SettingsSectionView(title: "More", items: moreItems)
             }
             .listStyle(.insetGrouped)
@@ -89,15 +91,17 @@ struct AccountView: View {
     private var customizeItems: [SettingsItem] {
         [
             SettingsItem(title: "App Icon", description: "Change the app icon", icon: "app.badge", destination: AnyView(AppIconView())),
-            SettingsItem(title: "Theme", description: "Customize the app's theme", icon: "paintbrush", destination: AnyView(Text("Theme Settings View")))
+            SettingsItem(title: "Theme", description: "Customize the app's theme", icon: "paintbrush", destination: AnyView(ThemeView()))
         ]
     }
     
     private var supportItems: [SettingsItem] {
         [
             SettingsItem(title: "FAQs", description: "Frequently Asked Questions", icon: "questionmark.circle", destination: AnyView(FAQView())),
-            SettingsItem(title: "Send Feedback", description: "Send us your feedback", icon: "paperplane", destination: AnyView(Text("Send Feedback"))),
-            SettingsItem(title: "What's New", description: "Check out the latest features", icon: "star", destination: AnyView(Text("What's New")))
+            SettingsItem(title: "Send Feedback", description: "Send us your feedback", icon: "paperplane", action: {
+                sendFeedback()
+            }),
+            SettingsItem(title: "What's New", description: "Check out the latest features", icon: "star", destination: AnyView(WhatsNewView()))
         ]
     }
     
@@ -107,6 +111,19 @@ struct AccountView: View {
             SettingsItem(title: "About", description: "Learn more about this app", icon: "info.circle", destination: AnyView(AboutView()))
         ]
     }
+    
+    // Function to open the default mail app
+    func sendFeedback() {
+        let email = "support@teamwe.com"
+        let subject = "App Feedback: "
+        let body = ""
+        let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let urlString = "mailto:\(email)?subject=\(encodedSubject)&body=\(encodedBody)"
+        if let url = URL(string: urlString) {
+            openURL(url)
+        }
+    }
 }
 
 struct SettingsItem: Identifiable {
@@ -115,7 +132,17 @@ struct SettingsItem: Identifiable {
     var content: String = ""
     var description: String = ""
     let icon: String
-    let destination: AnyView
+    let destination: AnyView?
+    let action: (() -> Void)?
+    
+    init(title: String, content: String = "", description: String = "", icon: String, destination: AnyView? = nil, action: (() -> Void)? = nil) {
+        self.title = title
+        self.content = content
+        self.description = description
+        self.icon = icon
+        self.destination = destination
+        self.action = action
+    }
 }
 
 struct SettingsSectionView: View {
@@ -125,15 +152,28 @@ struct SettingsSectionView: View {
     var body: some View {
         Section {
             ForEach(items) { item in
-                NavigationLink(destination: item.destination) {
-                    VStack(alignment: .leading) {
+                if let action = item.action {
+                    Button(action: action) {
                         HStack(spacing: 16) {
                             Image(systemName: item.icon)
-                            
                             VStack(alignment: .leading) {
                                 Text(item.title)
                                     .font(.headline)
-                                
+                                if !item.description.isEmpty {
+                                    Text(item.description)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                } else if let destination = item.destination {
+                    NavigationLink(destination: destination) {
+                        HStack(spacing: 16) {
+                            Image(systemName: item.icon)
+                            VStack(alignment: .leading) {
+                                Text(item.title)
+                                    .font(.headline)
                                 if !item.description.isEmpty {
                                     Text(item.description)
                                         .font(.subheadline)

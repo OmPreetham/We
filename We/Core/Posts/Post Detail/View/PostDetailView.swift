@@ -13,23 +13,57 @@ struct PostDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack {
                 if let post = authViewModel.selectedPost {
-                    Text(post.title)
-                        .font(.title)
-                        .bold()
-                        .multilineTextAlignment(.leading)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(post.title)
+                            .font(.title)
+                            .bold()
+                            .multilineTextAlignment(.leading)
+                        
+                        Text("By \(post.username)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                        
+                        Text(post.content)
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
+                    }
                     
-                    Text("By \(post.username)")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.leading)
+                    Divider()
                     
-                    Text(post.content)
-                        .font(.callout)
-                        .multilineTextAlignment(.leading)
+                    HStack {
+                        Button {
+                            
+                        } label: {
+                            Label("55k", systemImage: "hand.thumbsdown")
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            
+                        } label: {
+                            Label("19k", systemImage: "hand.thumbsup")
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            
+                        } label: {
+                            Label("Bookmark", systemImage: "bookmark")
+                                .labelStyle(.iconOnly)
+                        }
+                    }
+                    
+                    Divider()
+                } else if authViewModel.isLoadingSelectedPost {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, alignment: .center)
                 } else {
-                    Text("Loading...")
+                    ContentUnavailableView("Post Not Found", systemImage: "text.page.slash.fill", description: Text("Post is not available. Please try again later."))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -56,14 +90,17 @@ struct PostDetailView: View {
                 }
             }
         }
-        .navigationTitle(authViewModel.selectedPost?.board.title ?? "Post Details")
+        .navigationTitle(authViewModel.selectedPost?.board.title ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             authViewModel.checkIfPostIsBookmarked(postId: postId)
             authViewModel.fetchPost(by: postId)
         }
+        .onDisappear {
+            authViewModel.selectedPost = nil
+        }
         .alert(isPresented: $authViewModel.showAlert) {
-            Alert(title: Text("Notification"), message: Text(authViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
         }
     }
 }

@@ -46,7 +46,7 @@ struct PostPreviewCell: View {
             .padding(4)
         }
         .padding(8)
-        .background(.background)
+        .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
         .padding(.horizontal)
