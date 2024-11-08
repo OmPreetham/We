@@ -70,7 +70,7 @@ struct AccountView: View {
         [
             SettingsItem(title: "Activity", description: "View your recent activities", icon: "heart.text.square", destination: AnyView(ActivityView())),
             SettingsItem(title: "Bookmarks", description: "Access your saved bookmarks", icon: "bookmark", destination: AnyView(BookmarksView())),
-            SettingsItem(title: "Following", description: "See who you are following", icon: "checkmark.rectangle.stack", destination: AnyView(FollowedBoardsView())),
+            SettingsItem(title: "Followed Boards", description: "See which boards you are following", icon: "checkmark.rectangle.stack", destination: AnyView(FollowedBoardsView())),
         ]
     }
     

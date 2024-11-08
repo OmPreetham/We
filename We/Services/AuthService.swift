@@ -1315,6 +1315,286 @@ class AuthService {
             }
         }.resume()
     }
+    
+    // MARK: - Fetch User Posts
+
+    /// Fetches posts created by a specific user.
+    /// - Parameters:
+    ///   - userId: The ID of the user whose posts you want to fetch.
+    ///   - completion: Completion handler with Result containing an array of Posts or an Error.
+    func fetchUserPosts(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        // Debugging: print the response data
+                        #if DEBUG
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        #endif
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    // MARK: - Fetch User Replies
+
+    /// Fetches replies made by a specific user.
+    /// - Parameters:
+    ///   - userId: The ID of the user whose replies you want to fetch.
+    ///   - completion: Completion handler with Result containing an array of Posts or an Error.
+    func fetchUserReplies(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/replies") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        // Debugging: print the response data
+                        #if DEBUG
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        #endif
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    // MARK: - Fetch User Upvoted Posts
+
+    /// Fetches posts upvoted by a specific user.
+    /// - Parameters:
+    ///   - userId: The ID of the user whose upvoted posts you want to fetch.
+    ///   - completion: Completion handler with Result containing an array of Posts or an Error.
+    func fetchUserUpvotes(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/upvotes") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        // Debugging: print the response data
+                        #if DEBUG
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        #endif
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    // MARK: - Fetch User Downvoted Posts
+
+    /// Fetches posts downvoted by a specific user.
+    /// - Parameters:
+    ///   - userId: The ID of the user whose downvoted posts you want to fetch.
+    ///   - completion: Completion handler with Result containing an array of Posts or an Error.
+    func fetchUserDownvotes(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/downvotes") else {
+            completion(.failure(AuthError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(AuthError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(AuthError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        // Debugging: print the response data
+                        #if DEBUG
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print("Response Data: \(dataString)")
+                        }
+                        #endif
+                        
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(AuthError.noData))
+                    }
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(AuthError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
 
     /// Clears all cookies from the shared HTTPCookieStorage.
     private func clearCookies() {
