@@ -8,68 +8,73 @@
 import SwiftUI
 
 struct MyBoardsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var searchText: String = ""
-
-    var filteredBoards: [Board] {
-        if searchText.isEmpty {
-            return authViewModel.userBoards
-        } else {
-            return authViewModel.userBoards.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-        }
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
+    @StateObject private var viewModel: MyBoardsViewModel
+    
+    init(authViewModel: AuthViewModel) {
+        _viewModel = StateObject(wrappedValue: MyBoardsViewModel(authViewModel: authViewModel))
     }
 
     var body: some View {
         NavigationStack {
-            List(filteredBoards) { board in
-                NavigationLink(destination: BoardDetailView(boardId: board.id)) {
-                    HStack {
-                        ZStack {
-                            Rectangle()
-                                .fill(Color(hex: board.symbolColor).materialActiveAppearance(.active))
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+            if viewModel.isLoadingUserBoards {
+                ProgressView()
+                    .navigationTitle("My Boards")
+            } else if viewModel.filteredBoards.isEmpty {
+                VStack {
+                    Text("You have not created any boards yet.")
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
+                .navigationTitle("My Boards")
+            } else {
+                List(viewModel.filteredBoards) { board in
+                    NavigationLink(destination: BoardDetailView(boardId: board.id, authViewModel: authViewModel)) {
+                        HStack {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color(hex: board.symbolColor).materialActiveAppearance(.active))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                            Image(systemName: board.systemImageName)
-                                .foregroundStyle(.background)
-                        }
-                        .frame(width: 50, height: 50)
-                        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
-                        .padding(.trailing, 8)
+                                Image(systemName: board.systemImageName)
+                                    .foregroundStyle(.background)
+                            }
+                            .frame(width: 50, height: 50)
+                            .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
+                            .padding(.trailing, 8)
 
-                        VStack(alignment: .leading) {
-                            Text(board.title)
-                                .font(.headline)
-                                .lineLimit(1)
+                            VStack(alignment: .leading) {
+                                Text(board.title)
+                                    .font(.headline)
+                                    .lineLimit(1)
 
-                            Text(board.description)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
+                                Text(board.description)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
                         }
                     }
                 }
-            }
-            .navigationTitle("My Boards")
-            .searchable(text: $searchText, prompt: "Search Boards")
-            .onAppear {
-                if authViewModel.userBoards.isEmpty {
-                    authViewModel.fetchUserBoards()
+                .navigationTitle("My Boards")
+                .searchable(text: $viewModel.searchText, prompt: "Search Boards")
+                .refreshable {
+                    viewModel.fetchUserBoards()
                 }
             }
-            .alert(isPresented: Binding<Bool>(
-                get: { authViewModel.errorMessage != nil },
-                set: { _ in authViewModel.errorMessage = nil }
-            )) {
-                Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+        }
+        .onAppear {
+            if viewModel.userBoards.isEmpty {
+                viewModel.fetchUserBoards()
             }
-            .refreshable {
-                authViewModel.fetchUserBoards()
-            }
+        }
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("My Boards Alert"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 #Preview {
-    MyBoardsView()
-        .environmentObject(AuthViewModel())
+    MyBoardsView(authViewModel: AuthViewModel())
 }

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NavigationContentView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
     @Binding var primarySelection: NavigateView.PrimarySelection?
     @Binding var isShowingCreatePost: Bool
 
@@ -22,7 +24,7 @@ struct NavigationContentView: View {
             case .followingPosts:
                 FollowingPostsView()
             case .board(let boardId):
-                BoardDetailView(boardId: boardId)
+                BoardDetailView(boardId: boardId, authViewModel: authViewModel)
             }
         } else {
             Text("Select an item")

@@ -1,28 +1,28 @@
 //
-//  BoardService.swift
+//  UserService.swift
 //  We
 //
-//  Created by Om Preetham Bandi on 10/21/24.
+//  Created by Om Preetham Bandi on 11/9/24.
 //
 
 import Foundation
 
-class BoardService: BaseService {
-    static let shared = BoardService()
+class UserService: BaseService {
+    static let shared = UserService()
     private override init() {}
     
-    // MARK: - Create Board
+    // MARK: - Fetch Current User
     
-    /// Creates a new board.
-    func createBoard(title: String, description: String, symbolColor: String, systemImageName: String, completion: @escaping (Result<Board, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/create") else {
+    /// Fetches the current authenticated user.
+    func fetchCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/user/current-user") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "GET"
+        request.httpShouldHandleCookies = true
         
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
@@ -32,22 +32,13 @@ class BoardService: BaseService {
             return
         }
         
-        // Prepare the request body
-        let body: [String: String] = [
-            "title": title,
-            "description": description,
-            "symbolColor": symbolColor,
-            "systemImageName": systemImageName
-        ]
-        do {
-            request.httpBody = try JSONEncoder().encode(body)
-        } catch {
-            completion(.failure(error))
-            return
-        }
+        // Configure the session
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.httpCookieStorage = HTTPCookieStorage.shared
+        sessionConfig.httpShouldSetCookies = true
+        let session = URLSession(configuration: sessionConfig)
         
-        // Create the data task
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { data, response, error in
             // Handle networking errors
             if let error = error {
                 completion(.failure(error))
@@ -61,12 +52,13 @@ class BoardService: BaseService {
             }
             
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the Board object from the response
+                // Parse the user data
                 do {
                     if let data = data {
-                        let board = try JSONDecoder().decode(Board.self, from: data)
+                        let user = try JSONDecoder().decode(User.self, from: data)
+                        print("User Data: \(user)")
                         DispatchQueue.main.async {
-                            completion(.success(board))
+                            completion(.success(user))
                         }
                     } else {
                         completion(.failure(ServiceError.noData))
@@ -82,11 +74,11 @@ class BoardService: BaseService {
         }.resume()
     }
     
-    // MARK: - Update Board
+    // MARK: - Update Username
     
-    /// Updates a board with the given boardId and new details.
-    func updateBoard(boardId: String, title: String, description: String, symbolColor: String, systemImageName: String, completion: @escaping (Result<Board, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/\(boardId)") else {
+    /// Updates the user's username.
+    func updateUsername(newUsername: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/user/update-user") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
@@ -104,22 +96,21 @@ class BoardService: BaseService {
         }
         
         // Prepare the request body
-        let body: [String: Any] = [
-            "title": title,
-            "description": description,
-            "symbolColor": symbolColor,
-            "systemImageName": systemImageName
-        ]
-        
+        let body: [String: String] = ["username": newUsername]
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            request.httpBody = try JSONEncoder().encode(body)
         } catch {
             completion(.failure(error))
             return
         }
         
-        // Create the data task
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        // Configure the session
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.httpCookieStorage = HTTPCookieStorage.shared
+        sessionConfig.httpShouldSetCookies = true
+        let session = URLSession(configuration: sessionConfig)
+        
+        session.dataTask(with: request) { data, response, error in
             // Handle networking errors
             if let error = error {
                 completion(.failure(error))
@@ -133,20 +124,9 @@ class BoardService: BaseService {
             }
             
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the updated Board object from the response
-                do {
-                    if let data = data {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let updatedBoard = try decoder.decode(Board.self, from: data)
-                        DispatchQueue.main.async {
-                            completion(.success(updatedBoard))
-                        }
-                    } else {
-                        completion(.failure(ServiceError.noData))
-                    }
-                } catch {
-                    completion(.failure(error))
+                // Success
+                DispatchQueue.main.async {
+                    completion(.success(()))
                 }
             } else {
                 // Handle server-side errors
@@ -156,66 +136,11 @@ class BoardService: BaseService {
         }.resume()
     }
     
-    // MARK: - Fetch All Boards
+    // MARK: - Fetch User Posts
     
-    /// Fetches all available boards.
-    func fetchAllBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/") else {
-            completion(.failure(ServiceError.invalidURL))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // Include access token if required
-        if let accessToken = getAccessToken() {
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        }
-        
-        // Create the data task
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // Handle networking errors
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Check for valid HTTP response
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(ServiceError.invalidResponse))
-                return
-            }
-            
-            if (200...299).contains(httpResponse.statusCode) {
-                // Parse the array of Board objects from the response
-                do {
-                    if let data = data {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let boards = try decoder.decode([Board].self, from: data)
-                        DispatchQueue.main.async {
-                            completion(.success(boards))
-                        }
-                    } else {
-                        completion(.failure(ServiceError.noData))
-                    }
-                } catch {
-                    completion(.failure(error))
-                }
-            } else {
-                // Handle server-side errors
-                let errorMessage = self.parseErrorMessage(data: data)
-                completion(.failure(ServiceError.serverError(message: errorMessage)))
-            }
-        }.resume()
-    }
-    
-    // MARK: - Fetch Boards Created by User
-    
-    /// Fetches the boards created by the authenticated user.
-    func fetchUserBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/myboards") else {
+    /// Fetches posts created by a specific user.
+    func fetchUserPosts(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
@@ -246,14 +171,15 @@ class BoardService: BaseService {
             }
             
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the array of Board objects from the response
+                // Parse the Post array from the response
                 do {
                     if let data = data {
                         let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let boards = try decoder.decode([Board].self, from: data)
+                        let posts = try decoder.decode([Post].self, from: data)
                         DispatchQueue.main.async {
-                            completion(.success(boards))
+                            completion(.success(posts))
                         }
                     } else {
                         completion(.failure(ServiceError.noData))
@@ -269,73 +195,11 @@ class BoardService: BaseService {
         }.resume()
     }
     
-    // MARK: - Toggle Follow Board
-
-    /// Toggles following or unfollowing a board with the given boardId.
-    func toggleFollowBoard(boardId: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/toggleFollow") else {
-            completion(.failure(ServiceError.invalidURL))
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-
-        // Include the access token in the Authorization header
-        if let accessToken = getAccessToken() {
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        } else {
-            completion(.failure(ServiceError.noAccessToken))
-            return
-        }
-
-        // Create the data task
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // Handle networking errors
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            // Check for valid HTTP response
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(ServiceError.invalidResponse))
-                return
-            }
-
-            // Handle server response
-            if (200...299).contains(httpResponse.statusCode) {
-                // Parse the message from the response
-                if let data = data {
-                    do {
-                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                           let message = json["message"] as? String {
-                            DispatchQueue.main.async {
-                                completion(.success(message))
-                            }
-                        } else {
-                            completion(.failure(ServiceError.invalidData))
-                        }
-                    } catch {
-                        completion(.failure(error))
-                    }
-                } else {
-                    completion(.failure(ServiceError.noData))
-                }
-            } else {
-                // Handle server-side errors
-                let errorMessage = self.parseErrorMessage(data: data)
-                completion(.failure(ServiceError.serverError(message: errorMessage)))
-            }
-        }.resume()
-    }
+    // MARK: - Fetch User Replies
     
-    // MARK: - Fetch Followed Boards
-    
-    /// Fetches the boards followed by the authenticated user.
-    func fetchFollowedBoards(completion: @escaping (Result<[Board], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/following") else {
+    /// Fetches replies made by a specific user.
+    func fetchUserReplies(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/replies") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
@@ -366,14 +230,15 @@ class BoardService: BaseService {
             }
             
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the array of Board objects from the response
+                // Parse the Post array from the response
                 do {
                     if let data = data {
                         let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let boards = try decoder.decode([Board].self, from: data)
+                        let posts = try decoder.decode([Post].self, from: data)
                         DispatchQueue.main.async {
-                            completion(.success(boards))
+                            completion(.success(posts))
                         }
                     } else {
                         completion(.failure(ServiceError.noData))
@@ -389,11 +254,11 @@ class BoardService: BaseService {
         }.resume()
     }
     
-    // MARK: - Fetch Board by ID
+    // MARK: - Fetch User Upvoted Posts
     
-    /// Fetches a specific board by its ID.
-    func fetchBoardById(boardId: String, completion: @escaping (Result<Board, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/boards/\(boardId)") else {
+    /// Fetches posts upvoted by a specific user.
+    func fetchUserUpvotes(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/upvotes") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
@@ -401,9 +266,12 @@ class BoardService: BaseService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        // Include the access token in the Authorization header if required
+        // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(ServiceError.noAccessToken))
+            return
         }
         
         // Create the data task
@@ -421,14 +289,15 @@ class BoardService: BaseService {
             }
             
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the Board object from the response
+                // Parse the Post array from the response
                 do {
                     if let data = data {
                         let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let board = try decoder.decode(Board.self, from: data)
+                        let posts = try decoder.decode([Post].self, from: data)
                         DispatchQueue.main.async {
-                            completion(.success(board))
+                            completion(.success(posts))
                         }
                     } else {
                         completion(.failure(ServiceError.noData))
@@ -444,11 +313,11 @@ class BoardService: BaseService {
         }.resume()
     }
     
-    // MARK: - Fetch Board Posts
+    // MARK: - Fetch User Downvoted Posts
     
-    /// Fetches posts from a specific board by its ID.
-    func fetchBoardPosts(for boardId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/posts/board/\(boardId)") else {
+    /// Fetches posts downvoted by a specific user.
+    func fetchUserDownvotes(userId: String, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/user/\(userId)/downvotes") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }

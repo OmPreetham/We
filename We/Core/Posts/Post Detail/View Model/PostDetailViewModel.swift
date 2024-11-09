@@ -15,16 +15,23 @@ class PostDetailViewModel: ObservableObject {
     @Published var isBookmarked: Bool = false
     @Published var errorMessage: String?
     @Published var showAlert: Bool = false
-
-    private let authService = AuthService.shared
+    @Published var lastUpdated: Date?
+    
+    private let postService = PostService.shared
+    
+    // Computed property to provide a user-friendly update time
+    var lastUpdatedText: String {
+        return lastUpdated?.timeAgo ?? "Updated a long time ago"
+    }
 
     func fetchPost(by postId: String) {
         isLoadingPost = true
         errorMessage = nil
-
-        authService.fetchPostById(postId: postId) { [weak self] result in
+        
+        postService.fetchPostById(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingPost = false
+                self?.lastUpdated = Date() // Update the lastUpdated time
                 switch result {
                 case .success(let post):
                     self?.post = post
@@ -39,10 +46,11 @@ class PostDetailViewModel: ObservableObject {
     func fetchPostReplies(postId: String) {
         isLoadingReplies = true
         errorMessage = nil
-
-        authService.fetchPostReplies(postId: postId) { [weak self] result in
+        
+        postService.fetchPostReplies(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingReplies = false
+                self?.lastUpdated = Date() // Update the lastUpdated time
                 switch result {
                 case .success(let replies):
                     self?.replies = replies
@@ -55,7 +63,7 @@ class PostDetailViewModel: ObservableObject {
     }
 
     func toggleBookmarkPost(postId: String) {
-        authService.toggleBookmarkPost(postId: postId) { [weak self] result in
+        postService.toggleBookmarkPost(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -69,7 +77,7 @@ class PostDetailViewModel: ObservableObject {
     }
 
     func checkIfPostIsBookmarked(postId: String) {
-        authService.isPostBookmarked(postId: postId) { [weak self] result in
+        postService.isPostBookmarked(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let isBookmarked):

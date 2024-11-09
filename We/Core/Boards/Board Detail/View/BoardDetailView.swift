@@ -8,40 +8,38 @@
 import SwiftUI
 
 struct BoardDetailView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    var boardId: String
+    @EnvironmentObject private var authViewModel: AuthViewModel
 
+    @StateObject private var viewModel: BoardDetailViewModel
+    
     @State private var showingEditSheet: Bool = false
     @State private var showingCreatePost: Bool = false
-    @State private var isLoading: Bool = false
-    @State private var lastLoadedBoardId: String?
-
-    private var isFollowing: Bool {
-        guard let board = authViewModel.selectedBoard else { return false }
-        return authViewModel.followedBoards.contains { $0.id == board.id }
+    
+    init(boardId: String, authViewModel: AuthViewModel) {
+        _viewModel = StateObject(wrappedValue: BoardDetailViewModel(authViewModel: authViewModel, boardId: boardId))
     }
 
     var body: some View {
         ZStack {
-            if authViewModel.isLoadingBoardPosts {
+            if viewModel.isLoadingBoardPosts {
                 ProgressView()
             } else {
                 VStack {
-                    if authViewModel.boardPosts.isEmpty {
+                    if viewModel.boardPosts.isEmpty {
                         ContentUnavailableView("No Posts", systemImage: "square.stack.3d.up.slash.fill", description: Text("No posts are available for this Board"))
                     } else {
-                        PostListView(posts: authViewModel.boardPosts)
+                        PostListView(posts: viewModel.boardPosts)
                     }
                 }
             }
         }
-        .navigationTitle(authViewModel.selectedBoard?.title ?? "Board Details")
+        .navigationTitle(viewModel.selectedBoard?.title ?? "Board Details")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    handleToggleFollow()
+                    viewModel.toggleFollowBoard()
                 } label: {
-                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
+                    Label(viewModel.isFollowing ? "Unfollow" : "Follow", systemImage: viewModel.isFollowing ? "checkmark" : "plus")
                         .labelStyle(.titleOnly)
                 }
                 .buttonStyle(.bordered)
@@ -89,16 +87,8 @@ struct BoardDetailView: View {
                 }
             }
         }
-        .onAppear {
-            if lastLoadedBoardId != boardId {
-                loadData()
-            }
-        }
-        .refreshable {
-            loadData()
-        }
         .sheet(isPresented: $showingEditSheet) {
-            if let board = authViewModel.selectedBoard {
+            if let board = viewModel.selectedBoard {
                 EditBoardView(
                     title: .constant(board.title),
                     description: .constant(board.description),
@@ -107,35 +97,18 @@ struct BoardDetailView: View {
                 )
                 .environmentObject(authViewModel)
                 .onDisappear {
-                    authViewModel.fetchBoard(by: boardId)
+                    viewModel.loadBoardData()
                 }
             }
         }
         .sheet(isPresented: $showingCreatePost) {
-            if let board = authViewModel.selectedBoard {
+            if let board = viewModel.selectedBoard {
                 CreatePostView(selectedBoard: board)
             }
         }
-        .alert(isPresented: Binding<Bool>(
-            get: { authViewModel.errorMessage != nil },
-            set: { _ in authViewModel.errorMessage = nil }
-        )) {
-            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("Alert"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
-    }
-    
-    // MARK: - Helper Methods
-    
-    private func loadData() {
-        isLoading = true
-        lastLoadedBoardId = boardId
-        authViewModel.fetchBoard(by: boardId)
-        authViewModel.fetchBoardPosts(for: boardId)
-    }
-    
-    private func handleToggleFollow() {
-        guard let board = authViewModel.selectedBoard else { return }
-        authViewModel.toggleFollowBoard(boardId: board.id)
     }
     
     private var isAdminOrModerator: Bool {
@@ -146,7 +119,7 @@ struct BoardDetailView: View {
 
 #Preview {
     NavigationView {
-        BoardDetailView(boardId: "6720220991dfa7246a92ef7c")
+        BoardDetailView(boardId: "6720220991dfa7246a92ef7c", authViewModel: AuthViewModel())
             .environmentObject(AuthViewModel())
     }
 }

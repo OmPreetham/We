@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AuthScreenView: View {
     @StateObject private var safariViewModel = SafariViewModel()
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject private var viewModel: AuthViewModel
+    
     @State private var showingLogin: Bool = false
     @State private var showingRegister: Bool = false
 

@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var authViewModel: AuthViewModel
+
     @State private var showingLaunchScreen: Bool = true
-    @StateObject private var viewModel = AuthViewModel()
     
     var body: some View {
         ZStack {
@@ -17,15 +18,15 @@ struct ContentView: View {
                 LaunchScreenView(isPresented: $showingLaunchScreen)
             } else {
                 ContainerView()
-                    .environmentObject(viewModel)
             }
         }
         .onAppear {
-            viewModel.checkLoginStatus()
+            authViewModel.checkLoginStatus()
         }
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(AuthViewModel())
 }

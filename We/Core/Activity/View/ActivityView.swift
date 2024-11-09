@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ActivityView: View {
-    @State private var selectedPicker = 0
-    @ObservedObject var authViewModel = AuthViewModel()
-        
+    @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
+    @ObservedObject var activityViewModel: ActivityViewModel = ActivityViewModel()
+    
+    @State private var selectedPicker: Int = 0
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -26,56 +28,56 @@ struct ActivityView: View {
                 // Display content based on selectedPicker value
                 Group {
                     if selectedPicker == 0 {
-                        if authViewModel.isLoadingUserPosts {
-                            ProgressView("Loading Posts...")
+                        if activityViewModel.isLoadingUserPosts {
+                            ProgressView()
                                 .padding()
-                        } else if let error = authViewModel.errorMessage {
+                        } else if let error = activityViewModel.errorMessage {
                             Text("Error: \(error)")
                                 .foregroundStyle(.red)
                                 .padding()
-                        } else if authViewModel.userPosts.isEmpty {
+                        } else if activityViewModel.userPosts.isEmpty {
                             ContentUnavailableView("No Posts", systemImage: "rectangle.portrait.slash", description: Text("There are currently no posts to display."))
                         } else {
-                            PostListView(posts: authViewModel.userPosts)
+                            PostListView(posts: activityViewModel.userPosts)
                         }
                     } else if selectedPicker == 1 {
-                        if authViewModel.isLoadingUserReplies {
-                            ProgressView("Loading Replies...")
+                        if activityViewModel.isLoadingUserReplies {
+                            ProgressView()
                                 .padding()
-                        } else if let error = authViewModel.errorMessage {
+                        } else if let error = activityViewModel.errorMessage {
                             Text("Error: \(error)")
                                 .foregroundStyle(.red)
                                 .padding()
-                        } else if authViewModel.userReplies.isEmpty {
-                            ContentUnavailableView("No Posts", systemImage: "rectangle.portrait.slash", description: Text("There are currently no posts to display."))
+                        } else if activityViewModel.userReplies.isEmpty {
+                            ContentUnavailableView("No Replies", systemImage: "rectangle.portrait.slash", description: Text("There are currently no replies to display."))
                         } else {
-                            PostListView(posts: authViewModel.userReplies)
+                            PostListView(posts: activityViewModel.userReplies)
                         }
                     } else if selectedPicker == 2 {
-                        if authViewModel.isLoadingUserUpvotedPosts {
-                            ProgressView("Loading Upvoted Posts...")
+                        if activityViewModel.isLoadingUserUpvotedPosts {
+                            ProgressView()
                                 .padding()
-                        } else if let error = authViewModel.errorMessage {
+                        } else if let error = activityViewModel.errorMessage {
                             Text("Error: \(error)")
                                 .foregroundStyle(.red)
                                 .padding()
-                        } else if authViewModel.userUpvotedPosts.isEmpty {
-                            ContentUnavailableView("No Posts", systemImage: "rectangle.portrait.slash", description: Text("There are currently no posts to display."))
+                        } else if activityViewModel.userUpvotedPosts.isEmpty {
+                            ContentUnavailableView("No Upvotes", systemImage: "rectangle.portrait.slash", description: Text("There are currently no upvoted posts to display."))
                         } else {
-                            PostListView(posts: authViewModel.userUpvotedPosts)
+                            PostListView(posts: activityViewModel.userUpvotedPosts)
                         }
                     } else if selectedPicker == 3 {
-                        if authViewModel.isLoadingUserDownvotedPosts {
-                            ProgressView("Loading Downvoted Posts...")
+                        if activityViewModel.isLoadingUserDownvotedPosts {
+                            ProgressView()
                                 .padding()
-                        } else if let error = authViewModel.errorMessage {
+                        } else if let error = activityViewModel.errorMessage {
                             Text("Error: \(error)")
                                 .foregroundStyle(.red)
                                 .padding()
-                        } else if authViewModel.userDownvotedPosts.isEmpty {
-                            ContentUnavailableView("No Posts", systemImage: "rectangle.portrait.slash", description: Text("There are currently no posts to display."))
+                        } else if activityViewModel.userDownvotedPosts.isEmpty {
+                            ContentUnavailableView("No Downvotes", systemImage: "rectangle.portrait.slash", description: Text("There are currently no downvoted posts to display."))
                         } else {
-                            PostListView(posts: authViewModel.userDownvotedPosts)
+                            PostListView(posts: activityViewModel.userDownvotedPosts)
                         }
                     }
                 }
@@ -102,18 +104,19 @@ struct ActivityView: View {
         }
         switch selectedPicker {
         case 0:
-            authViewModel.fetchUserPosts(userId: userId)
+            activityViewModel.fetchUserPosts(userId: userId)
         case 1:
-            authViewModel.fetchUserReplies(userId: userId)
+            activityViewModel.fetchUserReplies(userId: userId)
         case 2:
-            authViewModel.fetchUserUpvotedPosts(userId: userId)
+            activityViewModel.fetchUserUpvotedPosts(userId: userId)
         case 3:
-            authViewModel.fetchUserDownvotedPosts(userId: userId)
+            activityViewModel.fetchUserDownvotedPosts(userId: userId)
         default:
             break
         }
     }
 }
+
 #Preview {
     ActivityView()
 }

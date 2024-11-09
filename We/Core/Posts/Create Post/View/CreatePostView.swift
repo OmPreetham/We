@@ -106,7 +106,7 @@ struct CreatePostView: View {
         isSubmitting = true
         alertMessage = ""
         
-        AuthService.shared.createPost(username: username, title: subject, content: content, boardId: boardId) { result in
+        PostService.shared.createPost(username: username, title: subject, content: content, boardId: boardId) { result in
             DispatchQueue.main.async {
                 self.isSubmitting = false
                 switch result {

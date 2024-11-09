@@ -291,7 +291,7 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        AuthService.shared.fetchCurrentUser { [weak self] result in
+        UserService.shared.fetchCurrentUser { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
@@ -311,7 +311,7 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        AuthService.shared.updateUsername(newUsername: newUsername) { [weak self] result in
+        UserService.shared.updateUsername(newUsername: newUsername) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
@@ -332,7 +332,7 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        AuthService.shared.updateBoard(boardId: boardId, title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { [weak self] result in
+        BoardService.shared.updateBoard(boardId: boardId, title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
@@ -364,7 +364,7 @@ class AuthViewModel: ObservableObject {
         isLoadingAllBoards = true
         errorMessage = nil
         
-        AuthService.shared.fetchAllBoards { [weak self] result in
+        BoardService.shared.fetchAllBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingAllBoards = false
                 switch result {
@@ -384,7 +384,7 @@ class AuthViewModel: ObservableObject {
         isLoadingBoards = true
         errorMessage = nil
         
-        AuthService.shared.fetchUserBoards { [weak self] result in
+        BoardService.shared.fetchUserBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingBoards = false
                 switch result {
@@ -403,7 +403,7 @@ class AuthViewModel: ObservableObject {
         isLoadingFollowedBoards = true
         errorMessage = nil
 
-        AuthService.shared.fetchFollowedBoards { [weak self] result in
+        BoardService.shared.fetchFollowedBoards { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingFollowedBoards = false
                 switch result {
@@ -425,7 +425,7 @@ class AuthViewModel: ObservableObject {
         isLoadingSelectedBoard = true
         errorMessage = nil
         
-        AuthService.shared.fetchBoardById(boardId: id) { [weak self] result in
+        BoardService.shared.fetchBoardById(boardId: id) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingSelectedBoard = false
                 switch result {
@@ -445,7 +445,7 @@ class AuthViewModel: ObservableObject {
         isTogglingFollow = true
         errorMessage = nil
 
-        AuthService.shared.toggleFollowBoard(boardId: boardId) { [weak self] result in
+        BoardService.shared.toggleFollowBoard(boardId: boardId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isTogglingFollow = false
                 switch result {
@@ -468,7 +468,7 @@ class AuthViewModel: ObservableObject {
         isLoadingFollowingPosts = true
         errorMessage = nil
         
-        AuthService.shared.fetchFollowingPosts { [weak self] result in
+        PostService.shared.fetchFollowingPosts { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingFollowingPosts = false
                 switch result {
@@ -488,7 +488,7 @@ class AuthViewModel: ObservableObject {
         isLoadingBookmarkPosts = true
         errorMessage = nil
         
-        AuthService.shared.fetchBookmarkPosts { [weak self] result in
+        PostService.shared.fetchBookmarkPosts { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingBookmarkPosts = false
                 switch result {
@@ -506,7 +506,7 @@ class AuthViewModel: ObservableObject {
         isLoadingBoardPosts = true
         errorMessage = nil
         
-        AuthService.shared.fetchBoardPosts(for: boardId) { [weak self] result in
+        BoardService.shared.fetchBoardPosts(for: boardId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingBoardPosts = false
                 switch result {
@@ -526,7 +526,7 @@ class AuthViewModel: ObservableObject {
         isLoadingPostReplies = true
         errorMessage = nil
 
-        AuthService.shared.fetchPostReplies(postId: postId) { [weak self] result in
+        PostService.shared.fetchPostReplies(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingPostReplies = false
                 switch result {
@@ -547,7 +547,7 @@ class AuthViewModel: ObservableObject {
         isLoadingUserPosts = true
         errorMessage = nil
 
-        AuthService.shared.fetchUserPosts(userId: userId) { [weak self] result in
+        UserService.shared.fetchUserPosts(userId: userId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingUserPosts = false
                 switch result {
@@ -567,7 +567,7 @@ class AuthViewModel: ObservableObject {
         isLoadingUserReplies = true
         errorMessage = nil
 
-        AuthService.shared.fetchUserReplies(userId: userId) { [weak self] result in
+        UserService.shared.fetchUserReplies(userId: userId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingUserReplies = false
                 switch result {
@@ -587,7 +587,7 @@ class AuthViewModel: ObservableObject {
         isLoadingUserUpvotedPosts = true
         errorMessage = nil
 
-        AuthService.shared.fetchUserUpvotes(userId: userId) { [weak self] result in
+        UserService.shared.fetchUserUpvotes(userId: userId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingUserUpvotedPosts = false
                 switch result {
@@ -607,7 +607,7 @@ class AuthViewModel: ObservableObject {
         isLoadingUserDownvotedPosts = true
         errorMessage = nil
 
-        AuthService.shared.fetchUserDownvotes(userId: userId) { [weak self] result in
+        UserService.shared.fetchUserDownvotes(userId: userId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingUserDownvotedPosts = false
                 switch result {
@@ -627,7 +627,7 @@ class AuthViewModel: ObservableObject {
         isLoadingSelectedPost = true
         errorMessage = nil
         
-        AuthService.shared.fetchPostById(postId: id) { [weak self] result in
+        PostService.shared.fetchPostById(postId: id) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoadingSelectedPost = false
                 switch result {
@@ -645,7 +645,7 @@ class AuthViewModel: ObservableObject {
     func toggleBookmarkPost(postId: String) {
         guard selectedPost != nil else { return }
         
-        AuthService.shared.toggleBookmarkPost(postId: postId) { [weak self] result in
+        PostService.shared.toggleBookmarkPost(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let message):
@@ -661,7 +661,7 @@ class AuthViewModel: ObservableObject {
     }
 
     func checkIfPostIsBookmarked(postId: String) {
-        AuthService.shared.isPostBookmarked(postId: postId) { [weak self] result in
+        PostService.shared.isPostBookmarked(postId: postId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let isBookmarked):

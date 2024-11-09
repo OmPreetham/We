@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct BookmarksView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var bookmarksViewModel = BookmarksViewModel()
     @State private var showingCreatePost: Bool = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if authViewModel.isLoadingBookmarkPosts {
+                if bookmarksViewModel.isLoadingBookmarkPosts {
                     ProgressView()
-                } else if authViewModel.bookmarkPosts.isEmpty {
+                } else if bookmarksViewModel.bookmarkPosts.isEmpty {
                     ContentUnavailableView("No Bookmarks", systemImage: "bookmark.slash.fill", description: Text("You haven't bookmarked any posts yet."))
                 } else {
-                    PostListView(posts: authViewModel.bookmarkPosts)
+                    PostListView(posts: bookmarksViewModel.bookmarkPosts)
                 }
             }
             .navigationTitle("Bookmarks")
@@ -36,8 +36,8 @@ struct BookmarksView: View {
                         Spacer()
                         
                         VStack {
-                            Text("Updated Just Now")
-                            Text("02:00 PM")
+                            Text(bookmarksViewModel.lastUpdatedText)
+                            Text(DateFormatter.localizedString(from: bookmarksViewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
                                 .foregroundStyle(.secondary)
                         }
                         .font(.caption2)
@@ -56,18 +56,19 @@ struct BookmarksView: View {
                 CreatePostView()
             }
             .onAppear {
-                if authViewModel.bookmarkPosts.isEmpty {
-                    authViewModel.fetchBookmarkPosts()
+                if bookmarksViewModel.bookmarkPosts.isEmpty {
+                    bookmarksViewModel.fetchBookmarkPosts()
                 }
             }
             .refreshable {
-                authViewModel.fetchBookmarkPosts()
+                bookmarksViewModel.fetchBookmarkPosts()
             }
-            .alert(isPresented: Binding<Bool>(
-                get: { authViewModel.errorMessage != nil },
-                set: { _ in authViewModel.errorMessage = nil }
-            )) {
-                Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $bookmarksViewModel.showAlert) {
+                Alert(
+                    title: Text("Bookmarks Alert"),
+                    message: Text(bookmarksViewModel.errorMessage ?? ""),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
     }
@@ -75,5 +76,4 @@ struct BookmarksView: View {
 
 #Preview {
     BookmarksView()
-        .environmentObject(AuthViewModel())
 }

@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct FollowingPostsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var followingPostsViewModel = FollowingPostsViewModel()
+    
     @State private var showingCreatePost: Bool = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if authViewModel.isLoadingFollowingPosts {
+                if followingPostsViewModel.isLoadingFollowingPosts {
                     ProgressView()
-                } else if authViewModel.followingPosts.isEmpty {
+                } else if followingPostsViewModel.followingPosts.isEmpty {
                     ContentUnavailableView("No Following Posts", systemImage: "star.slash.fill", description: Text("You haven't followed any boards yet."))
                 } else {
-                    PostListView(posts: authViewModel.followingPosts)
+                    PostListView(posts: followingPostsViewModel.followingPosts)
                 }
             }
             .navigationTitle("Following")
@@ -27,7 +28,6 @@ struct FollowingPostsView: View {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
                         Button(action: {
-                            // Add action for filter functionality
                             print("Filter button tapped")
                         }) {
                             Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
@@ -36,8 +36,8 @@ struct FollowingPostsView: View {
                         Spacer()
                         
                         VStack {
-                            Text("Updated Just Now")
-                            Text("02:00 PM")
+                            Text(followingPostsViewModel.lastUpdatedText)
+                            Text(DateFormatter.localizedString(from: followingPostsViewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
                                 .foregroundStyle(.secondary)
                         }
                         .font(.caption2)
@@ -56,18 +56,15 @@ struct FollowingPostsView: View {
                 CreatePostView()
             }
             .onAppear {
-                if authViewModel.followingPosts.isEmpty {
-                    authViewModel.fetchFollowingPosts()
+                if followingPostsViewModel.followingPosts.isEmpty {
+                    followingPostsViewModel.fetchFollowingPosts()
                 }
             }
             .refreshable {
-                authViewModel.fetchFollowingPosts()
+                followingPostsViewModel.fetchFollowingPosts()
             }
-            .alert(isPresented: Binding<Bool>(
-                get: { authViewModel.errorMessage != nil },
-                set: { _ in authViewModel.errorMessage = nil }
-            )) {
-                Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $followingPostsViewModel.showAlert) {
+                Alert(title: Text("Following Posts Alert"), message: Text(followingPostsViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
             }
         }
     }
@@ -75,5 +72,4 @@ struct FollowingPostsView: View {
 
 #Preview {
     FollowingPostsView()
-        .environmentObject(AuthViewModel())
 }

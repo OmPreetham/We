@@ -9,7 +9,9 @@ import SwiftUI
 
 struct PostDetailView: View {
     @StateObject private var viewModel = PostDetailViewModel()
+    
     @State var showingCreatePost: Bool = false
+
     var postId: String
 
     var body: some View {
@@ -78,7 +80,6 @@ struct PostDetailView: View {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
                         Button(action: {
-                            // Add action for filter functionality
                             print("Filter button tapped")
                         }) {
                             Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
@@ -87,8 +88,8 @@ struct PostDetailView: View {
                         Spacer()
                         
                         VStack {
-                            Text("Updated Just Now")
-                            Text("02:00 PM")
+                            Text(viewModel.lastUpdatedText)
+                            Text(DateFormatter.localizedString(from: viewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
                                 .foregroundStyle(.secondary)
                         }
                         .font(.caption2)
@@ -114,8 +115,13 @@ struct PostDetailView: View {
             viewModel.fetchPost(by: postId)
             viewModel.fetchPostReplies(postId: postId)
         }
+        .refreshable {
+            viewModel.checkIfPostIsBookmarked(postId: postId)
+            viewModel.fetchPost(by: postId)
+            viewModel.fetchPostReplies(postId: postId)
+        }
         .alert(isPresented: $viewModel.showAlert) {
-            Alert(title: Text("Alert"), message: Text(viewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Post Alert"), message: Text(viewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
         }
     }
 }

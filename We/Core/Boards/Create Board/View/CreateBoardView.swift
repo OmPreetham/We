@@ -90,7 +90,7 @@ struct CreateBoardView: View {
         isCreatingBoard = true
         errorMessage = nil
 
-        AuthService.shared.createBoard(title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { result in
+        BoardService.shared.createBoard(title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { result in
             DispatchQueue.main.async {
                 self.isCreatingBoard = false
                 switch result {

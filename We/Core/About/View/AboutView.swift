@@ -10,38 +10,28 @@ import SwiftUI
 struct AboutView: View {
     @Environment(\.openURL) var openURL
     
+    @StateObject private var viewModel: AboutViewModel = AboutViewModel()
+    
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    Button(action: {
-                        openURL(URL(string: "https://x.com/OmPreetham")!)
-                    }) {
-                        HStack {
-                            Text("X")
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                        }
+                    Button {
+                        viewModel.openURL("https://x.com/TeamWe")
+                    } label: {
+                        Label("X", systemImage: "arrow.up.right.square")
                     }
                     
-                    Button(action: {
-                        openURL(URL(string: "https://instagram.com/ompreetham")!)
-                    }) {
-                        HStack {
-                            Text("Instagram")
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                        }
+                    Button {
+                        viewModel.openURL("https://instagram.com/teamwe")
+                    } label: {
+                        Label("Instagram", systemImage: "arrow.up.right.square")
                     }
                     
-                    Button(action: {
-                        openURL(URL(string: "https://ompreetham.com/we")!)
-                    }) {
-                        HStack {
-                            Text("Website")
-                            Spacer()
-                            Image(systemName: "arrow.up.right.square")
-                        }
+                    Button {
+                        viewModel.openURL("https://we.ompreetham.com/")
+                    } label: {
+                        Label("Website", systemImage: "arrow.up.right.square")
                     }
                 } header: {
                     Text("Follow")

@@ -8,23 +8,20 @@
 import SwiftUI
 
 struct AllBoardsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var searchText: String = ""
-
-    var filteredBoards: [Board] {
-        if searchText.isEmpty {
-            return authViewModel.allBoards
-        } else {
-            return authViewModel.allBoards.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-        }
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
+    @StateObject private var viewModel: AllBoardsViewModel
+    
+    init(authViewModel: AuthViewModel) {
+        _viewModel = StateObject(wrappedValue: AllBoardsViewModel(authViewModel: authViewModel))
     }
 
     var body: some View {
         NavigationStack {
-            if authViewModel.isLoadingAllBoards {
+            if viewModel.isLoadingAllBoards {
                 ProgressView("Loading...")
                     .navigationTitle("All Boards")
-            } else if filteredBoards.isEmpty {
+            } else if viewModel.filteredBoards.isEmpty {
                 VStack {
                     Text("No boards available.")
                         .foregroundStyle(.secondary)
@@ -32,8 +29,8 @@ struct AllBoardsView: View {
                 }
                 .navigationTitle("All Boards")
             } else {
-                List(filteredBoards) { board in
-                    NavigationLink(destination: BoardDetailView(boardId: board.id)) {
+                List(viewModel.filteredBoards) { board in
+                    NavigationLink(destination: BoardDetailView(boardId: board.id, authViewModel: authViewModel)) {
                         HStack {
                             ZStack {
                                 Rectangle()
@@ -61,30 +58,23 @@ struct AllBoardsView: View {
                     }
                 }
                 .navigationTitle("All Boards")
-                .searchable(text: $searchText, prompt: "Search Boards")
+                .searchable(text: $viewModel.searchText, prompt: "Search Boards")
                 .refreshable {
-                    authViewModel.fetchAllBoards()
+                    viewModel.fetchAllBoards()
                 }
             }
         }
         .onAppear {
-            if authViewModel.allBoards.isEmpty {
-                authViewModel.fetchAllBoards()
+            if viewModel.allBoards.isEmpty {
+                viewModel.fetchAllBoards()
             }
         }
-        .alert(isPresented: Binding<Bool>(
-            get: { authViewModel.errorMessage != nil },
-            set: { _ in authViewModel.errorMessage = nil }
-        )) {
-            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
-        }
-        .refreshable {
-            authViewModel.fetchAllBoards()
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("All Boards Alert"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 #Preview {
-    AllBoardsView()
-        .environmentObject(AuthViewModel())
+    AllBoardsView(authViewModel: AuthViewModel())
 }

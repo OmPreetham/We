@@ -8,17 +8,13 @@
 import SwiftUI
 
 struct AccountView: View {
-    @EnvironmentObject var viewModel: AuthViewModel
-    @State private var searchText: String = ""
-    @State private var showingAuthScreen: Bool = false
-    @State private var showSignOutAlert: Bool = false
     @Environment(\.openURL) var openURL
     
-    // Computed property to check if the user is admin or moderator
-    private var isAdminOrModerator: Bool {
-        guard let role = viewModel.currentUser?.role else { return false }
-        return role.lowercased() == "admin" || role.lowercased() == "moderator"
-    }
+    @StateObject private var accountViewModel: AccountViewModel = AccountViewModel()
+    
+    @State private var searchText: String = ""
+    @State private var showingAuthScreen: Bool = false
+    @State private var showingSignOutAlert: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -27,13 +23,12 @@ struct AccountView: View {
                 SettingsSectionView(title: "Account", items: accountItems)
                 
                 // Conditionally include the Authorized section
-                if isAdminOrModerator {
+                if accountViewModel.isAdminOrModerator {
                     SettingsSectionView(title: "Authorized", items: authorizedItems)
                 }
                 
                 SettingsSectionView(title: "Customize", items: customizeItems)
                 SettingsSectionView(title: "Support", items: supportItems)
-                    .foregroundStyle(.primary)
                 SettingsSectionView(title: "More", items: moreItems)
             }
             .listStyle(.insetGrouped)
@@ -41,7 +36,7 @@ struct AccountView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showSignOutAlert = true
+                        showingSignOutAlert = true
                     } label: {
                         Label("Sign Out", systemImage: "power")
                     }
@@ -52,9 +47,9 @@ struct AccountView: View {
             .sheet(isPresented: $showingAuthScreen) {
                 AuthScreenView()
             }
-            .alert("Sign Out", isPresented: $showSignOutAlert) {
+            .alert("Sign Out", isPresented: $showingSignOutAlert) {
                 Button("Sign Out", role: .destructive) {
-                    viewModel.logout() // Call the logout function
+                    accountViewModel.logout() // Call the logout function
                 }
                 Button("Cancel", role: .cancel) { }
             } message: {
@@ -62,7 +57,7 @@ struct AccountView: View {
             }
         }
         .onAppear {
-            viewModel.fetchCurrentUser() // Ensure the current user is fetched
+            accountViewModel.fetchCurrentUser() // Ensure the current user is fetched
         }
     }
     
@@ -70,7 +65,7 @@ struct AccountView: View {
         [
             SettingsItem(title: "Activity", description: "View your recent activities", icon: "heart.text.square", destination: AnyView(ActivityView())),
             SettingsItem(title: "Bookmarks", description: "Access your saved bookmarks", icon: "bookmark", destination: AnyView(BookmarksView())),
-            SettingsItem(title: "Followed Boards", description: "See which boards you are following", icon: "checkmark.rectangle.stack", destination: AnyView(FollowedBoardsView())),
+            SettingsItem(title: "Followed Boards", description: "See which boards you are following", icon: "checkmark.rectangle.stack", destination: AnyView(FollowedBoardsView(authViewModel: AuthViewModel()))),
         ]
     }
     
@@ -83,7 +78,7 @@ struct AccountView: View {
     
     private var authorizedItems: [SettingsItem] {
         [
-            SettingsItem(title: "My Boards", description: "View all your created boards", icon: "square.grid.2x2", destination: AnyView(MyBoardsView())),
+            SettingsItem(title: "My Boards", description: "View all your created boards", icon: "square.grid.2x2", destination: AnyView(MyBoardsView(authViewModel: AuthViewModel()))),
             SettingsItem(title: "Create Board", description: "Create a new board", icon: "plus.square", destination: AnyView(CreateBoardView())),
         ]
     }
@@ -194,5 +189,4 @@ struct SettingsSectionView: View {
 
 #Preview {
     AccountView()
-        .environmentObject(AuthViewModel())
 }

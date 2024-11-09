@@ -29,10 +29,22 @@ extension Date {
     }
 }
 
-let customISO8601Formatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
+extension Date {
+    /// Returns a user-friendly string representing the time elapsed since the date.
+    var timeAgo: String {
+        let now = Date()
+        let timeInterval = now.timeIntervalSince(self)
+        
+        if timeInterval < 60 {
+            return "Updated just now"
+        } else if timeInterval < 3600 {
+            let minutes = Int(timeInterval / 60)
+            return "Updated \(minutes) min ago"
+        } else if timeInterval < 86400 {
+            let hours = Int(timeInterval / 3600)
+            return "Updated \(hours) hour ago"
+        } else {
+            return "Updated a long time ago"
+        }
+    }
+}

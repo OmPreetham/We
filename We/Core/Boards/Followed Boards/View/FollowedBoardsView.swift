@@ -8,23 +8,20 @@
 import SwiftUI
 
 struct FollowedBoardsView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var searchText: String = ""
-
-    var filteredBoards: [Board] {
-        if searchText.isEmpty {
-            return authViewModel.followedBoards
-        } else {
-            return authViewModel.followedBoards.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-        }
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
+    @StateObject private var viewModel: FollowedBoardsViewModel
+    
+    init(authViewModel: AuthViewModel) {
+        _viewModel = StateObject(wrappedValue: FollowedBoardsViewModel(authViewModel: authViewModel))
     }
 
     var body: some View {
         NavigationStack {
-            if authViewModel.isLoadingFollowedBoards {
-                ProgressView("Loading...")
+            if viewModel.isLoadingFollowedBoards {
+                ProgressView()
                     .navigationTitle("Followed Boards")
-            } else if filteredBoards.isEmpty {
+            } else if viewModel.filteredBoards.isEmpty {
                 VStack {
                     Text("You are not following any boards yet.")
                         .foregroundStyle(.secondary)
@@ -32,8 +29,8 @@ struct FollowedBoardsView: View {
                 }
                 .navigationTitle("Followed Boards")
             } else {
-                List(filteredBoards) { board in
-                    NavigationLink(destination: BoardDetailView(boardId: board.id)) {
+                List(viewModel.filteredBoards) { board in
+                    NavigationLink(destination: BoardDetailView(boardId: board.id, authViewModel: authViewModel)) {
                         HStack {
                             ZStack {
                                 Rectangle()
@@ -61,30 +58,23 @@ struct FollowedBoardsView: View {
                     }
                 }
                 .navigationTitle("Followed Boards")
-                .searchable(text: $searchText, prompt: "Search Boards")
+                .searchable(text: $viewModel.searchText, prompt: "Search Boards")
                 .refreshable {
-                    authViewModel.fetchFollowedBoards()
+                    viewModel.fetchFollowedBoards()
                 }
             }
         }
         .onAppear {
-            if authViewModel.followedBoards.isEmpty {
-                authViewModel.fetchFollowedBoards()
+            if viewModel.followedBoards.isEmpty {
+                viewModel.fetchFollowedBoards()
             }
         }
-        .alert(isPresented: Binding<Bool>(
-            get: { authViewModel.errorMessage != nil },
-            set: { _ in authViewModel.errorMessage = nil }
-        )) {
-            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
-        }
-        .refreshable {
-            authViewModel.fetchFollowedBoards()
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("Followed Boards Alert"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 #Preview {
-    FollowedBoardsView()
-        .environmentObject(AuthViewModel())
+    FollowedBoardsView(authViewModel: AuthViewModel())
 }
