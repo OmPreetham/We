@@ -19,7 +19,7 @@ struct FAQView: View {
                         .padding(.vertical, 8)
                 }
             }
-            .listStyle(.plain)
+            .listStyle(.automatic)
             .navigationBarTitle("FAQs")
         }
     }

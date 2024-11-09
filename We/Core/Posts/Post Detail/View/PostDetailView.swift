@@ -8,58 +8,56 @@
 import SwiftUI
 
 struct PostDetailView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var viewModel = PostDetailViewModel()
+    @State var showingCreatePost: Bool = false
     var postId: String
-    
+
     var body: some View {
         ScrollView {
-            VStack {
-                if let post = authViewModel.selectedPost {
+            VStack(alignment: .leading) {
+                if let post = viewModel.post {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(post.title)
                             .font(.title)
                             .bold()
                             .multilineTextAlignment(.leading)
-                        
+
                         Text("By \(post.username)")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
-                        
+
                         Text(post.content)
                             .font(.callout)
                             .multilineTextAlignment(.leading)
                     }
-                    
+                    .padding()
+
                     Divider()
-                    
-                    HStack {
-                        Button {
-                            
-                        } label: {
-                            Label("55k", systemImage: "hand.thumbsdown")
+
+                    // Replies Section
+                    if viewModel.isLoadingReplies {
+                        ProgressView("Loading replies...")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else if !viewModel.replies.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Replies")
+                                .font(.headline)
+                                .padding(.horizontal)
+
+                            ForEach(viewModel.replies) { reply in
+                                NavigationLink(destination: PostDetailView(postId: reply.id)) {
+                                    PostPreviewCell(post: reply)
+                                }
+                                .foregroundStyle(.foreground)
+                            }
                         }
-                        
-                        Spacer()
-                        
-                        Button {
-                            
-                        } label: {
-                            Label("19k", systemImage: "hand.thumbsup")
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            
-                        } label: {
-                            Label("Bookmark", systemImage: "bookmark")
-                                .labelStyle(.iconOnly)
-                        }
+                    } else {
+                        Text("No replies yet.")
+                            .foregroundColor(.secondary)
+                            .padding()
                     }
-                    
-                    Divider()
-                } else if authViewModel.isLoadingSelectedPost {
+                } else if viewModel.isLoadingPost {
                     ProgressView()
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
@@ -67,47 +65,63 @@ struct PostDetailView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
             .toolbar {
                 // Bookmark Button
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        if let post = authViewModel.selectedPost {
-                            authViewModel.toggleBookmarkPost(postId: post.id)
-                        }
+                        viewModel.toggleBookmarkPost(postId: postId)
                     }) {
-                        Label(authViewModel.isBookmarked ? "Remove Bookmark" : "Bookmark", systemImage: authViewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                        Label(viewModel.isBookmarked ? "Remove Bookmark" : "Bookmark", systemImage: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
                     }
                 }
-                
-                // More Options Button
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        // Add functionality for more options
-                    } label: {
-                        Label("More", systemImage: "ellipsis")
+
+                ToolbarItem(placement: .bottomBar) {
+                    HStack {
+                        Button(action: {
+                            // Add action for filter functionality
+                            print("Filter button tapped")
+                        }) {
+                            Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                        }
+                        
+                        Spacer()
+                        
+                        VStack {
+                            Text("Updated Just Now")
+                            Text("02:00 PM")
+                                .foregroundStyle(.secondary)
+                        }
+                        .font(.caption2)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            showingCreatePost.toggle()
+                        }) {
+                            Label("New Post", systemImage: "square.and.pencil")
+                        }
                     }
                 }
             }
         }
-        .navigationTitle(authViewModel.selectedPost?.board.title ?? "")
+        .navigationTitle(viewModel.post?.board.title ?? "")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingCreatePost) {
+            CreatePostView()
+        }
         .onAppear {
-            authViewModel.checkIfPostIsBookmarked(postId: postId)
-            authViewModel.fetchPost(by: postId)
+            viewModel.checkIfPostIsBookmarked(postId: postId)
+            viewModel.fetchPost(by: postId)
+            viewModel.fetchPostReplies(postId: postId)
         }
-        .onDisappear {
-            authViewModel.selectedPost = nil
-        }
-        .alert(isPresented: $authViewModel.showAlert) {
-            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text("Alert"), message: Text(viewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        PostDetailView(postId: "67202a3e91dfa7246a92f59f")
-            .environmentObject(AuthViewModel())
+        PostDetailView(postId: "672eb44ea04e8cdea10c86c9")
     }
 }

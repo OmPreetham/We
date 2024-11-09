@@ -38,17 +38,17 @@ struct PostPreviewCell: View {
                 
                 Text(post.createdAt.relativeDate())
             }
-            .font(.footnote)
+            .font(.caption2)
             .lineLimit(1)
             .truncationMode(.tail)
             .foregroundStyle(.secondary)
             .fontWeight(.medium)
-            .padding(4)
+            .padding(1)
         }
         .padding(8)
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
+        .shadow(color: .secondary.opacity(0.1), radius: 4, x: 0, y: 0)
         .padding(.horizontal)
     }
 }

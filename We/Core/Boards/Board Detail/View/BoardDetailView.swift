@@ -42,16 +42,22 @@ struct BoardDetailView: View {
                     handleToggleFollow()
                 } label: {
                     Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
+                        .labelStyle(.titleOnly)
                 }
+                .buttonStyle(.bordered)
+                .clipShape(.capsule)
             }
             
             ToolbarItem(placement: .topBarTrailing) {
                 if isAdminOrModerator {
-                    Button(action: {
+                    Button {
                         showingEditSheet = true
-                    }) {
-                        Label("Edit", systemImage: "ellipsis")
+                    } label: {
+                        Label("Edit", systemImage: "slider.horizontal.3")
                     }
+                    .buttonStyle(.borderedProminent)
+                    .clipShape(.circle)
+                    .padding(.trailing, -8)
                 }
             }
             

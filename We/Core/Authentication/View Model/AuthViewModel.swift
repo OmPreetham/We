@@ -93,6 +93,11 @@ class AuthViewModel: ObservableObject {
 
     @Published var userDownvotedPosts: [Post] = []
     @Published var isLoadingUserDownvotedPosts: Bool = false
+    
+    // MARK: - Post Replies
+
+    @Published var postReplies: [Post] = []
+    @Published var isLoadingPostReplies: Bool = false
 
 
     // Common properties
@@ -509,6 +514,27 @@ class AuthViewModel: ObservableObject {
                     self?.boardPosts = posts
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch Post Replies
+
+    /// Fetches replies for a specific post.
+    func fetchPostReplies(postId: String) {
+        isLoadingPostReplies = true
+        errorMessage = nil
+
+        AuthService.shared.fetchPostReplies(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoadingPostReplies = false
+                switch result {
+                case .success(let replies):
+                    self?.postReplies = replies
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
                 }
             }
         }
