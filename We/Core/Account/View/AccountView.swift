@@ -10,6 +10,8 @@ import SwiftUI
 struct AccountView: View {
     @Environment(\.openURL) var openURL
     
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    
     @StateObject private var accountViewModel: AccountViewModel = AccountViewModel()
     
     @State private var searchText: String = ""
@@ -54,7 +56,7 @@ struct AccountView: View {
             }
             .alert("Sign Out", isPresented: $showingSignOutAlert) {
                 Button("Sign Out", role: .destructive) {
-                    accountViewModel.logout() // Call the logout function
+                    authViewModel.logout()
                 }
                 Button("Cancel", role: .cancel) { }
             } message: {
@@ -62,7 +64,7 @@ struct AccountView: View {
             }
         }
         .onAppear {
-            accountViewModel.fetchCurrentUser() // Ensure the current user is fetched
+            accountViewModel.fetchCurrentUser()
         }
     }
     
@@ -200,4 +202,5 @@ struct SettingsSectionView: View {
 
 #Preview {
     AccountView()
+        .environmentObject(AuthViewModel())
 }

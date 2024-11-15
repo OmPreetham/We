@@ -16,9 +16,8 @@ struct NavigationContentView: View {
             switch selection {
             case .account:
                 AccountView()
-                    .navigationTitle("Profile")
             case .forYou:
-                ForYouView(posts: samplePosts)
+                ForYouView()
             case .followingPosts:
                 FollowingPostsView()
             case .board(let boardId):

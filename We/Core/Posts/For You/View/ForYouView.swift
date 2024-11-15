@@ -8,17 +8,19 @@
 import SwiftUI
 
 struct ForYouView: View {
-    var posts: [Post]
+    @StateObject private var forYouPostsViewModel = ForYouViewModel()
     
-    @State var showingCreatePost: Bool = false
+    @State private var showingCreatePost: Bool = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if posts.isEmpty {
-                    ContentUnavailableView("No Posts Available", systemImage: "sharedwithyou.slash", description: Text("No posts to show right now."))
+                if forYouPostsViewModel.isLoadingForYouPosts {
+                    ProgressView()
+                } else if forYouPostsViewModel.forYouPosts.isEmpty {
+                    ContentUnavailableView("No For You Posts", systemImage: "star.slash.fill", description: Text("You haven't interacted with any boards or posts yet."))
                 } else {
-                    PostListView(posts: posts)
+                    PostListView(posts: forYouPostsViewModel.forYouPosts)
                 }
             }
             .navigationTitle("For You")
@@ -26,7 +28,6 @@ struct ForYouView: View {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
                         Button(action: {
-                            // Add action for filter functionality
                             print("Filter button tapped")
                         }) {
                             Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
@@ -35,8 +36,8 @@ struct ForYouView: View {
                         Spacer()
                         
                         VStack {
-                            Text("Updated Just Now")
-                            Text("02:00 PM")
+                            Text(forYouPostsViewModel.lastUpdatedText)
+                            Text(DateFormatter.localizedString(from: forYouPostsViewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
                                 .foregroundStyle(.secondary)
                         }
                         .font(.caption2)
@@ -55,14 +56,21 @@ struct ForYouView: View {
                 CreatePostView()
                     .presentationDetents([.medium, .large])
             }
+            .onAppear {
+                if forYouPostsViewModel.forYouPosts.isEmpty {
+                    forYouPostsViewModel.fetchForYouPosts()
+                }
+            }
             .refreshable {
-                // Add refresh logic if necessary
+                forYouPostsViewModel.fetchForYouPosts()
+            }
+            .alert(isPresented: $forYouPostsViewModel.showAlert) {
+                Alert(title: Text("For You Posts Alert"), message: Text(forYouPostsViewModel.errorMessage ?? "Something went wrong."), dismissButton: .default(Text("OK")))
             }
         }
     }
 }
 
 #Preview {
-    ForYouView(posts: samplePosts)
-        .environmentObject(AuthViewModel())
+    ForYouView()
 }

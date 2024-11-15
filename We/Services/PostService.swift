@@ -11,6 +11,66 @@ class PostService: BaseService {
     static let shared = PostService()
     private override init() {}
     
+    // MARK: - Fetch For You Posts
+    
+    /// Fetches posts from the boards the user is following.
+    func fetchForYouPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/for-you") else {
+            completion(.failure(ServiceError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(ServiceError.noAccessToken))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(ServiceError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post array from the response
+                do {
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let posts = try decoder.decode([Post].self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(posts))
+                        }
+                    } else {
+                        completion(.failure(ServiceError.noData))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(ServiceError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    
     // MARK: - Fetch Following Posts
     
     /// Fetches posts from the boards the user is following.

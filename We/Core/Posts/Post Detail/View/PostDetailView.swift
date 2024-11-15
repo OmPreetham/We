@@ -173,7 +173,7 @@ struct PostDetailView: View {
                 .presentationDetents([.medium, .large])
         }
         .alert(isPresented: $postDetailViewModel.showAlert) {
-            Alert(title: Text("Post Alert"), message: Text(postDetailViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Post Alert"), message: Text(postDetailViewModel.errorMessage ?? "Something went wrong."), dismissButton: .default(Text("OK")))
         }
     }
 }

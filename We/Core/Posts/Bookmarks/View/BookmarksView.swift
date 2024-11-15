@@ -67,7 +67,7 @@ struct BookmarksView: View {
             .alert(isPresented: $bookmarksViewModel.showAlert) {
                 Alert(
                     title: Text("Bookmarks Alert"),
-                    message: Text(bookmarksViewModel.errorMessage ?? ""),
+                    message: Text(bookmarksViewModel.errorMessage ?? "Something went wrong."),
                     dismissButton: .default(Text("OK"))
                 )
             }

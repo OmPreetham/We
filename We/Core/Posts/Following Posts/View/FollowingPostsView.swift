@@ -65,7 +65,7 @@ struct FollowingPostsView: View {
                 followingPostsViewModel.fetchFollowingPosts()
             }
             .alert(isPresented: $followingPostsViewModel.showAlert) {
-                Alert(title: Text("Following Posts Alert"), message: Text(followingPostsViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Following Posts Alert"), message: Text(followingPostsViewModel.errorMessage ?? "Something went wrong."), dismissButton: .default(Text("OK")))
             }
         }
     }
