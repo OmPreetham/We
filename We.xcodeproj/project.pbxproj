@@ -10,6 +10,19 @@
 		0E3ECCBA2CC5AD750050B21B /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 0E3ECCB92CC5AD750050B21B /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		0E4646032CE8088200682FC5 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0E0D967B2CAF8D8800610B51 /* We.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = We.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -60,6 +73,7 @@
 				0E0D96772CAF8D8800610B51 /* Sources */,
 				0E0D96782CAF8D8800610B51 /* Frameworks */,
 				0E0D96792CAF8D8800610B51 /* Resources */,
+				0E4646032CE8088200682FC5 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
@@ -83,7 +97,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					0E0D967A2CAF8D8800610B51 = {

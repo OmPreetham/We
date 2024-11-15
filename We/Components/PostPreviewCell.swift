@@ -11,21 +11,15 @@ struct PostPreviewCell: View {
     let post: Post
 
     var body: some View {
-        VStack(alignment: .leading) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(post.title)
-                    .font(.headline)
-                    .lineLimit(3)
-                
-                Text(post.content)
-                    .font(.subheadline)
-                    .lineLimit(9)
-            }
-            .multilineTextAlignment(.leading)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 8)
+        GroupBox {
+            Text(post.content)
+                .font(.subheadline)
+                .lineLimit(9)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Divider()
+                .padding(.bottom, 2)
             
             HStack(alignment: .center) {
                 Label(post.board.title, systemImage: post.board.systemImageName)
@@ -39,17 +33,15 @@ struct PostPreviewCell: View {
                 Text(post.createdAt.relativeDate())
             }
             .font(.caption2)
+            .fontWeight(.medium)
             .lineLimit(1)
             .truncationMode(.tail)
             .foregroundStyle(.secondary)
-            .fontWeight(.medium)
-            .padding(1)
+        } label: {
+            Text(post.title)
         }
-        .padding(8)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .secondary.opacity(0.1), radius: 4, x: 0, y: 0)
-        .padding(.horizontal)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
     }
 }
 
