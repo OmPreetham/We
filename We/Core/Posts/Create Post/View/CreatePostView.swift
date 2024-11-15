@@ -9,8 +9,9 @@ import SwiftUI
 
 struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
-    
+
     @EnvironmentObject var authViewModel: AuthViewModel
+    
     @State var selectedBoard: Board? = nil
     @State private var subject: String = ""
     @State private var content: String = ""
@@ -123,5 +124,5 @@ struct CreatePostView: View {
 
 #Preview {
     CreatePostView()
-        .environmentObject(AuthViewModel()) // Ensure your AuthViewModel is injected
+        .environmentObject(AuthViewModel())
 }

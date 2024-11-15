@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct PostDetailView: View {
-    @StateObject private var viewModel = PostDetailViewModel()
+    @StateObject private var postDetailViewModel = PostDetailViewModel()
     
-    @State var showingCreatePost: Bool = false
+    @State private var showingReplyToPost: Bool = false
     @State private var showingReportSheet = false
     @State private var reportReason = ""
     
@@ -20,7 +20,7 @@ struct PostDetailView: View {
         ScrollView {
             VStack(alignment: .leading) {
                 // Display parent post if it exists
-                if let parentPost = viewModel.parentPost {
+                if let parentPost = postDetailViewModel.parentPost {
                     NavigationLink(destination: PostDetailView(postId: parentPost.id)) {
                         PostPreviewCell(post: parentPost)
                     }
@@ -29,7 +29,7 @@ struct PostDetailView: View {
                     Divider()
                 }
                 
-                if let post = viewModel.post {
+                if let post = postDetailViewModel.post {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(post.title)
                             .font(.title)
@@ -50,7 +50,7 @@ struct PostDetailView: View {
                     // Upvote and Downvote Buttons
                     HStack(spacing: 40) {
                         Button(action: {
-                            viewModel.upvotePost(postId: postId)
+                            postDetailViewModel.upvotePost(postId: postId)
                         }) {
                             HStack {
                                 Image(systemName: "hand.thumbsup.fill")
@@ -63,7 +63,7 @@ struct PostDetailView: View {
                         Spacer()
                         
                         Button(action: {
-                            viewModel.downvotePost(postId: postId)
+                            postDetailViewModel.downvotePost(postId: postId)
                         }) {
                             HStack {
                                 Image(systemName: "hand.thumbsdown.fill")
@@ -76,9 +76,9 @@ struct PostDetailView: View {
                         Spacer()
                         
                         Button(action: {
-                            viewModel.toggleBookmarkPost(postId: postId)
+                            postDetailViewModel.toggleBookmarkPost(postId: postId)
                         }) {
-                            Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                            Image(systemName: postDetailViewModel.isBookmarked ? "bookmark.fill" : "bookmark")
                         }
                     }
                     .font(.headline)
@@ -87,16 +87,16 @@ struct PostDetailView: View {
                     Divider()
 
                     // Replies Section
-                    if viewModel.isLoadingReplies {
+                    if postDetailViewModel.isLoadingReplies {
                         ProgressView("Loading replies...")
                             .frame(maxWidth: .infinity, alignment: .center)
-                    } else if !viewModel.replies.isEmpty {
+                    } else if !postDetailViewModel.replies.isEmpty {
                         VStack(alignment: .leading, spacing: 16) {
                             Text("Replies")
                                 .font(.headline)
                                 .padding(.horizontal)
 
-                            ForEach(viewModel.replies) { reply in
+                            ForEach(postDetailViewModel.replies) { reply in
                                 NavigationLink(destination: PostDetailView(postId: reply.id)) {
                                     PostPreviewCell(post: reply)
                                 }
@@ -108,7 +108,7 @@ struct PostDetailView: View {
                             .foregroundColor(.secondary)
                             .padding()
                     }
-                } else if viewModel.isLoadingPost {
+                } else if postDetailViewModel.isLoadingPost {
                     ProgressView()
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
@@ -117,12 +117,12 @@ struct PostDetailView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle(viewModel.post?.board.title ?? "")
+        .navigationTitle(postDetailViewModel.post?.board.title ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            viewModel.fetchPost(by: postId)
-            viewModel.checkIfPostIsBookmarked(postId: postId)
-            viewModel.fetchPostReplies(postId: postId)
+            postDetailViewModel.fetchPost(by: postId)
+            postDetailViewModel.checkIfPostIsBookmarked(postId: postId)
+            postDetailViewModel.fetchPostReplies(postId: postId)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -134,12 +134,43 @@ struct PostDetailView: View {
                     Image(systemName: "ellipsis.circle")
                 }
             }
+            
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    Button(action: {
+                        // Add action for filter functionality
+                        print("Filter button tapped")
+                    }) {
+                        Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Text(postDetailViewModel.lastUpdatedText)
+                        Text(DateFormatter.localizedString(from: postDetailViewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.caption2)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        showingReplyToPost.toggle()
+                    }) {
+                        Label("Reply to Post", systemImage: "square.and.pencil")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingReplyToPost) {
+            ReplyPostView(postId: postId)
         }
         .sheet(isPresented: $showingReportSheet) {
             ReportPostSheetView(reportReason: $reportReason, postId: postId)
         }
-        .alert(isPresented: $viewModel.showAlert) {
-            Alert(title: Text("Post Alert"), message: Text(viewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $postDetailViewModel.showAlert) {
+            Alert(title: Text("Post Alert"), message: Text(postDetailViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
         }
     }
 }

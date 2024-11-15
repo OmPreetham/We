@@ -499,4 +499,78 @@ class PostService: BaseService {
             }
         }.resume()
     }
+    
+    // MARK: - Reply to Post
+
+    /// Sends a reply to a specific post.
+    func replyToPost(postId: String, username: String, title: String, content: String, completion: @escaping (Result<Post, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)/reply") else {
+            completion(.failure(ServiceError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Include the access token in the Authorization header
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(ServiceError.noAccessToken))
+            return
+        }
+
+        // Prepare the request body
+        let body: [String: Any] = [
+            "username": username,
+            "title": title,
+            "content": content
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        
+        // Create the data task
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Handle networking errors
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            // Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(ServiceError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                // Parse the Post object from the response
+                do {
+                    if let data = data {
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let post = try decoder.decode(Post.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(post))
+                        }
+                    } else {
+                        completion(.failure(ServiceError.noData))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else {
+                // Handle server-side errors
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(ServiceError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
 }
