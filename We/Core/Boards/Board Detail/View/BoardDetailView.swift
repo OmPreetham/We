@@ -8,38 +8,41 @@
 import SwiftUI
 
 struct BoardDetailView: View {
-    @EnvironmentObject private var authViewModel: AuthViewModel
-
-    @StateObject private var viewModel: BoardDetailViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     
+    var boardId: String
+
     @State private var showingEditSheet: Bool = false
     @State private var showingCreatePost: Bool = false
-    
-    init(boardId: String, authViewModel: AuthViewModel) {
-        _viewModel = StateObject(wrappedValue: BoardDetailViewModel(authViewModel: authViewModel, boardId: boardId))
+    @State private var isLoading: Bool = false
+    @State private var lastLoadedBoardId: String?
+
+    private var isFollowing: Bool {
+        guard let board = authViewModel.selectedBoard else { return false }
+        return authViewModel.followedBoards.contains { $0.id == board.id }
     }
 
     var body: some View {
         ZStack {
-            if viewModel.isLoadingBoardPosts {
+            if authViewModel.isLoadingBoardPosts {
                 ProgressView()
             } else {
                 VStack {
-                    if viewModel.boardPosts.isEmpty {
+                    if authViewModel.boardPosts.isEmpty {
                         ContentUnavailableView("No Posts", systemImage: "square.stack.3d.up.slash.fill", description: Text("No posts are available for this Board"))
                     } else {
-                        PostListView(posts: viewModel.boardPosts)
+                        PostListView(posts: authViewModel.boardPosts)
                     }
                 }
             }
         }
-        .navigationTitle(viewModel.selectedBoard?.title ?? "Board Details")
+        .navigationTitle(authViewModel.selectedBoard?.title ?? "Board Details")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.toggleFollowBoard()
+                    handleToggleFollow()
                 } label: {
-                    Label(viewModel.isFollowing ? "Unfollow" : "Follow", systemImage: viewModel.isFollowing ? "checkmark" : "plus")
+                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
                         .labelStyle(.titleOnly)
                 }
                 .buttonStyle(.bordered)
@@ -87,28 +90,54 @@ struct BoardDetailView: View {
                 }
             }
         }
+        .onAppear {
+            if lastLoadedBoardId != boardId {
+                loadData()
+            }
+        }
+        .refreshable {
+            loadData()
+        }
         .sheet(isPresented: $showingEditSheet) {
-            if let board = viewModel.selectedBoard {
+            if let board = authViewModel.selectedBoard {
                 EditBoardView(
-                    title: .constant(board.title),
-                    description: .constant(board.description),
-                    symbolColor: .constant(board.symbolColor),
-                    systemImageName: .constant(board.systemImageName)
+                    boardId: board.id,
+                    title: board.title,
+                    description: board.description,
+                    symbolColor: board.symbolColor,
+                    systemImageName: board.systemImageName
                 )
                 .environmentObject(authViewModel)
                 .onDisappear {
-                    viewModel.loadBoardData()
+                    authViewModel.fetchBoard(by: board.id)
                 }
             }
         }
         .sheet(isPresented: $showingCreatePost) {
-            if let board = viewModel.selectedBoard {
+            if let board = authViewModel.selectedBoard {
                 CreatePostView(selectedBoard: board)
             }
         }
-        .alert(isPresented: $viewModel.showAlert) {
-            Alert(title: Text("Alert"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
+        .alert(isPresented: Binding<Bool>(
+            get: { authViewModel.errorMessage != nil },
+            set: { _ in authViewModel.errorMessage = nil }
+        )) {
+            Alert(title: Text("Alert"), message: Text(authViewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")))
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func loadData() {
+        isLoading = true
+        lastLoadedBoardId = boardId
+        authViewModel.fetchBoard(by: boardId)
+        authViewModel.fetchBoardPosts(for: boardId)
+    }
+    
+    private func handleToggleFollow() {
+        guard let board = authViewModel.selectedBoard else { return }
+        authViewModel.toggleFollowBoard(boardId: board.id)
     }
     
     private var isAdminOrModerator: Bool {
@@ -119,7 +148,7 @@ struct BoardDetailView: View {
 
 #Preview {
     NavigationView {
-        BoardDetailView(boardId: "6720220991dfa7246a92ef7c", authViewModel: AuthViewModel())
+        BoardDetailView(boardId: "6720220991dfa7246a92ef7c")
             .environmentObject(AuthViewModel())
     }
 }

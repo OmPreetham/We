@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct FollowedBoardsView: View {
-    @EnvironmentObject private var authViewModel: AuthViewModel
-    
+struct FollowedBoardsView: View {    
     @StateObject private var viewModel: FollowedBoardsViewModel
     
     init(authViewModel: AuthViewModel) {
@@ -30,7 +28,7 @@ struct FollowedBoardsView: View {
                 .navigationTitle("Followed Boards")
             } else {
                 List(viewModel.filteredBoards) { board in
-                    NavigationLink(destination: BoardDetailView(boardId: board.id, authViewModel: authViewModel)) {
+                    NavigationLink(destination: BoardDetailView(boardId: board.id)) {
                         HStack {
                             ZStack {
                                 Rectangle()

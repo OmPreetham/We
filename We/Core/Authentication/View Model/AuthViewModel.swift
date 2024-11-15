@@ -61,53 +61,16 @@ class AuthViewModel: ObservableObject {
     
     @Published var followingPosts: [Post] = []
     @Published var isLoadingFollowingPosts: Bool = false
-    
-    // MARK: - Bookmark Posts
-    
-    @Published var bookmarkPosts: [Post] = []
-    @Published var isLoadingBookmarkPosts: Bool = false
-    @Published var isTogglingBookmark: Bool = false
 
     // MARK: - Board Posts
     
     @Published var boardPosts: [Post] = []
     @Published var isLoadingBoardPosts: Bool = false
-    
-    
-    // MARK: - User's Posts
-
-    @Published var userPosts: [Post] = []
-    @Published var isLoadingUserPosts: Bool = false
-
-    // MARK: - User's Replies
-
-    @Published var userReplies: [Post] = []
-    @Published var isLoadingUserReplies: Bool = false
-
-    // MARK: - User's Upvoted Posts
-
-    @Published var userUpvotedPosts: [Post] = []
-    @Published var isLoadingUserUpvotedPosts: Bool = false
-
-    // MARK: - User's Downvoted Posts
-
-    @Published var userDownvotedPosts: [Post] = []
-    @Published var isLoadingUserDownvotedPosts: Bool = false
-    
-    // MARK: - Post Replies
-
-    @Published var postReplies: [Post] = []
-    @Published var isLoadingPostReplies: Bool = false
-
 
     // Common properties
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var showAlert: Bool = false
-    
-    @Published var isLoadingSelectedPost: Bool = false
-    @Published var selectedPost: Post?
-    @Published var isBookmarked: Bool = false
     
     // MARK: - Validation Properties
     
@@ -325,38 +288,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Update Board
-    
-    /// Updates a board with new details.
-    func updateBoard(boardId: String, title: String, description: String, symbolColor: String, systemImageName: String) {
-        isLoading = true
-        errorMessage = nil
-        
-        BoardService.shared.updateBoard(boardId: boardId, title: title, description: description, symbolColor: symbolColor, systemImageName: systemImageName) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let updatedBoard):
-                    // Update the selectedBoard with the updated details
-                    self?.selectedBoard = updatedBoard
-                    
-                    // Update in userBoards and followedBoards if necessary
-                    if let index = self?.userBoards.firstIndex(where: { $0.id == updatedBoard.id }) {
-                        self?.userBoards[index] = updatedBoard
-                    }
-                    
-                    if let index = self?.followedBoards.firstIndex(where: { $0.id == updatedBoard.id }) {
-                        self?.followedBoards[index] = updatedBoard
-                    }
-                    
-                    self?.errorMessage = nil
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-    
     // MARK: - Fetch All Boards
     
     /// Fetches all available boards.
@@ -376,27 +307,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
-    // MARK: - Fetch User Boards
-    
-    /// Fetches the boards created by the authenticated user.
-    func fetchUserBoards() {
-        isLoadingBoards = true
-        errorMessage = nil
         
-        BoardService.shared.fetchUserBoards { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingBoards = false
-                switch result {
-                case .success(let boards):
-                    self?.userBoards = boards
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-    
     // MARK: - Fetch Followed Boards
     
     func fetchFollowedBoards(completion: (() -> Void)? = nil) {
@@ -480,27 +391,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
-    // MARK: - Fetch Bookmark Posts
-    
-    /// Fetches the posts from the boards the user is following.
-    func fetchBookmarkPosts() {
-        isLoadingBookmarkPosts = true
-        errorMessage = nil
         
-        PostService.shared.fetchBookmarkPosts { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingBookmarkPosts = false
-                switch result {
-                case .success(let posts):
-                    self?.bookmarkPosts = posts
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-    
     // MARK: - Fetch Board Posts
     func fetchBoardPosts(for boardId: String) {
         isLoadingBoardPosts = true
@@ -519,160 +410,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Fetch Post Replies
-
-    /// Fetches replies for a specific post.
-    func fetchPostReplies(postId: String) {
-        isLoadingPostReplies = true
-        errorMessage = nil
-
-        PostService.shared.fetchPostReplies(postId: postId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingPostReplies = false
-                switch result {
-                case .success(let replies):
-                    self?.postReplies = replies
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                    self?.showAlert = true
-                }
-            }
-        }
-    }
-    
-    // MARK: - Fetch User Posts
-
-    /// Fetches posts created by a specific user.
-    func fetchUserPosts(userId: String) {
-        isLoadingUserPosts = true
-        errorMessage = nil
-
-        UserService.shared.fetchUserPosts(userId: userId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingUserPosts = false
-                switch result {
-                case .success(let posts):
-                    self?.userPosts = posts
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-
-    // MARK: - Fetch User Replies
-
-    /// Fetches replies made by a specific user.
-    func fetchUserReplies(userId: String) {
-        isLoadingUserReplies = true
-        errorMessage = nil
-
-        UserService.shared.fetchUserReplies(userId: userId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingUserReplies = false
-                switch result {
-                case .success(let replies):
-                    self?.userReplies = replies
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-
-    // MARK: - Fetch User Upvoted Posts
-
-    /// Fetches posts upvoted by a specific user.
-    func fetchUserUpvotedPosts(userId: String) {
-        isLoadingUserUpvotedPosts = true
-        errorMessage = nil
-
-        UserService.shared.fetchUserUpvotes(userId: userId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingUserUpvotedPosts = false
-                switch result {
-                case .success(let posts):
-                    self?.userUpvotedPosts = posts
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-
-    // MARK: - Fetch User Downvoted Posts
-
-    /// Fetches posts downvoted by a specific user.
-    func fetchUserDownvotedPosts(userId: String) {
-        isLoadingUserDownvotedPosts = true
-        errorMessage = nil
-
-        UserService.shared.fetchUserDownvotes(userId: userId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingUserDownvotedPosts = false
-                switch result {
-                case .success(let posts):
-                    self?.userDownvotedPosts = posts
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-    
-    // MARK: - Fetch Post by ID
-    
-    /// Fetches a post by its ID.
-    func fetchPost(by id: String) {
-        isLoadingSelectedPost = true
-        errorMessage = nil
-        
-        PostService.shared.fetchPostById(postId: id) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingSelectedPost = false
-                switch result {
-                case .success(let post):
-                    self?.selectedPost = post
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-    
-    // MARK: - Toggle Bookmark Post
-    
-    func toggleBookmarkPost(postId: String) {
-        guard selectedPost != nil else { return }
-        
-        PostService.shared.toggleBookmarkPost(postId: postId) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let message):
-                    self?.isBookmarked.toggle()
-                    self?.errorMessage = message
-                    self?.showAlert = true
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                    self?.showAlert = true
-                }
-            }
-        }
-    }
-
-    func checkIfPostIsBookmarked(postId: String) {
-        PostService.shared.isPostBookmarked(postId: postId) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let isBookmarked):
-                    self?.isBookmarked = isBookmarked
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                    self?.showAlert = true
-                }
-            }
-        }
-    }
     // Existing password validation method
     func isPasswordValid(_ password: String) -> Bool {
         // Password validation logic (same as before)

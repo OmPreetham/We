@@ -9,6 +9,7 @@ import Foundation
 
 class PostDetailViewModel: ObservableObject {
     @Published var post: Post?
+    @Published var parentPost: Post?
     @Published var replies: [Post] = []
     @Published var isLoadingPost: Bool = false
     @Published var isLoadingReplies: Bool = false
@@ -35,6 +36,56 @@ class PostDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let post):
                     self?.post = post
+                    if let parentId = post.parentPost {
+                        self?.fetchParentPost(by: parentId) // Fetch parent post if it exists
+                    }
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
+    
+    // New function to fetch the parent post
+    func fetchParentPost(by postId: String) {
+        postService.fetchPostById(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let parentPost):
+                    self?.parentPost = parentPost
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
+    
+    // Upvote function
+    func upvotePost(postId: String) {
+        postService.upvotePost(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let message):
+                    print(message)
+                    self?.fetchPost(by: postId) // Refresh post data
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
+
+    // Downvote function
+    func downvotePost(postId: String) {
+        postService.downvotePost(postId: postId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let message):
+                    print(message)
+                    self?.fetchPost(by: postId) // Refresh post data
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                     self?.showAlert = true
@@ -82,6 +133,20 @@ class PostDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let isBookmarked):
                     self?.isBookmarked = isBookmarked
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                    self?.showAlert = true
+                }
+            }
+        }
+    }
+    
+    func reportPost(postId: String, reason: String) {
+        ReportService.shared.reportPost(postId: postId, reason: reason) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let message):
+                    print(message)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                     self?.showAlert = true

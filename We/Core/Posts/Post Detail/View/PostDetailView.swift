@@ -11,12 +11,24 @@ struct PostDetailView: View {
     @StateObject private var viewModel = PostDetailViewModel()
     
     @State var showingCreatePost: Bool = false
-
+    @State private var showingReportSheet = false
+    @State private var reportReason = ""
+    
     var postId: String
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
+                // Display parent post if it exists
+                if let parentPost = viewModel.parentPost {
+                    NavigationLink(destination: PostDetailView(postId: parentPost.id)) {
+                        PostPreviewCell(post: parentPost)
+                    }
+                    .foregroundStyle(.foreground)
+                    
+                    Divider()
+                }
+                
                 if let post = viewModel.post {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(post.title)
@@ -33,6 +45,43 @@ struct PostDetailView: View {
                             .font(.callout)
                             .multilineTextAlignment(.leading)
                     }
+                    .padding()
+
+                    // Upvote and Downvote Buttons
+                    HStack(spacing: 40) {
+                        Button(action: {
+                            viewModel.upvotePost(postId: postId)
+                        }) {
+                            HStack {
+                                Image(systemName: "hand.thumbsup.fill")
+                                Text("\(post.upvoteCount)")
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            viewModel.downvotePost(postId: postId)
+                        }) {
+                            HStack {
+                                Image(systemName: "hand.thumbsdown.fill")
+                                Text("\(post.downvoteCount)")
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            viewModel.toggleBookmarkPost(postId: postId)
+                        }) {
+                            Image(systemName: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                        }
+                    }
+                    .font(.headline)
                     .padding()
 
                     Divider()
@@ -67,58 +116,27 @@ struct PostDetailView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .toolbar {
-                // Bookmark Button
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        viewModel.toggleBookmarkPost(postId: postId)
-                    }) {
-                        Label(viewModel.isBookmarked ? "Remove Bookmark" : "Bookmark", systemImage: viewModel.isBookmarked ? "bookmark.fill" : "bookmark")
-                    }
-                }
-
-                ToolbarItem(placement: .bottomBar) {
-                    HStack {
-                        Button(action: {
-                            print("Filter button tapped")
-                        }) {
-                            Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
-                        }
-                        
-                        Spacer()
-                        
-                        VStack {
-                            Text(viewModel.lastUpdatedText)
-                            Text(DateFormatter.localizedString(from: viewModel.lastUpdated ?? Date(), dateStyle: .none, timeStyle: .short))
-                                .foregroundStyle(.secondary)
-                        }
-                        .font(.caption2)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            showingCreatePost.toggle()
-                        }) {
-                            Label("New Post", systemImage: "square.and.pencil")
-                        }
-                    }
-                }
-            }
         }
         .navigationTitle(viewModel.post?.board.title ?? "")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showingCreatePost) {
-            CreatePostView()
-        }
         .onAppear {
-            viewModel.checkIfPostIsBookmarked(postId: postId)
             viewModel.fetchPost(by: postId)
+            viewModel.checkIfPostIsBookmarked(postId: postId)
             viewModel.fetchPostReplies(postId: postId)
         }
-        .refreshable {
-            viewModel.checkIfPostIsBookmarked(postId: postId)
-            viewModel.fetchPost(by: postId)
-            viewModel.fetchPostReplies(postId: postId)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button("Report Post") {
+                        showingReportSheet = true
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
+            }
+        }
+        .sheet(isPresented: $showingReportSheet) {
+            ReportPostSheetView(reportReason: $reportReason, postId: postId)
         }
         .alert(isPresented: $viewModel.showAlert) {
             Alert(title: Text("Post Alert"), message: Text(viewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))
@@ -128,6 +146,6 @@ struct PostDetailView: View {
 
 #Preview {
     NavigationStack {
-        PostDetailView(postId: "672eb44ea04e8cdea10c86c9")
+        PostDetailView(postId: "672f23333453b558ef1eb8d2")
     }
 }

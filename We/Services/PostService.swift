@@ -433,4 +433,70 @@ class PostService: BaseService {
             }
         }.resume()
     }
+    
+    func upvotePost(postId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)/upvote") else {
+            completion(.failure(ServiceError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(ServiceError.invalidResponse))
+                return
+            }
+
+            if (200...299).contains(httpResponse.statusCode) {
+                completion(.success("Post upvoted"))
+            } else {
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(ServiceError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+
+    func downvotePost(postId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/\(postId)/downvote") else {
+            completion(.failure(ServiceError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(ServiceError.invalidResponse))
+                return
+            }
+
+            if (200...299).contains(httpResponse.statusCode) {
+                completion(.success("Post downvoted"))
+            } else {
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(ServiceError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
 }

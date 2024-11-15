@@ -331,6 +331,55 @@ class BoardService: BaseService {
         }.resume()
     }
     
+    // Add this method to BoardService
+    func isBoardFollowedByUser(boardId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/boards/\(boardId)/isFollowed") else {
+            completion(.failure(ServiceError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        if let accessToken = getAccessToken() {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        } else {
+            completion(.failure(ServiceError.noAccessToken))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(ServiceError.invalidResponse))
+                return
+            }
+            
+            if (200...299).contains(httpResponse.statusCode), let data = data {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let isFollowed = json["isFollowed"] as? Bool {
+                        DispatchQueue.main.async {
+                            completion(.success(isFollowed))
+                        }
+                    } else {
+                        completion(.failure(ServiceError.invalidData))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            } else {
+                let errorMessage = self.parseErrorMessage(data: data)
+                completion(.failure(ServiceError.serverError(message: errorMessage)))
+            }
+        }.resume()
+    }
+    
     // MARK: - Fetch Followed Boards
     
     /// Fetches the boards followed by the authenticated user.

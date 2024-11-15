@@ -8,21 +8,20 @@
 import SwiftUI
 
 struct EditBoardView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.dismiss) var dismiss
+    @StateObject private var viewModel: EditBoardViewModel
     
-    @State private var title: String
-    @State private var description: String
-    @State private var symbolColor: String
-    @State private var systemImageName: String
     @State private var showingIconPicker = false
     @State private var showErrorAlert: Bool = false
-    
-    init(title: Binding<String>, description: Binding<String>, symbolColor: Binding<String>, systemImageName: Binding<String>) {
-        _title = State(initialValue: title.wrappedValue)
-        _description = State(initialValue: description.wrappedValue)
-        _symbolColor = State(initialValue: symbolColor.wrappedValue)
-        _systemImageName = State(initialValue: systemImageName.wrappedValue)
+
+    init(boardId: String, title: String, description: String, symbolColor: String, systemImageName: String) {
+        _viewModel = StateObject(wrappedValue: EditBoardViewModel(
+            boardId: boardId,
+            title: title,
+            description: description,
+            symbolColor: symbolColor,
+            systemImageName: systemImageName
+        ))
     }
     
     var body: some View {
@@ -32,11 +31,11 @@ struct EditBoardView: View {
                 ZStack(alignment: .bottomTrailing) {
                     ZStack {
                         Rectangle()
-                            .fill(Color(hex: symbolColor).gradient.materialActiveAppearance(.automatic))
+                            .fill(Color(hex: viewModel.symbolColor).gradient.materialActiveAppearance(.automatic))
                             .frame(width: 100, height: 100)
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                         
-                        Image(systemName: systemImageName)
+                        Image(systemName: viewModel.systemImageName)
                             .resizable()
                             .scaledToFit()
                             .foregroundStyle(.white)
@@ -62,10 +61,10 @@ struct EditBoardView: View {
                 // Form for Editing Board Details
                 Form {
                     Section(header: Text("Board Details")) {
-                        TextField("Title", text: $title)
+                        TextField("Title", text: $viewModel.title)
                             .disableAutocorrection(true)
                         
-                        TextField("Description", text: $description)
+                        TextField("Description", text: $viewModel.description)
                             .disableAutocorrection(true)
                     }
                 }
@@ -85,42 +84,35 @@ struct EditBoardView: View {
                         Button {
                             saveChanges()
                         } label: {
-                            Label("Save", systemImage: "checkmark.circle.fill")
-                                .labelStyle(.titleOnly)
+                            if viewModel.isLoading {
+                                ProgressView()
+                            } else {
+                                Label("Save", systemImage: "checkmark.circle.fill")
+                                    .labelStyle(.titleOnly)
+                            }
                         }
-                        .disabled(title.isEmpty || description.isEmpty || symbolColor.isEmpty || systemImageName.isEmpty)
+                        .disabled(viewModel.title.isEmpty || viewModel.description.isEmpty || viewModel.symbolColor.isEmpty || viewModel.systemImageName.isEmpty)
                     }
                 }
             }
             .sheet(isPresented: $showingIconPicker) {
-                IconPickerView(viewTitle: "Board Icon", selectedColor: $symbolColor, selectedSymbol: $systemImageName)
+                IconPickerView(viewTitle: "Board Icon", selectedColor: $viewModel.symbolColor, selectedSymbol: $viewModel.systemImageName)
             }
             .alert("Error", isPresented: $showErrorAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text(authViewModel.errorMessage ?? "An unknown error occurred.")
+                Text(viewModel.errorMessage ?? "An unknown error occurred.")
             }
         }
     }
     
     /// Saves the changes made to the board.
     private func saveChanges() {
-        guard let board = authViewModel.selectedBoard else { return }
-        
-        authViewModel.updateBoard(
-            boardId: board.id,
-            title: title,
-            description: description,
-            symbolColor: symbolColor,
-            systemImageName: systemImageName
-        )
-        
-        // Observe for errors
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Adjust delay as needed
-            if authViewModel.errorMessage != nil {
-                showErrorAlert = true
-            } else {
+        viewModel.updateBoard { success in
+            if success {
                 dismiss()
+            } else {
+                showErrorAlert = true
             }
         }
     }
@@ -128,10 +120,10 @@ struct EditBoardView: View {
 
 #Preview {
     EditBoardView(
-        title: .constant("Graduation"),
-        description: .constant("This board is for graduation."),
-        symbolColor: .constant("33C1FF"),
-        systemImageName: .constant("graduationcap.fill")
+        boardId: "123",
+        title: "Graduation",
+        description: "This board is for graduation.",
+        symbolColor: "33C1FF",
+        systemImageName: "graduationcap.fill"
     )
-    .environmentObject(AuthViewModel())
 }
