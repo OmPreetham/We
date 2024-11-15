@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct NavigateView: View {
+    @AppStorage("thankYou") private var showingThankYou: Bool = true
+    
     @EnvironmentObject var authViewModel: AuthViewModel
     
     @State private var primarySelection: PrimarySelection? = .forYou
     @State private var selectedPostId: Post.ID?
     @State private var searchText = ""
-    @State private var isShowingCreatePost = false
+    @State private var showingCreatePost = false
+    
 
     enum PrimarySelection: Hashable {
         case account
@@ -31,12 +34,15 @@ struct NavigateView: View {
         } content: {
             NavigationContentView(
                 primarySelection: $primarySelection,
-                isShowingCreatePost: $isShowingCreatePost
+                isShowingCreatePost: $showingCreatePost
             )
         } detail: {
             NavigationDetailView(selectedPostId: $selectedPostId)
         }
         .navigationSplitViewStyle(.balanced)
+        .sheet(isPresented: $showingThankYou) {
+            ThankYouView()
+        }
     }
 }
 

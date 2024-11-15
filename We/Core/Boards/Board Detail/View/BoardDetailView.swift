@@ -116,6 +116,7 @@ struct BoardDetailView: View {
         .sheet(isPresented: $showingCreatePost) {
             if let board = authViewModel.selectedBoard {
                 CreatePostView(selectedBoard: board)
+                    .presentationDetents([.medium, .large])
             }
         }
         .alert(isPresented: Binding<Bool>(

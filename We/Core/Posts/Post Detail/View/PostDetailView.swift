@@ -55,7 +55,7 @@ struct PostDetailView: View {
                             HStack {
                                 Image(systemName: "hand.thumbsup.fill")
                                 Text("\(post.upvoteCount)")
-                                    .font(.caption)
+                                    .font(.callout)
                                     .foregroundColor(.primary)
                             }
                         }
@@ -68,7 +68,7 @@ struct PostDetailView: View {
                             HStack {
                                 Image(systemName: "hand.thumbsdown.fill")
                                 Text("\(post.downvoteCount)")
-                                    .font(.caption)
+                                    .font(.callout)
                                     .foregroundColor(.primary)
                             }
                         }
@@ -79,9 +79,10 @@ struct PostDetailView: View {
                             postDetailViewModel.toggleBookmarkPost(postId: postId)
                         }) {
                             Image(systemName: postDetailViewModel.isBookmarked ? "bookmark.fill" : "bookmark")
+                                .font(.callout)
                         }
                     }
-                    .font(.headline)
+                    .font(.callout)
                     .padding()
 
                     Divider()
@@ -165,9 +166,11 @@ struct PostDetailView: View {
         }
         .sheet(isPresented: $showingReplyToPost) {
             ReplyPostView(postId: postId)
+                .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showingReportSheet) {
             ReportPostSheetView(reportReason: $reportReason, postId: postId)
+                .presentationDetents([.medium, .large])
         }
         .alert(isPresented: $postDetailViewModel.showAlert) {
             Alert(title: Text("Post Alert"), message: Text(postDetailViewModel.errorMessage ?? "Message"), dismissButton: .default(Text("OK")))

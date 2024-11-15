@@ -37,6 +37,7 @@ struct ReportPostSheetView: View {
                         postViewModel.reportPost(postId: postId, reason: reportReason)
                         dismiss()
                     }
+                    .tint(.red)
                     .disabled(reportReason.isEmpty)
                 }
             }

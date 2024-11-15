@@ -54,6 +54,7 @@ struct FollowingPostsView: View {
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
+                    .presentationDetents([.medium, .large])
             }
             .onAppear {
                 if followingPostsViewModel.followingPosts.isEmpty {

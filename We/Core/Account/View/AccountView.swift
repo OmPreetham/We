@@ -20,6 +20,7 @@ struct AccountView: View {
         NavigationStack {
             List {
                 SettingsSectionView(title: "Profile", items: profileItems)
+                
                 SettingsSectionView(title: "Account", items: accountItems)
                 
                 // Conditionally include the Authorized section
@@ -28,7 +29,11 @@ struct AccountView: View {
                 }
                 
                 SettingsSectionView(title: "Customize", items: customizeItems)
+                
+                SettingsSectionView(title: "Special", items: specialItems)
+
                 SettingsSectionView(title: "Support", items: supportItems)
+                
                 SettingsSectionView(title: "More", items: moreItems)
             }
             .listStyle(.insetGrouped)
@@ -86,7 +91,13 @@ struct AccountView: View {
     private var customizeItems: [SettingsItem] {
         [
             SettingsItem(title: "App Icon", description: "Change the app icon", icon: "app.badge", destination: AnyView(AppIconView())),
-            SettingsItem(title: "Theme", description: "Customize the app's theme", icon: "paintbrush", destination: AnyView(ThemeView()))
+            SettingsItem(title: "Theme", description: "Customize the app's theme", icon: "paintbrush", destination: AnyView(ThemeView())),
+        ]
+    }
+    
+    private var specialItems: [SettingsItem] {
+        [
+            SettingsItem(title: "Thank You", description: "A special thank you to you for using our app!", icon: "append.page", destination: AnyView(ThankYouView())),
         ]
     }
     

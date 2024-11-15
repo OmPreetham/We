@@ -53,6 +53,7 @@ struct ForYouView: View {
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
+                    .presentationDetents([.medium, .large])
             }
             .refreshable {
                 // Add refresh logic if necessary

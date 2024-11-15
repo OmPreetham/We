@@ -144,6 +144,7 @@ struct NavigationSidebarView: View {
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
+                    .presentationDetents([.medium, .large])
             }
             .alert(isPresented: Binding<Bool>(
                 get: { authViewModel.errorMessage != nil },
