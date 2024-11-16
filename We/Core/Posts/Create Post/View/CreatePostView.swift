@@ -10,9 +10,10 @@ import SwiftUI
 struct CreatePostView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
-    
+
     @StateObject private var viewModel: CreatePostViewModel
     @FocusState private var isContentFocused: Bool
+    @State private var isShowingImagePicker = false
 
     init(selectedBoard: Board? = nil) {
         _viewModel = StateObject(wrappedValue: CreatePostViewModel(selectedBoard: selectedBoard))
@@ -50,9 +51,28 @@ struct CreatePostView: View {
 
                 // Content Field
                 TextEditor(text: $viewModel.content)
-                    .frame(minHeight: 200)
                     .focused($isContentFocused)
                     .listRowSeparator(.hidden, edges: .bottom)
+
+                // Image Selection
+                if let selectedImage = viewModel.selectedImage {
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                        .onTapGesture {
+                            isShowingImagePicker = true
+                        }
+                } else {
+                    Button(action: {
+                        isShowingImagePicker = true
+                    }) {
+                        HStack {
+                            Image(systemName: "photo")
+                            Text("Add Photo")
+                        }
+                    }
+                }
             }
             .listStyle(.plain)
             .onAppear {
@@ -92,10 +112,12 @@ struct CreatePostView: View {
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text("Create Post Alert"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
             }
+            .sheet(isPresented: $isShowingImagePicker) {
+                ImagePicker(selectedImage: $viewModel.selectedImage)
+            }
         }
     }
 }
-
 #Preview {
     CreatePostView()
         .environmentObject(AuthViewModel())

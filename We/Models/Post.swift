@@ -22,7 +22,8 @@ struct Post: Identifiable, Codable {
     var board: Board
     var createdAt: Date
     var updatedAt: Date
-    
+    var image: String? // Optional image URL
+
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case title
@@ -38,20 +39,11 @@ struct Post: Identifiable, Codable {
         case board
         case createdAt
         case updatedAt
+        case image // Add image to coding keys
     }
 }
 
 // Sample Post data with User and Board objects
-let sampleUsers: [User] = [
-    User(id: "610cd1cf3b0f5a001e86534b", username: "@AnonStudent", email: "anon@student.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e86534a", username: "@SwiftLearner", email: "swift@learner.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e86534c", username: "@HungryStudent", email: "hungry@student.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e86534d", username: "@StressedOut", email: "stressed@student.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e86534e", username: "@Explorer", email: "explorer@student.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e86534f", username: "@SoloWorker", email: "solo@worker.com", role: "user"),
-    User(id: "610cd1cf3b0f5a001e865350", username: "@FreshmanFocus", email: "freshman@focus.com", role: "user")
-]
-
 let samplePosts: [Post] = [
     Post(
         id: "620cde403b1f1b002e865a4c",
@@ -67,7 +59,8 @@ let samplePosts: [Post] = [
         viewCount: 500,
         board: sampleBoards[1],
         createdAt: Date(),
-        updatedAt: Date()
+        updatedAt: Date(),
+        image: nil // No image for this post
     ),
     Post(
         id: "630cda503b0f5a001f865b4c",
@@ -83,7 +76,8 @@ let samplePosts: [Post] = [
         viewCount: 300,
         board: sampleBoards[2],
         createdAt: Date(),
-        updatedAt: Date()
+        updatedAt: Date(),
+        image: nil // No image for this post
     ),
     Post(
         id: "640cda603b0f5a002e865c4d",
@@ -99,7 +93,8 @@ let samplePosts: [Post] = [
         viewCount: 800,
         board: sampleBoards[3],
         createdAt: Date(),
-        updatedAt: Date()
+        updatedAt: Date(),
+        image: "https://res.cloudinary.com/de0b2myhz/image/upload/v1731766810/ckodjjb0wabajzdzyrs7.png" // No image for this post
     ),
     Post(
         id: "650cda703b0f5a003e865d4e",
@@ -115,7 +110,8 @@ let samplePosts: [Post] = [
         viewCount: 200,
         board: sampleBoards[4],
         createdAt: Date(),
-        updatedAt: Date()
+        updatedAt: Date(),
+        image: nil // No image for this post
     ),
     // You can add more posts with similar expanded content for greater realism and engagement
 ]

@@ -11,6 +11,7 @@ struct PostDetailView: View {
     @StateObject private var postDetailViewModel = PostDetailViewModel()
     
     @State private var showingReplyToPost: Bool = false
+    @State private var showingImagePreview: Bool = false
     @State private var showingReportSheet = false
     @State private var reportReason = ""
     
@@ -31,6 +32,42 @@ struct PostDetailView: View {
                 
                 if let post = postDetailViewModel.post {
                     VStack(alignment: .leading, spacing: 8) {
+                        // Display post image if available
+                        if let imageUrl = post.image, let url = URL(string: imageUrl) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(height: 150)
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.gray.opacity(0.2))
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: .infinity)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        .onTapGesture {
+                                            showingImagePreview = true
+                                        }
+                                        .clipped()
+                                case .failure:
+                                    Image(systemName: "photo.fill") // Fallback image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 150)
+                                        .frame(maxWidth: .infinity)
+                                        .foregroundColor(.gray)
+                                        .background(Color.gray.opacity(0.2))
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        }
+
+                        // Display post details
                         Text(post.title)
                             .font(.title)
                             .bold()
@@ -46,6 +83,11 @@ struct PostDetailView: View {
                             .multilineTextAlignment(.leading)
                     }
                     .padding()
+                    .sheet(isPresented: $showingImagePreview) {
+                        if let imageUrl = post.image, let url = URL(string: imageUrl) {
+                            ZoomableImageView(imageUrl: url)
+                        }
+                    }
 
                     // Upvote and Downvote Buttons
                     HStack(spacing: 40) {

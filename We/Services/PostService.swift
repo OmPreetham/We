@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class PostService: BaseService {
     static let shared = PostService()
@@ -192,16 +193,15 @@ class PostService: BaseService {
     // MARK: - Create Post
     
     /// Creates a new post.
-    func createPost(username: String, title: String, content: String, boardId: String, completion: @escaping (Result<PostCreationResponse, Error>) -> Void) {
+    func createPost(username: String, title: String, content: String, boardId: String, image: UIImage?, completion: @escaping (Result<Post, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/posts/create") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -209,22 +209,20 @@ class PostService: BaseService {
             completion(.failure(ServiceError.noAccessToken))
             return
         }
-        
-        // Prepare the request body
-        let body: [String: Any] = [
+
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        let parameters: [String: String] = [
             "username": username,
             "title": title,
             "content": content,
             "boardId": boardId
         ]
-        
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        } catch {
-            completion(.failure(error))
-            return
-        }
-        
+
+        let bodyData = createBody(parameters: parameters, boundary: boundary, image: image)
+        request.httpBody = bodyData
+
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -232,19 +230,21 @@ class PostService: BaseService {
                 completion(.failure(error))
                 return
             }
-            
+
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(ServiceError.invalidResponse))
                 return
             }
-            
+
             if (200...299).contains(httpResponse.statusCode) {
-                // Parse the PostCreationResponse object from the response
+                // Parse the Post object from the response
                 do {
                     if let data = data {
                         let decoder = JSONDecoder()
-                        let response = try decoder.decode(PostCreationResponse.self, from: data)
+                        decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        let response = try decoder.decode(Post.self, from: data)
                         DispatchQueue.main.async {
                             completion(.success(response))
                         }
@@ -262,8 +262,31 @@ class PostService: BaseService {
         }.resume()
     }
     
-    struct PostCreationResponse: Codable {
-        let success: String
+    func createBody(parameters: [String: String], boundary: String, image: UIImage?) -> Data {
+        var body = Data()
+
+        // Add parameters
+        for (key, value) in parameters {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(value)\r\n".data(using: .utf8)!)
+        }
+
+        // Add image data
+        if let image = image, let imageData = image.jpegData(compressionQuality: 0.8) {
+            let filename = "image.jpg"
+            let mimeType = "image/jpeg"
+
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+            body.append(imageData)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+        return body
     }
     
     // MARK: - Toggle Bookmark Post
