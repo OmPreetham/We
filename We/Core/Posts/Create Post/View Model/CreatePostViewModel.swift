@@ -21,7 +21,7 @@ class CreatePostViewModel: ObservableObject {
 
     init(selectedBoard: Board? = nil, username: String? = nil) {
         self.selectedBoard = selectedBoard
-        self.username = username ?? "userx99"
+        self.username = username ?? ""
     }
 
     func validateFields() -> Bool {

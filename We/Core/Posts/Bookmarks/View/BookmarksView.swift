@@ -54,7 +54,6 @@ struct BookmarksView: View {
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
-                    .presentationDetents([.medium, .large])
             }
             .onAppear {
                 if bookmarksViewModel.bookmarkPosts.isEmpty {

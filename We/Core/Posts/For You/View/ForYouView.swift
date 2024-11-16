@@ -54,7 +54,6 @@ struct ForYouView: View {
             }
             .sheet(isPresented: $showingCreatePost) {
                 CreatePostView()
-                    .presentationDetents([.medium, .large])
             }
             .onAppear {
                 if forYouPostsViewModel.forYouPosts.isEmpty {
