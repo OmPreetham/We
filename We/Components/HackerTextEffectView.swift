@@ -31,7 +31,7 @@ struct HackerTextEffectView: View {
                 .font(.callout)
                 .fontDesign(.serif)
                 .fontWeight(.semibold)
-                .textCase(.uppercase)
+                .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
     }

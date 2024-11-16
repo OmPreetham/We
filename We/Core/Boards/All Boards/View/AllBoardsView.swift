@@ -7,25 +7,20 @@
 
 import SwiftUI
 
-struct AllBoardsView: View {    
+struct AllBoardsView: View {
     @StateObject private var viewModel: AllBoardsViewModel
     
     init(authViewModel: AuthViewModel) {
         _viewModel = StateObject(wrappedValue: AllBoardsViewModel(authViewModel: authViewModel))
     }
-
+    
     var body: some View {
         NavigationStack {
             if viewModel.isLoadingAllBoards {
                 ProgressView("Loading...")
                     .navigationTitle("All Boards")
             } else if viewModel.filteredBoards.isEmpty {
-                VStack {
-                    Text("No boards available.")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                }
-                .navigationTitle("All Boards")
+                ContentUnavailableView("No Boards", systemImage: "square.stack.3d.up.slash.fill", description: Text("No boards are available at this time."))
             } else {
                 List(viewModel.filteredBoards) { board in
                     NavigationLink(destination: BoardDetailView(boardId: board.id)) {
@@ -34,19 +29,19 @@ struct AllBoardsView: View {
                                 Rectangle()
                                     .fill(Color(hex: board.symbolColor).gradient)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
-
+                                
                                 Image(systemName: board.systemImageName)
                                     .foregroundStyle(.background)
                             }
                             .frame(width: 50, height: 50)
                             .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)
                             .padding(.trailing, 8)
-
+                            
                             VStack(alignment: .leading) {
                                 Text(board.title)
                                     .font(.headline)
                                     .lineLimit(1)
-
+                                
                                 Text(board.description)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)

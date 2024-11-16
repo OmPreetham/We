@@ -20,12 +20,7 @@ struct MyBoardsView: View {
                 ProgressView()
                     .navigationTitle("My Boards")
             } else if viewModel.filteredBoards.isEmpty {
-                VStack {
-                    Text("You have not created any boards yet.")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                }
-                .navigationTitle("My Boards")
+                    ContentUnavailableView("No Boards", systemImage: "square.stack.3d.up.slash.fill", description: Text("No boards are available at this time."))
             } else {
                 List(viewModel.filteredBoards) { board in
                     NavigationLink(destination: BoardDetailView(boardId: board.id)) {

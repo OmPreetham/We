@@ -29,7 +29,7 @@ struct BoardDetailView: View {
             } else {
                 VStack {
                     if authViewModel.boardPosts.isEmpty {
-                        ContentUnavailableView("No Posts", systemImage: "square.stack.3d.up.slash.fill", description: Text("No posts are available for this Board"))
+                        ContentUnavailableView("Board is empty.", systemImage: "square.stack.3d.up.slash.fill", description: Text("Please create a post to see the board details."))
                     } else {
                         PostListView(posts: authViewModel.boardPosts)
                     }

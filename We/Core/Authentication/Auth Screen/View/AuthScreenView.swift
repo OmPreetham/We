@@ -85,10 +85,10 @@ struct AuthScreenView: View {
                 .foregroundStyle(.secondary)
             
             HStack(spacing: 4) {
-                TermsButton(title: "Terms of Service", url: "https://www.ompreetham.com", viewModel: safariViewModel)
+                TermsButton(title: "Terms of Service", url: "https://we.ompreetham.com", viewModel: safariViewModel)
                 Text("and")
                     .foregroundStyle(.secondary)
-                TermsButton(title: "Privacy Policy", url: "https://www.ompreetham.com", viewModel: safariViewModel)
+                TermsButton(title: "Privacy Policy", url: "https://we.ompreetham.com", viewModel: safariViewModel)
             }
             .modifier(SafariViewControllerViewModifier(viewModel: safariViewModel))
             .font(.caption)

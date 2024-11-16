@@ -17,8 +17,8 @@ struct CreateBoardView: View {
 
     @State private var title = ""
     @State private var description = ""
-    @State private var symbolColor: String = "33C1FF"
-    @State private var systemImageName: String = "graduationcap"
+    @State private var symbolColor: String = "#30B0C7"
+    @State private var systemImageName: String = "graduationcap.fill"
 
     var body: some View {
         NavigationStack {
