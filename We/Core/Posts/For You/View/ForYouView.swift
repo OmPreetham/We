@@ -9,18 +9,47 @@ import SwiftUI
 
 struct ForYouView: View {
     @StateObject private var forYouPostsViewModel = ForYouViewModel()
-    
     @State private var showingCreatePost: Bool = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                if forYouPostsViewModel.isLoadingForYouPosts {
+                if forYouPostsViewModel.isLoadingForYouPosts && forYouPostsViewModel.forYouPosts.isEmpty {
                     ProgressView()
                 } else if forYouPostsViewModel.forYouPosts.isEmpty {
-                    ContentUnavailableView("No For You Posts", systemImage: "star.slash.fill", description: Text("You haven't interacted with any boards or posts yet."))
+                    ContentUnavailableView("No For You Posts", systemImage: "sharedwithyou.slash", description: Text("You haven't interacted with any boards or posts yet. Start by creating a post or joining a board to see some content."))
                 } else {
-                    PostListView(posts: forYouPostsViewModel.forYouPosts)
+                    ScrollView {
+                        LazyVStack {
+                            ForEach(forYouPostsViewModel.forYouPosts) { post in
+                                NavigationLink(destination: PostDetailView(postId: post.id)) {
+                                    PostPreviewCell(post: post)
+                                        .onAppear {
+                                            if post == forYouPostsViewModel.forYouPosts.last {
+                                                forYouPostsViewModel.fetchForYouPosts()
+                                            }
+                                        }
+                                }
+                                .foregroundStyle(.foreground)
+                            }
+                        }
+
+                        if forYouPostsViewModel.isLoadingForYouPosts {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
+                        } else if !forYouPostsViewModel.hasMorePosts {
+                            HStack {
+                                Spacer()
+                                Text("You have reached the end of the your for you posts.")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("For You")
@@ -61,7 +90,7 @@ struct ForYouView: View {
                 }
             }
             .refreshable {
-                forYouPostsViewModel.fetchForYouPosts()
+                forYouPostsViewModel.refreshPosts()
             }
             .alert(isPresented: $forYouPostsViewModel.showAlert) {
                 Alert(title: Text("For You Posts Alert"), message: Text(forYouPostsViewModel.errorMessage ?? "Something went wrong."), dismissButton: .default(Text("OK")))

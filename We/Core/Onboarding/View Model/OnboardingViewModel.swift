@@ -9,7 +9,7 @@ import SwiftUI
 
 func colorForSystemImage(systemName: String) -> Color {
     switch systemName {
-    case "quote.bubble.fill":
+    case "dot.circle.viewfinder":
         return .teal
     case "shield.fill":
         return .green
@@ -24,15 +24,15 @@ func colorForSystemImage(systemName: String) -> Color {
     case "book.fill":
         return .brown
     default:
-        return .blue
+        return .accentColor
     }
 }
 
 let onboardingData: [OnboardingInfo] = [
     OnboardingInfo(
-        label: "’Ello! We",
+        label: "Welcome to We",
         content: "We is your platform for open discussions with fellow university students. Share your thoughts, ask questions, and connect with others in a safe and welcoming environment.",
-        systemName: "quote.bubble.fill"
+        systemName: "dot.circle.viewfinder"
     ),
     OnboardingInfo(
         label: "Privacy Protection",

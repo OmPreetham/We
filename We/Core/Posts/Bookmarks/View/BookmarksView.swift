@@ -17,7 +17,7 @@ struct BookmarksView: View {
                 if bookmarksViewModel.isLoadingBookmarkPosts {
                     ProgressView()
                 } else if bookmarksViewModel.bookmarkPosts.isEmpty {
-                    ContentUnavailableView("No Bookmarks", systemImage: "bookmark.slash.fill", description: Text("You haven't bookmarked any posts yet."))
+                    ContentUnavailableView("No Bookmarks", systemImage: "bookmark.slash.fill", description: Text("You haven't bookmarked any posts yet. Bookmark some posts to see them here."))
                 } else {
                     PostListView(posts: bookmarksViewModel.bookmarkPosts)
                 }
@@ -26,10 +26,10 @@ struct BookmarksView: View {
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
-                        Button(action: {
+                        Button {
                             // Add action for filter functionality
                             print("Filter button tapped")
-                        }) {
+                        } label: {
                             Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
                         }
                         
@@ -44,9 +44,9 @@ struct BookmarksView: View {
                         
                         Spacer()
                         
-                        Button(action: {
+                        Button {
                             showingCreatePost.toggle()
-                        }) {
+                        } label: {
                             Label("New Post", systemImage: "square.and.pencil")
                         }
                     }

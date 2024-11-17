@@ -29,7 +29,7 @@ struct BoardDetailView: View {
             } else {
                 VStack {
                     if authViewModel.boardPosts.isEmpty {
-                        ContentUnavailableView("Board is empty.", systemImage: "square.stack.3d.up.slash.fill", description: Text("Please create a post to see the board details."))
+                        ContentUnavailableView("New Board", systemImage: "rectangle.center.inset.filled.badge.plus", description: Text("Please create a post in this board to see some content."))
                     } else {
                         PostListView(posts: authViewModel.boardPosts)
                     }
@@ -42,7 +42,7 @@ struct BoardDetailView: View {
                 Button {
                     handleToggleFollow()
                 } label: {
-                    Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
+                    Label(isFollowing ? "Following" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
                 }
                 .buttonStyle(.borderedProminent)
             }

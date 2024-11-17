@@ -67,7 +67,7 @@ struct IconPickerView: View {
                     Image(systemName: selectedSymbol)
                         .resizable()
                         .scaledToFit()
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .frame(width: 50, height: 50)
                 }
                 .shadow(color: .secondary.opacity(0.3), radius: 4, x: 0, y: 0)

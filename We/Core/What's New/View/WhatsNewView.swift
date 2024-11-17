@@ -9,36 +9,32 @@ import SwiftUI
 
 struct WhatsNewView: View {
     var body: some View {
-        ZStack {
-            AnimatedMeshGradientCell()
-                    
-            ScrollView {
-                VStack(alignment: .leading) {
-                    ForEach(whatsNewData) { update in
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Version \(update.version)")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .padding(.bottom, 5)
-                            
-                            ForEach(update.features) { feature in
-                                VStack(alignment: .leading, spacing: 5) {
-                                    Text(feature.title)
-                                        .font(.headline)
-                                    
-                                    Text(feature.content)
-                                        .font(.subheadline)
-                                }
-                                .padding(.bottom, 10)
+        ScrollView {
+            LazyVStack(alignment: .leading) {
+                ForEach(whatsNewData) { update in
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Version \(update.version)")
+                            .font(.title)
+                            .fontDesign(.serif)
+                            .fontWeight(.bold)
+                            .padding(.bottom, 5)
+                        
+                        ForEach(update.features) { feature in
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(feature.title)
+                                    .font(.headline)
+                                
+                                Text(feature.content)
+                                    .font(.subheadline)
                             }
+                            .padding(.bottom, 10)
                         }
-                        .padding()
                     }
+                    .padding()
                 }
             }
-            .navigationTitle("What's New")
         }
-
+        .navigationTitle("What's New")
     }
 }
 

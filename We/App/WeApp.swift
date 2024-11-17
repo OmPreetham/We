@@ -9,24 +9,10 @@ import SwiftUI
 
 @main
 struct WeApp: App {
-    @AppStorage("theme") private var theme: String = Theme.automatic.rawValue
-
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(AuthViewModel())
-                .preferredColorScheme(selectedColorScheme)
-        }
-    }
-    
-    private var selectedColorScheme: ColorScheme? {
-        switch Theme(rawValue: theme) ?? .automatic {
-        case .automatic:
-            return nil
-        case .light:
-            return .light
-        case .dark:
-            return .dark
         }
     }
 }

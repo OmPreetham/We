@@ -34,14 +34,14 @@ struct ChangePasswordView: View {
                 if !viewModel.isNewPasswordValid && !viewModel.newPassword.isEmpty {
                     Text("Password must be at least 8 characters, including uppercase, lowercase, number, and special character.")
                         .font(.caption)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                         .padding(.horizontal)
                 }
 
                 Section {
-                    Button(action: {
+                    Button {
                         viewModel.changePassword()
-                    }) {
+                    } label: {
                         if viewModel.isLoading {
                             HStack {
                                 Spacer()

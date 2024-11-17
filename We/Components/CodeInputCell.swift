@@ -26,7 +26,7 @@ struct CodeInputCell: View {
                         if index < code.count {
                             Text(String(code[code.index(code.startIndex, offsetBy: index)]))
                                 .font(.title)
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                         }
                     }
                 }

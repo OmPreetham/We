@@ -74,9 +74,9 @@ struct CreatePostView: View {
                 }
 
                 // Add Photo Button at the Bottom
-                Button(action: {
+                Button {
                     isShowingImagePicker = true
-                }) {
+                } label: {
                     HStack {
                         Image(systemName: "photo")
                         Text(viewModel.selectedImage == nil ? "Add Photo" : "Change Photo")

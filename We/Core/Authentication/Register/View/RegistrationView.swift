@@ -66,7 +66,7 @@ There is no option to recover a forgotten password.**
                             
                             if !viewModel.doPasswordsMatch {
                                 Text("Passwords do not match.")
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .font(.footnote)
                             }
                             

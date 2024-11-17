@@ -44,7 +44,7 @@ struct LoginView: View {
                             // Show validation error if email is invalid
                             if !viewModel.isLoginEmailValid && !viewModel.loginEmail.isEmpty {
                                 Text("Please enter a valid university email ending with @islander.tamucc.edu")
-                                    .foregroundColor(.red)
+                                    .foregroundStyle(.red)
                                     .font(.caption)
                                     .multilineTextAlignment(.center)
                             }

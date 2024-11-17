@@ -32,21 +32,30 @@ struct PostDetailView: View {
                 
                 if let post = postDetailViewModel.post {
                     VStack(alignment: .leading, spacing: 8) {
+                        if post.parentPost != nil {
+                            Label("REPLY", systemImage: "arrowshape.turn.up.left.fill")
+                                .fontDesign(.monospaced)
+                                .font(.caption2)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 4)
+                                .background(.quinary)
+                                .clipShape(.capsule)
+                        }
+                        
                         // Display post image if available
                         if let imageUrl = post.image, let url = URL(string: imageUrl) {
                             AsyncImage(url: url) { phase in
                                 switch phase {
                                 case .empty:
                                     ProgressView()
-                                        .frame(height: 150)
+                                        .frame(height: 100)
                                         .frame(maxWidth: .infinity)
                                         .background(Color.gray.opacity(0.2))
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                 case .success(let image):
                                     image
                                         .resizable()
-                                        .scaledToFill()
-                                        .frame(maxWidth: .infinity)
+                                        .scaledToFit()
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                         .onTapGesture {
                                             showingImagePreview = true
@@ -56,9 +65,10 @@ struct PostDetailView: View {
                                     Image(systemName: "photo.fill") // Fallback image
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(height: 150)
+                                        .frame(height: 100)
+                                        .padding()
                                         .frame(maxWidth: .infinity)
-                                        .foregroundColor(.gray)
+                                        .foregroundStyle(.gray)
                                         .background(Color.gray.opacity(0.2))
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                 @unknown default:
@@ -145,7 +155,7 @@ struct PostDetailView: View {
                         }
                     } else {
                         Text("No replies yet.")
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .padding()
                     }
                 } else if postDetailViewModel.isLoadingPost {

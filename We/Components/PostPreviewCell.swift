@@ -15,6 +15,16 @@ struct PostPreviewCell: View {
     var body: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 8) {
+                if post.parentPost != nil {
+                    Label("REPLY", systemImage: "arrowshape.turn.up.left.fill")
+                        .fontDesign(.monospaced)
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 4)
+                        .background(.quinary)
+                        .clipShape(.capsule)
+                }
+                
                 // Display the image at the top
                 if let imageUrl = post.image, let url = URL(string: imageUrl) {
                     AsyncImage(url: url) { phase in
@@ -54,7 +64,6 @@ struct PostPreviewCell: View {
                 Text(post.content)
                     .font(.subheadline)
                     .lineLimit(9)
-                    .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Divider()
@@ -81,8 +90,9 @@ struct PostPreviewCell: View {
         } label: {
             Text(post.title)
         }
+        .multilineTextAlignment(.leading)
         .padding(.horizontal)
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
         .sheet(isPresented: $isImagePreviewPresented) {
             if let imageUrl = post.image, let url = URL(string: imageUrl) {
                 ZoomableImageView(imageUrl: url)

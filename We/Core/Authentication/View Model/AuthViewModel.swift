@@ -371,27 +371,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
-    // MARK: - Fetch Following Posts
-    
-    /// Fetches the posts from the boards the user is following.
-    func fetchFollowingPosts() {
-        isLoadingFollowingPosts = true
-        errorMessage = nil
-        
-        PostService.shared.fetchFollowingPosts { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoadingFollowingPosts = false
-                switch result {
-                case .success(let posts):
-                    self?.followingPosts = posts
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
-        }
-    }
-        
+            
     // MARK: - Fetch Board Posts
     func fetchBoardPosts(for boardId: String) {
         isLoadingBoardPosts = true

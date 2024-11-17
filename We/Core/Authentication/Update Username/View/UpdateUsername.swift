@@ -26,9 +26,9 @@ struct UpdateUsernameView: View {
                 }
 
                 Section {
-                    Button(action: {
+                    Button {
                         viewModel.updateUsername(newUsername: newUsername)
-                    }) {
+                    } label: {
                         if viewModel.isLoading {
                             HStack {
                                 Spacer()

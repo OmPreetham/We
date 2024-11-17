@@ -48,10 +48,10 @@ struct AccountCreatedView: View {
                     .multilineTextAlignment(.center)
                     .padding()
                     
-                    Button(action: {
+                    Button {
                         self.presentationMode.wrappedValue.dismiss()
                         self.presentationMode.wrappedValue.dismiss()
-                    }) {
+                    } label: {
                         Text("Login Now")
                             .font(.body)
                             .fontWeight(.semibold)

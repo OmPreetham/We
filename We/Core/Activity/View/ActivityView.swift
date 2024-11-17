@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ActivityView: View {
     @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
-    @ObservedObject var activityViewModel: ActivityViewModel = ActivityViewModel()
+    @StateObject var activityViewModel: ActivityViewModel = ActivityViewModel()
     
     @State private var selectedPicker: Int = 0
     
@@ -37,7 +37,7 @@ struct ActivityView: View {
                             .foregroundStyle(.red)
                             .padding()
                     } else if activityViewModel.userPosts.isEmpty {
-                        ContentUnavailableView("No Posts", systemImage: "rectangle.portrait.slash", description: Text("There are currently no posts to display."))
+                        ContentUnavailableView("No Posts", systemImage: "text.page.slash.fill", description: Text("There are currently no posts to display. Create one by tapping the \"+\" button on the bottom right corner of the screen."))
                     } else {
                         PostListView(posts: activityViewModel.userPosts)
                     }
@@ -50,7 +50,7 @@ struct ActivityView: View {
                             .foregroundStyle(.red)
                             .padding()
                     } else if activityViewModel.userReplies.isEmpty {
-                        ContentUnavailableView("No Replies", systemImage: "rectangle.portrait.slash", description: Text("There are currently no replies to display."))
+                        ContentUnavailableView("No Replies", systemImage: "arrowshape.turn.up.left.fill", description: Text("There are currently no replies to display. Reply to a post by tapping the \"+\" button on the bottom right corner in the post screen."))
                     } else {
                         PostListView(posts: activityViewModel.userReplies)
                     }
@@ -63,7 +63,7 @@ struct ActivityView: View {
                             .foregroundStyle(.red)
                             .padding()
                     } else if activityViewModel.userUpvotedPosts.isEmpty {
-                        ContentUnavailableView("No Upvotes", systemImage: "rectangle.portrait.slash", description: Text("There are currently no upvoted posts to display."))
+                        ContentUnavailableView("No Upvotes", systemImage: "hand.thumbsup.fill", description: Text("There are currently no upvoted posts to display. Upvote a post by tapping the UPVOTE button on the in the post screen."))
                     } else {
                         PostListView(posts: activityViewModel.userUpvotedPosts)
                     }
@@ -76,7 +76,7 @@ struct ActivityView: View {
                             .foregroundStyle(.red)
                             .padding()
                     } else if activityViewModel.userDownvotedPosts.isEmpty {
-                        ContentUnavailableView("No Downvotes", systemImage: "rectangle.portrait.slash", description: Text("There are currently no downvoted posts to display."))
+                        ContentUnavailableView("No Downvotes", systemImage: "hand.thumbsdown.fill", description: Text("There are currently no downvoted posts to display. Downvote a post by tapping the DOWNVOTE button on the in the post screen."))
                     } else {
                         PostListView(posts: activityViewModel.userDownvotedPosts)
                     }
@@ -87,7 +87,11 @@ struct ActivityView: View {
         .onAppear {
             if authViewModel.currentUser == nil {
                 authViewModel.fetchCurrentUser()
+            } else {
+                fetchData()
             }
+        }
+        .onChange(of: authViewModel.currentUser) {
             fetchData()
         }
         .onChange(of: selectedPicker) {

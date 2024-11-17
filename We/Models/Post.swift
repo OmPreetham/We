@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post: Identifiable, Codable {
+struct Post: Identifiable, Codable, Equatable {
     var id: String
     var title: String
     var content: String
@@ -41,6 +41,10 @@ struct Post: Identifiable, Codable {
         case updatedAt
         case image // Add image to coding keys
     }
+    
+    func lhs (_ lhs: Post, _ rhs: Post) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 // Sample Post data with User and Board objects
@@ -68,7 +72,7 @@ let samplePosts: [Post] = [
         content: "It's midnight and you just finished a grueling study session. You're hungry, but unsure where to go. Let's compile a list of the best places to grab some food late at night, whether on campus or within a short drive. Bonus points for 24/7 options!",
         user: sampleUsers[2],
         username: "@NightOwl",
-        parentPost: nil,
+        parentPost: "nil",
         path: ",",
         upvoteCount: 780,
         downvoteCount: 5,

@@ -12,18 +12,18 @@ class PostService: BaseService {
     static let shared = PostService()
     private override init() {}
     
-    // MARK: - Fetch For You Posts
-    
-    /// Fetches posts from the boards the user is following.
-    func fetchForYouPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/posts/for-you") else {
+    // MARK: - Fetch For You Posts with Pagination
+
+    /// Fetches "For You" posts with pagination.
+    func fetchForYouPosts(page: Int, limit: Int, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/for-you?page=\(page)&limit=\(limit)") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -31,7 +31,7 @@ class PostService: BaseService {
             completion(.failure(ServiceError.noAccessToken))
             return
         }
-        
+
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -39,13 +39,13 @@ class PostService: BaseService {
                 completion(.failure(error))
                 return
             }
-            
+
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(ServiceError.invalidResponse))
                 return
             }
-            
+
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the Post array from the response
                 do {
@@ -54,9 +54,7 @@ class PostService: BaseService {
                         decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let posts = try decoder.decode([Post].self, from: data)
-                        DispatchQueue.main.async {
-                            completion(.success(posts))
-                        }
+                        completion(.success(posts))
                     } else {
                         completion(.failure(ServiceError.noData))
                     }
@@ -70,20 +68,19 @@ class PostService: BaseService {
             }
         }.resume()
     }
+    
+    // MARK: - Fetch Following Posts with Pagination
 
-    
-    // MARK: - Fetch Following Posts
-    
-    /// Fetches posts from the boards the user is following.
-    func fetchFollowingPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/posts/following") else {
+    /// Fetches posts from the boards the user is following with pagination.
+    func fetchFollowingPosts(page: Int, limit: Int, completion: @escaping (Result<[Post], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/posts/following?page=\(page)&limit=\(limit)") else {
             completion(.failure(ServiceError.invalidURL))
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+
         // Include the access token in the Authorization header
         if let accessToken = getAccessToken() {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -91,7 +88,7 @@ class PostService: BaseService {
             completion(.failure(ServiceError.noAccessToken))
             return
         }
-        
+
         // Create the data task
         URLSession.shared.dataTask(with: request) { data, response, error in
             // Handle networking errors
@@ -99,13 +96,13 @@ class PostService: BaseService {
                 completion(.failure(error))
                 return
             }
-            
+
             // Check for valid HTTP response
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(ServiceError.invalidResponse))
                 return
             }
-            
+
             if (200...299).contains(httpResponse.statusCode) {
                 // Parse the Post array from the response
                 do {
@@ -114,9 +111,7 @@ class PostService: BaseService {
                         decoder.dateDecodingStrategy = .formatted(customISO8601Formatter)
                         decoder.keyDecodingStrategy = .convertFromSnakeCase
                         let posts = try decoder.decode([Post].self, from: data)
-                        DispatchQueue.main.async {
-                            completion(.success(posts))
-                        }
+                        completion(.success(posts))
                     } else {
                         completion(.failure(ServiceError.noData))
                     }

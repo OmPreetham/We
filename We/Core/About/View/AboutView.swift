@@ -62,10 +62,10 @@ struct AboutView: View {
                 VStack(alignment: .center) {
                     Text("Version 1.0")
                         .font(.footnote)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.secondary)
                     Text("© 2024 We. All rights reserved.")
                         .font(.footnote)
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, 8)
