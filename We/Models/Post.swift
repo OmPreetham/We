@@ -77,7 +77,7 @@ let samplePosts: [Post] = [
         board: sampleBoards[2],
         createdAt: Date(),
         updatedAt: Date(),
-        image: nil // No image for this post
+        image: "https://www.tamucc.edu/images/icons/home-social-2.jpg" // No image for this post
     ),
     Post(
         id: "640cda603b0f5a002e865c4d",

@@ -21,15 +21,14 @@ struct PostPreviewCell: View {
                         switch phase {
                         case .empty:
                             ProgressView()
-                                .frame(height: 150)
+                                .frame(height: 100)
                                 .frame(maxWidth: .infinity)
                                 .background(Color.gray.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         case .success(let image):
                             image
                                 .resizable()
-                                .scaledToFill()
-                                .frame(maxWidth: .infinity)
+                                .scaledToFit()
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .onTapGesture {
                                     isImagePreviewPresented = true
@@ -39,9 +38,10 @@ struct PostPreviewCell: View {
                             Image(systemName: "photo.fill") // Fallback image
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 150)
+                                .padding()
+                                .frame(height: 100)
                                 .frame(maxWidth: .infinity)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                                 .background(Color.gray.opacity(0.2))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         @unknown default:
@@ -92,5 +92,5 @@ struct PostPreviewCell: View {
 }
 
 #Preview {
-    PostPreviewCell(post: samplePosts[2])
+    PostPreviewCell(post: samplePosts[1])
 }
