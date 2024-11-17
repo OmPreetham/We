@@ -23,6 +23,7 @@ struct SidebarItemView: View {
                     .clipShape(RoundedRectangle(cornerRadius: isAccount ? 30 : 8))
                 
                 Image(systemName: imageName)
+                    .scaleEffect(isAccount ? 1.5 : 1)
                     .foregroundStyle(.background)
             }
             .frame(width: isAccount ? 60 : 50, height: isAccount ? 60 : 50)
@@ -45,9 +46,9 @@ struct SidebarItemView: View {
 
 #Preview {
     SidebarItemView(
-        title: "Account",
+        title: "We Account",
         description: "Your personal account settings",
-        imageName: "person.crop.circle",
+        imageName: "person.badge.shield.checkmark.fill",
         gradientColor: .blue,
         isAccount: true
     )

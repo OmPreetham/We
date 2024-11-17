@@ -97,9 +97,9 @@ struct VerifyView: View {
                     }
                 }
                 
-                Button(action: {
+                Button {
                     viewModel.isCodeSent = true
-                }) {
+                } label: {
                     Text("Already have a code?")
                         .font(.footnote)
                         .underline()

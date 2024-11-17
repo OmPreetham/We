@@ -27,15 +27,19 @@ struct ReportPostSheetView: View {
             .navigationTitle("Report Post")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Report") {
+                    Button {
                         postViewModel.reportPost(postId: postId, reason: reportReason)
                         dismiss()
+                    } label: {
+                        Label("Report", systemImage: "paperplane.fill")
                     }
                     .tint(.red)
                     .disabled(reportReason.isEmpty)

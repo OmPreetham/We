@@ -43,7 +43,7 @@ struct AccountView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showingSignOutAlert = true
+                        showingSignOutAlert.toggle()
                     } label: {
                         Label("Sign Out", systemImage: "power")
                     }

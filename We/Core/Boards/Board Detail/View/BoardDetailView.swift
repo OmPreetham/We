@@ -43,10 +43,8 @@ struct BoardDetailView: View {
                     handleToggleFollow()
                 } label: {
                     Label(isFollowing ? "Unfollow" : "Follow", systemImage: isFollowing ? "checkmark" : "plus")
-                        .labelStyle(.titleOnly)
                 }
-                .buttonStyle(.bordered)
-                .clipShape(.capsule)
+                .buttonStyle(.borderedProminent)
             }
             
             ToolbarItem(placement: .topBarTrailing) {
@@ -57,17 +55,15 @@ struct BoardDetailView: View {
                         Label("Edit", systemImage: "slider.horizontal.3")
                     }
                     .buttonStyle(.borderedProminent)
-                    .clipShape(.circle)
-                    .padding(.trailing, -8)
                 }
             }
             
             ToolbarItem(placement: .bottomBar) {
                 HStack {
-                    Button(action: {
+                    Button {
                         // Add action for filter functionality
                         print("Filter button tapped")
-                    }) {
+                    } label: {
                         Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
                     }
                     
@@ -82,9 +78,9 @@ struct BoardDetailView: View {
                     
                     Spacer()
                     
-                    Button(action: {
+                    Button {
                         showingCreatePost.toggle()
-                    }) {
+                    } label: {
                         Label("New Post", systemImage: "square.and.pencil")
                     }
                 }

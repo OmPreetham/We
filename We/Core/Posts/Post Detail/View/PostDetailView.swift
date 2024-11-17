@@ -16,7 +16,7 @@ struct PostDetailView: View {
     @State private var reportReason = ""
     
     var postId: String
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -66,18 +66,18 @@ struct PostDetailView: View {
                                 }
                             }
                         }
-
+                        
                         // Display post details
                         Text(post.title)
                             .font(.title)
                             .bold()
                             .multilineTextAlignment(.leading)
-
+                        
                         Text("By \(post.username)")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
-
+                        
                         Text(post.content)
                             .font(.callout)
                             .multilineTextAlignment(.leading)
@@ -88,47 +88,44 @@ struct PostDetailView: View {
                             ZoomableImageView(imageUrl: url)
                         }
                     }
-
+                    
                     // Upvote and Downvote Buttons
                     HStack(spacing: 40) {
-                        Button(action: {
+                        Button {
                             postDetailViewModel.upvotePost(postId: postId)
-                        }) {
-                            HStack {
-                                Image(systemName: "hand.thumbsup.fill")
-                                Text("\(post.upvoteCount)")
-                                    .font(.callout)
-                                    .foregroundColor(.primary)
-                            }
+                        } label: {
+                            Label("\(post.upvoteCount)", systemImage: "hand.thumbsup.fill")
+                                .font(.callout)
+                                .foregroundStyle(.primary)
                         }
+                        .buttonStyle(.borderedProminent)
                         
                         Spacer()
                         
-                        Button(action: {
+                        Button {
                             postDetailViewModel.downvotePost(postId: postId)
-                        }) {
-                            HStack {
-                                Image(systemName: "hand.thumbsdown.fill")
-                                Text("\(post.downvoteCount)")
-                                    .font(.callout)
-                                    .foregroundColor(.primary)
-                            }
+                        } label: {
+                            Label("\(post.downvoteCount)", systemImage: "hand.thumbsdown.fill")
+                                .font(.callout)
+                                .foregroundStyle(.primary)
                         }
+                        .buttonStyle(.borderedProminent)
                         
                         Spacer()
                         
-                        Button(action: {
+                        Button {
                             postDetailViewModel.toggleBookmarkPost(postId: postId)
-                        }) {
+                        } label: {
                             Image(systemName: postDetailViewModel.isBookmarked ? "bookmark.fill" : "bookmark")
                                 .font(.callout)
                         }
+                        .buttonStyle(.borderedProminent)
                     }
                     .font(.callout)
                     .padding()
-
+                    
                     Divider()
-
+                    
                     // Replies Section
                     if postDetailViewModel.isLoadingReplies {
                         ProgressView("Loading replies...")
@@ -138,7 +135,7 @@ struct PostDetailView: View {
                             Text("Replies")
                                 .font(.headline)
                                 .padding(.horizontal)
-
+                            
                             ForEach(postDetailViewModel.replies) { reply in
                                 NavigationLink(destination: PostDetailView(postId: reply.id)) {
                                     PostPreviewCell(post: reply)
@@ -180,10 +177,10 @@ struct PostDetailView: View {
             
             ToolbarItem(placement: .bottomBar) {
                 HStack {
-                    Button(action: {
+                    Button {
                         // Add action for filter functionality
                         print("Filter button tapped")
-                    }) {
+                    } label: {
                         Label("Filter", systemImage: "line.horizontal.3.decrease.circle")
                     }
                     
@@ -198,9 +195,9 @@ struct PostDetailView: View {
                     
                     Spacer()
                     
-                    Button(action: {
+                    Button {
                         showingReplyToPost.toggle()
-                    }) {
+                    } label: {
                         Label("Reply to Post", systemImage: "square.and.pencil")
                     }
                 }

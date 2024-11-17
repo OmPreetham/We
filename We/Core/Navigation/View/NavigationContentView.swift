@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NavigationContentView: View {    
     @Binding var primarySelection: NavigateView.PrimarySelection?
-    @Binding var isShowingCreatePost: Bool
 
     var body: some View {
         if let selection = primarySelection {

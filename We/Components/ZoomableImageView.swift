@@ -74,18 +74,18 @@ struct ZoomableImageView: View {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .resizable()
                                 .scaledToFit()
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                                 .frame(width: 100, height: 100)
                                 .padding()
                             Text("Failed to load image")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .padding(.bottom, 20)
-                            Button(action: {
+                            Button {
                                 // Dismiss the view
                                 dismiss()
-                            }) {
+                            } label: {
                                 Text("Close")
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .padding()
                             }
                         }
@@ -100,12 +100,12 @@ struct ZoomableImageView: View {
             VStack {
                 HStack {
                     Spacer()
-                    Button(action: {
+                    Button {
                         dismiss()
-                    }) {
+                    } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.system(size: 30))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .padding()
                     }
                 }

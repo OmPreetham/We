@@ -12,7 +12,6 @@ struct NavigationSidebarView: View {
     @Binding var primarySelection: NavigateView.PrimarySelection?
 
     @State private var searchText: String = ""
-    @State private var showingCreatePost: Bool = false
 
     var filteredBoards: [Board] {
         if searchText.isEmpty {
@@ -37,9 +36,9 @@ struct NavigationSidebarView: View {
                 Section {
                     NavigationLink(value: NavigateView.PrimarySelection.account) {
                         SidebarItemView(
-                            title: authViewModel.currentUser?.username ?? "Loading...",
+                            title: authViewModel.currentUser?.username ?? "We Account",
                             description: "We Account, Personalization, and more.",
-                            imageName: "person.fill",
+                            imageName: "person.badge.shield.checkmark.fill",
                             gradientColor: .teal,
                             isAccount: true
                         )
@@ -113,18 +112,6 @@ struct NavigationSidebarView: View {
             }
             .listStyle(.sidebar)
             .navigationTitle("III")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingCreatePost.toggle()
-                    } label: {
-                        Label("Create Post", systemImage: "plus")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .clipShape(.circle)
-                    .padding(.trailing, -8)
-                }
-            }
             .searchable(text: $searchText, prompt: "Search We")
             .onAppear {
                 if authViewModel.currentUser == nil {
@@ -141,9 +128,6 @@ struct NavigationSidebarView: View {
                 authViewModel.fetchAllBoards()
                 authViewModel.fetchFollowedBoards()
                 authViewModel.fetchCurrentUser()
-            }
-            .sheet(isPresented: $showingCreatePost) {
-                CreatePostView()
             }
             .alert(isPresented: Binding<Bool>(
                 get: { authViewModel.errorMessage != nil },
